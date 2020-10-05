@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="" type="image/x-icon"/>
+    <title>{% block title %}{% endblock %} - Proyecto</title>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('home.index') }}">
+                    Proyecto
+                </a>
+
+                <!-- Mostrar navbar diferente cuando la ventana es muy chica -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    <!-- Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                          {% if current_user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>{{ current_user.usuario }}</a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="">Perfil</a>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('home.index') }}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Registrarse</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>
+                          {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        {% block alerta %}
+                        {% endblock %}
+                        <div class="card border-primary">
+                            <div class="card-header text-white bg-primary">{% block nombre %}{% endblock %}</div>
+                            <div class="card-body">
+                                {% block body %}
+                                {% endblock %}
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+        </main>
+    </div>
+    <footer id="sticky-footer" class="py-2 bg-primary text-white">
+      <div class="container text-center">
+        <small>Copyright &copy; 2020</small>
+      </div>
+    </footer>
+</body>
+</html>

@@ -1,63 +1,46 @@
-from os import path, environ
-from flask import Flask, render_template, g
-from flask_session import Session
-from config import config
-from app import db
-from app.resources import issue
-from app.resources import user
-from app.resources import auth
-from app.resources.api import issue as api_issue
-from app.helpers import handler
-from app.helpers import auth as helper_auth
+# third-party imports
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy # orm
+from flask_login import LoginManager # registro, login, logout
+from flask_migrate import Migrate # migraciones en la BD
+from flask_bootstrap import Bootstrap # generar los formularios de forms.py y para mostrar los mensajes flash()
+from config import app_config # imports locales
 
+db = SQLAlchemy()
+login_manager = LoginManager() # Para manejar login, logout, sesiones
 
-def create_app(environment="development"):
-    # Configuración inicial de la app
-    app = Flask(__name__)
+# cargar configuraciones
+def create_app(config_name):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config[config_name])
 
-    # Carga de la configuración
-    env = environ.get("FLASK_ENV", environment)
-    app.config.from_object(config[env])
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{username}:{password}@{host}/{database}'.format(
+            username=app.config["DB_USER"],
+            password=app.config["DB_PASS"],
+            host=app.config["DB_HOST"],
+            database=app.config["DB_NAME"],
+        )
 
-    # Server Side session
-    app.config["SESSION_TYPE"] = "filesystem"
-    Session(app)
-
-    # Configure db
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    Bootstrap(app)
     db.init_app(app)
+    login_manager.init_app(app)
+    # Si no está logueado muestra este mensaje y la vista para loguearse
+    login_manager.login_message = "Debes estar logueado para acceder a esta página"
+    login_manager.login_view = "auth.login"
+    migrate = Migrate(app, db)  # Para hacer migraciones
+    
+    from app import models
 
-    # Funciones que se exportan al contexto de Jinja2
-    app.jinja_env.globals.update(is_authenticated=helper_auth.authenticated)
+    # registro cada blueprint
+    # Todas las vistas de admin serán accesibles desde /admin
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
-    # Autenticación
-    app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
-    app.add_url_rule("/cerrar_sesion", "auth_logout", auth.logout)
-    app.add_url_rule(
-        "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
-    )
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
 
-    # Rutas de Consultas
-    app.add_url_rule("/consultas", "issue_index", issue.index)
-    app.add_url_rule("/consultas", "issue_create", issue.create, methods=["POST"])
-    app.add_url_rule("/consultas/nueva", "issue_new", issue.new)
+    from .home import home as home_blueprint
+    app.register_blueprint(home_blueprint)
 
-    # Rutas de Usuarios
-    app.add_url_rule("/usuarios", "user_index", user.index)
-    app.add_url_rule("/usuarios", "user_create", user.create, methods=["POST"])
-    app.add_url_rule("/usuarios/nuevo", "user_new", user.new)
-
-    # Ruta para el Home (usando decorator)
-    @app.route("/")
-    def home():
-        return render_template("home.html")
-
-    # Rutas de API-rest
-    app.add_url_rule("/api/consultas", "api_issue_index", api_issue.index)
-
-    # Handlers
-    app.register_error_handler(404, handler.not_found_error)
-    app.register_error_handler(401, handler.unauthorized_error)
-    # Implementar lo mismo para el error 500 y 401
-
-    # Retornar la instancia de app configurada
     return app
