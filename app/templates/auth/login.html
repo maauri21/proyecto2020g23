@@ -1,13 +1,17 @@
-{% extends "layout.html" %}
-{% block title %}Login{% endblock %}
-{% block head %}
-  {{ super() }}
+{% from 'bootstrap/utils.html' import render_messages %}
+{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block tamañoPanel %}col-md-8{% endblock %}
+
+{% block alerta %}
+{{ render_messages() }}
 {% endblock %}
-{% block content %}
-  <h1>Iniciar sesión</h1>
-  <form action="{{ url_for('auth_authenticate') }}" method="POST">
-    <input name="email" placeholder="Correo" required/>
-    <input type="password" name="password" placeholder="Clave" required/>
-    <input type="submit" value="Login">
-  </form>
+
+{% block nombre %}Iniciar sesión{% endblock %}
+
+{% block body %}
+  {{ render_form(form) }}
 {% endblock %}
+

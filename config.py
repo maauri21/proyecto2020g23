@@ -50,6 +50,7 @@ class ProductionConfig(BaseConfig):
     DB_NAME = environ.get("DB_NAME", "grupo23")
 
 
-config = dict(
+app_config = dict(
     development=DevelopmentConfig, testing=TestingConfig, production=ProductionConfig
 )
+
