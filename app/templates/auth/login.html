@@ -3,6 +3,7 @@
 {% extends "base.html" %}
 {% block title %}Iniciar sesión{% endblock %}
 
+<<<<<<< HEAD
 {% block tamañoPanel %}col-md-8{% endblock %}
 
 {% block alerta %}
@@ -15,3 +16,14 @@
   {{ render_form(form) }}
 {% endblock %}
 
+=======
+{% block alerta %}
+{{ render_messages() }}
+{% endblock %}
+
+{% block nombre %}Iniciar sesión{% endblock %}
+
+{% block body %}
+  {{ render_form(form) }}
+{% endblock %}
+>>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d

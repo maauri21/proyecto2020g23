@@ -2,7 +2,11 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 
+<<<<<<< HEAD
 #UserMixin es una clase de flasklogin que implementa métodos default
+=======
+
+>>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
 class Usuario(UserMixin, db.Model):
     __tablename__ = 'usuarios'
 

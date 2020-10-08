@@ -7,6 +7,7 @@ from . import home
 
 @home.route('/')
 def index():
+<<<<<<< HEAD
     return render_template('home/index.html', title="Home")
 
 # vista de admin
@@ -14,3 +15,6 @@ def index():
 @login_required
 def paneladmin():
     return render_template('home/paneladmin.html', title="Panel admin")
+=======
+    return render_template('home/index.html', title="Welcome")
+>>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
