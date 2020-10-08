@@ -49,14 +49,6 @@ class ProductionConfig(BaseConfig):
     DB_PASS = environ.get("DB_PASS", "YWFlNDdiZTZjOGMz")
     DB_NAME = environ.get("DB_NAME", "grupo23")
 
-<<<<<<< HEAD
-
 app_config = dict(
     development=DevelopmentConfig, testing=TestingConfig, production=ProductionConfig
 )
-
-=======
-app_config = dict(
-    development=DevelopmentConfig, testing=TestingConfig, production=ProductionConfig
-)
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d

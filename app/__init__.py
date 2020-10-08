@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-# third-party imports
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy # orm
 from flask_login import LoginManager # registro, login, logout
@@ -26,11 +22,7 @@ def create_app(config_name):
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     Bootstrap(app)
-<<<<<<< HEAD
     db.init_app(app)                # inicio app
-=======
-    db.init_app(app)
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
     login_manager.init_app(app)
     # Si no está logueado muestra este mensaje y la vista para loguearse
     login_manager.login_message = "Debes estar logueado para acceder a esta página"
@@ -40,14 +32,8 @@ def create_app(config_name):
     from app import models
 
     # registro cada blueprint
-<<<<<<< HEAD
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint)
-=======
-    # Todas las vistas de admin serán accesibles desde /admin
-    from .admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin')
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
@@ -55,8 +41,4 @@ def create_app(config_name):
     from .home import home as home_blueprint
     app.register_blueprint(home_blueprint)
 
-<<<<<<< HEAD
     return app
-=======
-    return app
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d

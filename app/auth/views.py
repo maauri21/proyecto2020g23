@@ -30,11 +30,7 @@ def register():
         return redirect(url_for('auth.login'))
 
     # Cargar registro
-<<<<<<< HEAD
     return render_template('auth/register.html', form=form, title='Registro')
-=======
-    return render_template('auth/register.html', form=form, title='Register')
->>>>>>> 5a4286af0679cfdf1e5113bfd0b233c880b1826d
 
 
 @auth.route('/login', methods=['GET', 'POST'])
