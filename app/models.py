@@ -35,3 +35,16 @@ class Usuario(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
+
+class Configuracion(db.Model):
+    __tablename__ = 'configuraciones'
+
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(20))
+    descripcion = db.Column(db.String(40))
+    email = db.Column(db.String(20))
+    cantPaginacion = db.Column(db.Integer)
+    estadoSitio = db.Column(db.Boolean, default=True)
+
+    def __repr__(self):
+        return '<Configuracion: {}>'.format(self.titulo)

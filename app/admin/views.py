@@ -1,8 +1,9 @@
-from flask import abort, flash, redirect, render_template, url_for
+from flask import abort, flash, redirect, render_template, url_for, session
 from flask_login import current_user, login_required
 
 from . import admin
 from ..auth.forms import RegistrationForm
+from .forms import EditarUsuarioForm
 from .. import db
 from ..models import Usuario
 
@@ -15,7 +16,7 @@ def listar_usuarios():
     usuarios = Usuario.query.all()
 
     return render_template('admin/usuarios/usuarios.html',
-                           usuarios=usuarios, title="Usuarios")
+                           usuarios=usuarios)
 
 
 @admin.route('/usuarios/add', methods=['GET', 'POST'])
@@ -55,24 +56,23 @@ def editar_usuario(id):
     agregar_usuario = False
 
     usuario = Usuario.query.get_or_404(id)
-    form = RegistrationForm(obj=usuario)
+    form = EditarUsuarioForm()
     if form.validate_on_submit():
         usuario.email = form.email.data
         usuario.usuario = form.usuario.data
         usuario.nombre = form.nombre.data
         usuario.apellido = form.apellido.data
-        usuario.password = form.password.data
         db.session.commit()
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
         return redirect(url_for('admin.listar_usuarios'))
 
+    session['idEditar'] = id
     form.email.data = usuario.email
     form.usuario.data = usuario.usuario
     form.nombre.data = usuario.nombre
     form.apellido.data = usuario.apellido
-    
     return render_template('admin/usuarios/usuario.html', action="Edit",
                            agregar_usuario=agregar_usuario, form=form,
                            usuario=usuario)

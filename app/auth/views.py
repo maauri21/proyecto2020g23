@@ -30,7 +30,7 @@ def register():
         return redirect(url_for('auth.login'))
 
     # Cargar registro
-    return render_template('auth/register.html', form=form, title='Registro')
+    return render_template('auth/register.html', form=form)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -57,7 +57,7 @@ def login():
             flash('Email o contraseña incorrecto')
 
     # Cargar login
-    return render_template('auth/login.html', form=form, title='Login')
+    return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout')

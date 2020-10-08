@@ -7,10 +7,10 @@ from . import home
 
 @home.route('/')
 def index():
-    return render_template('home/index.html', title="Home")
+    return render_template('home/index.html')
 
 # vista de admin
 @home.route('/paneladmin')
 @login_required
 def paneladmin():
-    return render_template('home/paneladmin.html', title="Panel admin")
+    return render_template('home/paneladmin.html')
