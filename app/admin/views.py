@@ -3,21 +3,26 @@ from flask_login import current_user, login_required
 
 from . import admin
 from ..auth.forms import RegistrationForm
-from .forms import EditarUsuarioForm
+from .forms import EditarUsuarioForm, BuscadorUsuario
 from .. import db
 from ..models import Usuario
 
 @admin.route('/usuarios', methods=['GET', 'POST'])
 @login_required
-def listar_usuarios():
+def buscar_usuarios():
     """
     Listar usuarios
     """
-    usuarios = Usuario.query.all()
-
-    return render_template('admin/usuarios/usuarios.html',
-                           usuarios=usuarios)
-
+    usuarios=Usuario.query.all()                                                                        # Al principio muestro todos
+    form = BuscadorUsuario()
+    buscar = form.data['search']
+    if form.data['select'] == 'Activo':
+        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar))        # Activos + string de busqueda
+    elif form.data['select'] == 'Bloqueado':
+        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar))
+    else:
+        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar))   
+    return render_template('admin/usuarios/usuarios.html', form=form, usuarios=usuarios)
 
 @admin.route('/usuarios/add', methods=['GET', 'POST'])
 @login_required
@@ -40,7 +45,7 @@ def agregar_usuario():
         flash('Usuario agregado')
 
         # Redirección al listado dsp de agregar
-        return redirect(url_for('admin.listar_usuarios'))
+        return redirect(url_for('admin.buscar_usuarios'))
 
     return render_template('admin/usuarios/usuario.html', action="Add",
                            agregar_usuario=agregar_usuario, form=form)
@@ -66,7 +71,7 @@ def editar_usuario(id):
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
-        return redirect(url_for('admin.listar_usuarios'))
+        return redirect(url_for('admin.buscar_usuarios'))
 
     session['idEditar'] = id
     form.email.data = usuario.email
@@ -91,4 +96,4 @@ def borrar_usuario(id):
     flash('Usuario borrado')
 
     # Redirección al listado dsp de borrar
-    return redirect(url_for('admin.listar_usuarios'))
+    return redirect(url_for('admin.buscar_usuarios'))

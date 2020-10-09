@@ -7,10 +7,10 @@ class Usuario(UserMixin, db.Model):
     __tablename__ = 'usuarios'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), index=True, unique=True)
-    usuario = db.Column(db.String(60), index=True, unique=True)
-    nombre = db.Column(db.String(60))
-    apellido = db.Column(db.String(60))
+    email = db.Column(db.String(40), index=True, unique=True)
+    usuario = db.Column(db.String(15), index=True, unique=True)
+    nombre = db.Column(db.String(15))
+    apellido = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
     activo = db.Column(db.Boolean, default=True)
 
