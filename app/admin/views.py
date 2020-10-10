@@ -1,5 +1,5 @@
-from flask import abort, flash, redirect, render_template, url_for, session
-from flask_login import current_user, login_required
+from flask import flash, redirect, render_template, url_for, session
+from flask_login import login_required
 
 from . import admin
 from ..auth.forms import RegistrationForm
@@ -7,24 +7,26 @@ from .forms import EditarUsuarioForm, BuscadorUsuario
 from .. import db
 from ..models import Usuario
 
-@admin.route('/usuarios', methods=['GET', 'POST'])
+@admin.route('/usuarios/', methods=['GET', 'POST'])
 @login_required
 def buscar_usuarios():
     """
     Listar usuarios
     """
-    usuarios=Usuario.query.all()                                                                        # Al principio muestro todos
+    # Al principio muestro todos
+    usuarios=Usuario.query.all()
     form = BuscadorUsuario()
     buscar = form.data['search']
+    # Activos + string de busqueda
     if form.data['select'] == 'Activo':
-        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar))        # Activos + string de busqueda
+        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar))
     elif form.data['select'] == 'Bloqueado':
         usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar))
     else:
         usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar))   
     return render_template('admin/usuarios/usuarios.html', form=form, usuarios=usuarios)
 
-@admin.route('/usuarios/add', methods=['GET', 'POST'])
+@admin.route('/usuarios/agregarusuario/', methods=['GET', 'POST'])
 @login_required
 def agregar_usuario():
     """
@@ -47,17 +49,16 @@ def agregar_usuario():
         # Redirección al listado dsp de agregar
         return redirect(url_for('admin.buscar_usuarios'))
 
-    return render_template('admin/usuarios/usuario.html', action="Add",
+    return render_template('admin/usuarios/usuario.html',
                            agregar_usuario=agregar_usuario, form=form)
 
 
-@admin.route('/usuarios/edit/<int:id>', methods=['GET', 'POST'])
+@admin.route('/usuarios/edititarusuario/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_usuario(id):
     """
     Editar usuario
     """
-
     agregar_usuario = False
 
     usuario = Usuario.query.get_or_404(id)
@@ -78,18 +79,17 @@ def editar_usuario(id):
     form.usuario.data = usuario.usuario
     form.nombre.data = usuario.nombre
     form.apellido.data = usuario.apellido
-    return render_template('admin/usuarios/usuario.html', action="Edit",
+    return render_template('admin/usuarios/usuario.html',
                            agregar_usuario=agregar_usuario, form=form,
                            usuario=usuario)
 
 
-@admin.route('/usuarios/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/usuarios/borrarusuario/<int:id>', methods=['GET', 'POST'])
 @login_required
 def borrar_usuario(id):
     """
     Borrar usuario
     """
-
     usuario = Usuario.query.get_or_404(id)
     db.session.delete(usuario)
     db.session.commit()
@@ -97,3 +97,11 @@ def borrar_usuario(id):
 
     # Redirección al listado dsp de borrar
     return redirect(url_for('admin.buscar_usuarios'))
+
+@admin.route('/paneladmin/')
+@login_required
+def panel_admin():
+    """
+    Panel de configuración del admin
+    """
+    return render_template('admin/paneladmin.html')

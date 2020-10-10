@@ -1,15 +1,19 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy # orm
-from flask_login import LoginManager # registro, login, logout
-from flask_migrate import Migrate # migraciones en la BD
-from flask_bootstrap import Bootstrap # generar los formularios de forms.py y para mostrar los mensajes flash()
-from config import app_config # imports locales
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_bootstrap import Bootstrap
+from config import app_config
 
+# ORM
 db = SQLAlchemy()
-login_manager = LoginManager() # Para manejar login, logout, sesiones
+# Para manejar login, logout, sesiones
+login_manager = LoginManager()
 
-# cargar configuraciones
 def create_app(config_name):
+    """
+    Cargar configuraciones
+    """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
 
@@ -20,14 +24,18 @@ def create_app(config_name):
             database=app.config["DB_NAME"],
         )
 
+    # No mostrar las modificaciones de los objetos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
-    db.init_app(app)                # inicio app
+    # inicio app
+    db.init_app(app)
     login_manager.init_app(app)
     # Si no está logueado muestra este mensaje y la vista para loguearse
     login_manager.login_message = "Debes estar logueado para acceder a esta página"
     login_manager.login_view = "auth.login"
-    migrate = Migrate(app, db)  # Para hacer migraciones
+    # para hacer migraciones
+    migrate = Migrate(app, db)
     
     from app import models
 

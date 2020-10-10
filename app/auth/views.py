@@ -7,7 +7,7 @@ from .. import db
 from ..models import Usuario
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/registro/', methods=['GET', 'POST'])
 def register():
     """
     Agregar usuario a la BD a través del registro
@@ -33,7 +33,7 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login/', methods=['GET', 'POST'])
 def login():
     """
     Login del usuario
