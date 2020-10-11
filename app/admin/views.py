@@ -5,7 +5,7 @@ from . import admin
 from ..auth.forms import RegistrationForm
 from .forms import EditarUsuarioForm, BuscadorUsuario
 from .. import db
-from ..models import Usuario
+from ..models import Usuario, Configuracion
 
 @admin.route('/usuarios/', methods=['GET', 'POST'])
 @login_required
@@ -94,8 +94,33 @@ def borrar_usuario(id):
     db.session.delete(usuario)
     db.session.commit()
     flash('Usuario borrado')
-
     # Redirección al listado dsp de borrar
+    return redirect(url_for('admin.buscar_usuarios'))
+
+@admin.route('/usuarios/bloquearusuario/<int:id>', methods=['GET', 'POST'])
+@login_required
+def bloquear_usuario(id):
+    """
+    Bloquear usuario
+    """
+    usuario = Usuario.query.get_or_404(id)
+    usuario.activo = False
+    db.session.commit()
+    flash('Usuario bloqueado')
+    # Redirección al listado dsp de bloquear
+    return redirect(url_for('admin.buscar_usuarios'))
+
+@admin.route('/usuarios/activarusuario/<int:id>', methods=['GET', 'POST'])
+@login_required
+def activar_usuario(id):
+    """
+    Activar usuario
+    """
+    usuario = Usuario.query.get_or_404(id)
+    usuario.activo = True
+    db.session.commit()
+    flash('Usuario activado')
+    # Redirección al listado dsp de activar
     return redirect(url_for('admin.buscar_usuarios'))
 
 @admin.route('/paneladmin/')
@@ -104,4 +129,13 @@ def panel_admin():
     """
     Panel de configuración del admin
     """
-    return render_template('admin/paneladmin.html')
+    config = Configuracion.query.first()
+    return render_template('admin/paneladmin.html', config=config)
+
+@admin.context_processor
+def mostrar_config():
+    """
+    context_processor se ejecuta antes que se procese la plantilla
+    """
+    config = Configuracion.query.first()
+    return dict(mostrar_config=config)

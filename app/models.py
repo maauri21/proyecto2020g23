@@ -52,12 +52,11 @@ class Configuracion(db.Model):
     """
     __tablename__ = 'configuraciones'
 
-    id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(20))
+    titulo = db.Column(db.String(20), primary_key=True)
     descripcion = db.Column(db.String(40))
-    email = db.Column(db.String(20))
+    email = db.Column(db.String(40))
     cantPaginacion = db.Column(db.Integer)
-    estadoSitio = db.Column(db.Boolean, default=True)
+    mantenimiento = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return '<Configuracion: {}>'.format(self.titulo)
