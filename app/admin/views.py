@@ -139,3 +139,33 @@ def mostrar_config():
     """
     config = Configuracion.query.first()
     return dict(mostrar_config=config)
+
+@admin.route('/usuarios/<int:num_pag>', methods=['GET', 'POST'])
+@login_required
+def buscar_usuarios(num_pag):
+    """
+    Listar usuarios
+    """
+    # Saber cuantos mostrar por pag
+    config = Configuracion.query.first()
+    form = BuscadorUsuario()
+    buscar = form.data['search']
+    # Para volver a la misma pag dsp de cualquier acción
+    session['pag_usuario'] = num_pag
+    # Activos + string de busqueda. Error out para que no me tire error cuando pongo un num de pag que no existe
+    if form.data['select'] == 'Activo':
+        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+    elif form.data['select'] == 'Bloqueado':
+        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+    # Todos
+    else:
+        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+    return render_template('admin/usuarios/usuarios.html', form=form, usuarios=usuarios)
+    
+@admin.route('/usuarios/')
+@login_required
+def redireccion_usuarios():
+    """
+    Para que no tire error si entro a /usuarios
+    """
+    return redirect(url_for('admin.buscar_usuarios', num_pag=1))    

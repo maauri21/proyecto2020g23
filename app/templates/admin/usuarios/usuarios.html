@@ -30,7 +30,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                {% for usuario in usuarios %}
+                  {% for usuario in usuarios.items %}
                   <tr>
                     <td> {{ usuario.email }} </td>
                     <td> {{ usuario.usuario }} </td>
@@ -50,6 +50,26 @@
                 {% endfor %}
                 </tbody>
               </table>
+              <ul class="pagination">
+                <!-- Para cuando hay muchas pags que se mantengan las 3 primeras y las 3 ultimas -->
+                {% for page in usuarios.iter_pages(left_edge=3, right_edge=3) %}
+                <!-- Desactivo la actual -->
+                {% if page == usuarios.page %}
+                  <li class="page-item disabled"><a class="page-link" href="{{ url_for('admin.buscar_usuarios', num_pag=page) }}"> {{page}} </a></li>
+                {% elif page %}
+                  <li class="page-item"><a class="page-link" href="{{ url_for('admin.buscar_usuarios', num_pag=page) }}"> {{page}} </a></li>
+                {% else %}
+                  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <a href="{{ url_for('admin.agregar_usuario') }}" class="btn btn-primary">Agregar usuario</a>
+
+
+{% endblock %}
             </div>
           </div>
 
