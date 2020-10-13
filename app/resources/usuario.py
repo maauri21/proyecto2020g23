@@ -111,8 +111,7 @@ def editar_usuario(id):
     form.nombre.data = usuario.nombre
     form.apellido.data = usuario.apellido
     return render_template('usuarios/usuario.html',
-                           agregar_usuario=agregar_usuario, form=form,
-                           usuario=usuario)
+                           agregar_usuario=agregar_usuario, form=form)
 
 @login_required
 def borrar_usuario(id):

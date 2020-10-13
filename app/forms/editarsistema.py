@@ -1,9 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, BooleanField
+from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email, Length
-from app.models.configuracion import Configuracion
-from flask import session
-
 
 # DataRequired es un validador de flaskwtf
 class EditarConfigForm(FlaskForm):

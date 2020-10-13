@@ -2,7 +2,6 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 from app.forms.editarsistema import EditarConfigForm
 from app.models.configuracion import Configuracion
-from . import app
 from app import db
 
 def mantenimiento():
@@ -23,10 +22,10 @@ def editar_configuracion():
         config.cantPaginacion = form.cantPaginacion.data
         config.mantenimiento = form.mantenimiento.data
         db.session.commit()
-        flash('Configuracion modificada')
+        flash('Configuración modificada')
 
-        # Redirección al panel del admin
-        return redirect(url_for('panel_admin'))
+        # Redirección al panel de configuracion
+        return redirect(url_for('panel_config'))
 
     
     form.titulo.data = config.titulo
@@ -34,6 +33,5 @@ def editar_configuracion():
     form.email.data = config.email
     form.cantPaginacion.data = config.cantPaginacion
     form.mantenimiento.data = config.mantenimiento
-    return render_template('admin/paneladmin.html',
-                            form=form,
-                           config=config)
+    return render_template('config/panelconfig.html',
+                            form=form)
