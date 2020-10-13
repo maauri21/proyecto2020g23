@@ -84,8 +84,7 @@ def create_app(environment="development"):
 
     # Usuarios
     app.add_url_rule("/registro/", "usuario_registro", usuario.register, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/<int:num_pag>", "usuario_buscar", usuario.buscar_usuarios, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/", "usuario_redireccion", usuario.redireccion_usuarios)
+    app.add_url_rule("/usuarios/", "usuario_buscar", usuario.buscar_usuarios, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/agregarusuario/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/edititarusuario/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/borrarusuario/<int:id>", "borrar_usuario", usuario.borrar_usuario)

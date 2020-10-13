@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for, session
+from flask import flash, redirect, render_template, url_for, session, request
 from flask_login import login_required
 
 from app.forms.registro import RegistroForm
@@ -34,35 +34,28 @@ def register():
                             form=form)
 
 @login_required
-def buscar_usuarios(num_pag):
+def buscar_usuarios():
     """
     Listar usuarios
     """
     # Saber cuantos mostrar por pag
     config = Configuracion.query.first()
-    form = BuscarUsuarioForm()
+    form = BuscarUsuarioForm(formdata=request.args)
     buscar = form.data['search']
     # Para volver a la misma pag dsp de cualquier acción
-    session['pag_usuario'] = num_pag
+    # Si no recibo, setea 1
+    session['pag_usuario'] = int(request.args.get('num_pag', 1))
     # Activos + string de busqueda. Error out para que no me tire error cuando pongo un num de pag que no existe
     if form.data['select'] == 'Activo':
-        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
     elif form.data['select'] == 'Bloqueado':
-        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
     # Todos
     else:
-        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
+        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
     return render_template('usuarios/usuarios.html',
                             form=form,
                             usuarios=usuarios)
-
-@login_required
-def redireccion_usuarios():
-    """
-    Para que no tire error si entro a /usuarios
-    """
-    return redirect(url_for('usuario_buscar',
-                            num_pag=1))
 
 @login_required
 def agregar_usuario():
