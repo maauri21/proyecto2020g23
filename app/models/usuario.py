@@ -36,27 +36,12 @@ class Usuario(UserMixin, db.Model):
         """
         return check_password_hash(self.password_hash, password)
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        """
+        Usado por flask login para manejar al usuario logueado
+        """
+        return Usuario.query.get(int(user_id))
+
     def __repr__(self):
         return '<Usuario: {}>'.format(self.usuario)
-
-@login_manager.user_loader
-def load_user(user_id):
-    """
-    Usado por flask login para manejar al usuario logueado
-    """
-    return Usuario.query.get(int(user_id))
-
-class Configuracion(db.Model):
-    """
-    Crear una tabla configuraciones
-    """
-    __tablename__ = 'configuraciones'
-
-    titulo = db.Column(db.String(20), primary_key=True)
-    descripcion = db.Column(db.String(40))
-    email = db.Column(db.String(40))
-    cantPaginacion = db.Column(db.Integer)
-    mantenimiento = db.Column(db.Boolean, default=True)
-
-    def __repr__(self):
-        return '<Configuracion: {}>'.format(self.titulo)

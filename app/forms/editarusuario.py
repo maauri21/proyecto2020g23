@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, SelectField
+from wtforms import StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, Length
-from ..models import Usuario
+from app.models.usuario import Usuario
 from flask import session
 
 
@@ -31,8 +31,3 @@ class EditarUsuarioForm(FlaskForm):
         if field.data != usuarioAEditar.usuario:    
             if Usuario.query.filter_by(usuario=field.data).first():
                 raise ValidationError('Este nombre de usuario ya se encuentra en uso')
-
-class BuscadorUsuario(FlaskForm):
-    search = StringField('Usuario', default='')
-    select = SelectField('Estado:', choices=[('Todos', 'Todos'),('Activo', 'Activo'),('Bloqueado', 'Bloqueado')]) # (value, label)
-    submit = SubmitField('Buscar')
