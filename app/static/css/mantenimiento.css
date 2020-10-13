@@ -6,7 +6,7 @@ body {
     text-align: center; padding: 15%;
     font: 20px Helvetica, sans-serif; color: #333; 
     background-color: #FBDA61;
-    background-image: linear-gradient(90deg, #FBDA61 0%, #FF5ACD 100%);      
+    background-image: linear-gradient(90deg, #8bf6fa 0%, #003536 100%);      
 }
 
 article { 
@@ -14,7 +14,7 @@ article {
 }
 
 a { 
-    color: blue; text-decoration: none; 
+    color: yellow; text-decoration: none; 
 }
 
 a:hover { 

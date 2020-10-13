@@ -1,5 +1,6 @@
 from os import environ
 from flask import Flask, render_template, request, url_for, redirect
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -26,10 +27,14 @@ def create_app(environment="development"):
             database=app.config["DB_NAME"],
         )
 
+    app.config["SESSION_TYPE"] = "filesystem"
+
     # No mostrar las modificaciones de los objetos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
+    # Flask-Session
+    Session(app)
     # inicio app
     db.init_app(app)
     login_manager.init_app(app)

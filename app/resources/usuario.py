@@ -30,7 +30,8 @@ def register():
         return redirect(url_for('auth_login'))
 
     # Cargar registro
-    return render_template('auth/register.html', form=form)
+    return render_template('auth/register.html',
+                            form=form)
 
 @login_required
 def buscar_usuarios(num_pag):
@@ -51,14 +52,17 @@ def buscar_usuarios(num_pag):
     # Todos
     else:
         usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=num_pag, error_out=False)
-    return render_template('usuarios/usuarios.html', form=form, usuarios=usuarios)
+    return render_template('usuarios/usuarios.html',
+                            form=form,
+                            usuarios=usuarios)
 
 @login_required
 def redireccion_usuarios():
     """
     Para que no tire error si entro a /usuarios
     """
-    return redirect(url_for('usuario_buscar', num_pag=1))
+    return redirect(url_for('usuario_buscar',
+                            num_pag=1))
 
 @login_required
 def agregar_usuario():
@@ -80,10 +84,12 @@ def agregar_usuario():
         flash('Usuario agregado')
 
         # Redirección al listado dsp de agregar
-        return redirect(url_for('usuario_buscar', num_pag=session['pag_usuario']))
+        return redirect(url_for('usuario_buscar',
+                                num_pag=session['pag_usuario']))
 
     return render_template('usuarios/usuario.html',
-                           agregar_usuario=agregar_usuario, form=form)
+                           agregar_usuario=agregar_usuario,
+                           form=form)
 
 @login_required
 def editar_usuario(id):
@@ -103,7 +109,8 @@ def editar_usuario(id):
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
-        return redirect(url_for('usuario_buscar', num_pag=session['pag_usuario']))
+        return redirect(url_for('usuario_buscar',
+                                num_pag=session['pag_usuario']))
 
     session['idEditar'] = id
     form.email.data = usuario.email
@@ -123,7 +130,8 @@ def borrar_usuario(id):
     db.session.commit()
     flash('Usuario borrado')
     # Redirección al listado dsp de borrar
-    return redirect(url_for('usuario_buscar', num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar',
+                            num_pag=session['pag_usuario']))
 
 @login_required
 def bloquear_usuario(id):
@@ -135,7 +143,8 @@ def bloquear_usuario(id):
     db.session.commit()
     flash('Usuario bloqueado')
     # Redirección al listado dsp de bloquear
-    return redirect(url_for('usuario_buscar', num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar',
+                            num_pag=session['pag_usuario']))
 
 @login_required
 def activar_usuario(id):
@@ -147,4 +156,5 @@ def activar_usuario(id):
     db.session.commit()
     flash('Usuario activado')
     # Redirección al listado dsp de activar
-    return redirect(url_for('usuario_buscar', num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar',
+                            num_pag=session['pag_usuario']))
