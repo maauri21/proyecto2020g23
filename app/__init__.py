@@ -84,6 +84,6 @@ def create_app(environment="development"):
     app.add_url_rule("/usuarios/borrarusuario/<int:id>", "borrar_usuario", usuario.borrar_usuario)
     app.add_url_rule("/usuarios/bloquearusuario/<int:id>", "bloquear_usuario", usuario.bloquear_usuario)
     app.add_url_rule("/usuarios/activarusuario/<int:id>", "activar_usuario", usuario.activar_usuario)
-    app.add_url_rule("/paneladmin/", "panel_admin", admin.panel_admin)
+    app.add_url_rule("/paneladmin/", "panel_admin",configuracion.editar_configuracion,  methods=['GET', 'POST'])
 
     return app

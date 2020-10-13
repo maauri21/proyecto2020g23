@@ -10,4 +10,4 @@ def panel_admin():
     Panel de configuración del admin
     """
     config = Configuracion.query.first()
-    return render_template('admin/paneladmin.html', config=config)
+    return render_template('admin/paneladmin.html', config=config,)

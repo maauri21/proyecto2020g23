@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% from 'bootstrap/utils.html' import render_messages %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block tamañoPanel %}col-md-13{% endblock %}
 {% block title %}Panel Admin{% endblock %}
 
 {% block nombre %}Panel Admin{% endblock %}
 
 {% block body %}
     <h1>Panel del admin</h1>
-    {{ config.email }}
+    {{ render_form(form) }}
 {% endblock %}
