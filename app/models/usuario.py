@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
+from app.models.relaciones import usuario_rol
 
 class Usuario(UserMixin, db.Model):
     """
@@ -15,6 +16,7 @@ class Usuario(UserMixin, db.Model):
     apellido = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
     activo = db.Column(db.Boolean, default=True)
+    roles = db.relationship('Rol', secondary=usuario_rol)
 
     @property
     def password(self):
