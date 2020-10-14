@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+from app.helpers import handler
 from config import config
 
 # ORM
@@ -75,6 +76,10 @@ def create_app(environment="development"):
         if modo_mantenimiento and request.path != url_for('mantenimiento'):
             return redirect(url_for('mantenimiento'))
 
+    #Handlers
+    app.register_error_handler(401, handler.unauthorized_error)
+    app.register_error_handler(404, handler.not_found_error)
+
     # Mantenimiento
     app.add_url_rule("/mantenimiento/", "mantenimiento", configuracion.mantenimiento)
 
@@ -85,11 +90,11 @@ def create_app(environment="development"):
     # Usuarios
     app.add_url_rule("/registro/", "usuario_registro", usuario.register, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/", "usuario_buscar", usuario.buscar_usuarios, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/agregarusuario/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/edititarusuario/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/borrarusuario/<int:id>", "borrar_usuario", usuario.borrar_usuario)
-    app.add_url_rule("/usuarios/bloquearusuario/<int:id>", "bloquear_usuario", usuario.bloquear_usuario)
-    app.add_url_rule("/usuarios/activarusuario/<int:id>", "activar_usuario", usuario.activar_usuario)
+    app.add_url_rule("/usuarios/agregar/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
+    app.add_url_rule("/usuarios/editar/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])
+    app.add_url_rule("/usuarios/borrar/<int:id>", "borrar_usuario", usuario.borrar_usuario)
+    app.add_url_rule("/usuarios/bloquear/<int:id>", "bloquear_usuario", usuario.bloquear_usuario)
+    app.add_url_rule("/usuarios/activar/<int:id>", "activar_usuario", usuario.activar_usuario)
     app.add_url_rule("/panelconfig/", "panel_config", configuracion.editar_configuracion, methods=['GET', 'POST'])
 
     return app

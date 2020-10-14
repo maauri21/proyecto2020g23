@@ -17,6 +17,16 @@ class Usuario(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     activo = db.Column(db.Boolean, default=True)
     roles = db.relationship('Rol', secondary=usuario_rol)
+    
+    def tiene_permiso(user_id, permiso):
+        """
+        Busca si el usuario tiene el permiso y retorna True o False
+        """
+        # Agarro los roles del usuario y tengo los permisos de esos roles
+        for rol in user_id.roles:
+            for permi in rol.permisos:
+                if (permi.nombre == permiso):
+                    return True
 
     @property
     def password(self):

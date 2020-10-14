@@ -1,5 +1,5 @@
-from flask import flash, redirect, render_template, url_for, session, request
-from flask_login import login_required
+from flask import flash, redirect, render_template, url_for, session, request, abort
+from flask_login import login_required, current_user
 
 from app.forms.registro import RegistroForm
 from app.forms.buscarusuario import BuscarUsuarioForm
@@ -7,6 +7,7 @@ from app.forms.editarusuario import EditarUsuarioForm
 from app import db
 from app.models.usuario import Usuario
 from app.models.configuracion import Configuracion
+from app.helpers.permisos import check_permiso
 
 def register():
     """
@@ -44,15 +45,15 @@ def buscar_usuarios():
     buscar = form.data['search']
     # Para volver a la misma pag dsp de cualquier acción
     # Si no recibo, setea 1
-    session['pag_usuario'] = int(request.args.get('num_pag', 1))
+    pag = int(request.args.get('num_pag', 1))
     # Activos + string de busqueda. Error out para que no me tire error cuando pongo un num de pag que no existe
     if form.data['select'] == 'Activo':
-        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
+        usuarios = Usuario.query.filter_by(activo=True).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
     elif form.data['select'] == 'Bloqueado':
-        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
+        usuarios = Usuario.query.filter_by(activo=False).filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
     # Todos
     else:
-        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=session['pag_usuario'], error_out=False)
+        usuarios = Usuario.query.filter(Usuario.usuario.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
     return render_template('usuarios/usuarios.html',
                             form=form,
                             usuarios=usuarios)
@@ -77,8 +78,7 @@ def agregar_usuario():
         flash('Usuario agregado')
 
         # Redirección al listado dsp de agregar
-        return redirect(url_for('usuario_buscar',
-                                num_pag=session['pag_usuario']))
+        return redirect(url_for('usuario_buscar'))
 
     return render_template('usuarios/usuario.html',
                            agregar_usuario=agregar_usuario,
@@ -89,8 +89,11 @@ def editar_usuario(id):
     """
     Editar usuario
     """
-    agregar_usuario = False
 
+    if not check_permiso(current_user, 'user_edit'):
+        abort(401)
+
+    agregar_usuario = False
     usuario = Usuario.query.get_or_404(id)
     form = EditarUsuarioForm()
     if form.validate_on_submit():
@@ -102,8 +105,7 @@ def editar_usuario(id):
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
-        return redirect(url_for('usuario_buscar',
-                                num_pag=session['pag_usuario']))
+        return redirect(url_for('usuario_buscar'))
 
     session['idEditar'] = id
     form.email.data = usuario.email
@@ -123,8 +125,7 @@ def borrar_usuario(id):
     db.session.commit()
     flash('Usuario borrado')
     # Redirección al listado dsp de borrar
-    return redirect(url_for('usuario_buscar',
-                            num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar'))
 
 @login_required
 def bloquear_usuario(id):
@@ -136,8 +137,7 @@ def bloquear_usuario(id):
     db.session.commit()
     flash('Usuario bloqueado')
     # Redirección al listado dsp de bloquear
-    return redirect(url_for('usuario_buscar',
-                            num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar'))
 
 @login_required
 def activar_usuario(id):
@@ -149,5 +149,4 @@ def activar_usuario(id):
     db.session.commit()
     flash('Usuario activado')
     # Redirección al listado dsp de activar
-    return redirect(url_for('usuario_buscar',
-                            num_pag=session['pag_usuario']))
+    return redirect(url_for('usuario_buscar'))
