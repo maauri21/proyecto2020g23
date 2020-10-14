@@ -39,6 +39,10 @@ def buscar_usuarios():
     """
     Listar usuarios
     """
+
+    if not check_permiso(current_user, 'user_index'):
+        abort(401)
+
     # Saber cuantos mostrar por pag
     config = Configuracion.query.first()
     form = BuscarUsuarioForm(formdata=request.args)
@@ -65,6 +69,9 @@ def agregar_usuario():
     """
     agregar_usuario = True
 
+    if not check_permiso(current_user, 'user_new'):
+        abort(401)
+
     form = RegistroForm()
     if form.validate_on_submit():
         usuario = Usuario(email=form.email.data,
@@ -90,7 +97,7 @@ def editar_usuario(id):
     Editar usuario
     """
 
-    if not check_permiso(current_user, 'user_edit'):
+    if not check_permiso(current_user, 'user_update'):
         abort(401)
 
     agregar_usuario = False
@@ -120,6 +127,10 @@ def borrar_usuario(id):
     """
     Borrar usuario
     """
+
+    if not check_permiso(current_user, 'user_destroy'):
+        abort(401)
+
     usuario = Usuario.query.get_or_404(id)
     db.session.delete(usuario)
     db.session.commit()
@@ -132,7 +143,15 @@ def bloquear_usuario(id):
     """
     Bloquear usuario
     """
+
+    if not check_permiso(current_user, 'user_state'):
+        abort(401)
+
     usuario = Usuario.query.get_or_404(id)
+    for rol in usuario.roles:
+        if (rol.nombre == 'administrador'):
+            flash('No se puede bloquear a un administrador')
+            return redirect(url_for('usuario_buscar'))
     usuario.activo = False
     db.session.commit()
     flash('Usuario bloqueado')
@@ -144,6 +163,10 @@ def activar_usuario(id):
     """
     Activar usuario
     """
+
+    if not check_permiso(current_user, 'user_state'):
+        abort(401)
+
     usuario = Usuario.query.get_or_404(id)
     usuario.activo = True
     db.session.commit()

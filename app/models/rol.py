@@ -9,7 +9,7 @@ class Rol(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(20))
-    permisos = db.relationship('Permiso', secondary=rol_permiso)
+    permisos = db.relationship('Permiso', secondary=rol_permiso, lazy='subquery', backref=db.backref('roles', lazy=True))
 
     def __repr__(self):
         return '<Rol: {}>'.format(self.nombre)

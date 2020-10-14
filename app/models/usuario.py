@@ -16,7 +16,7 @@ class Usuario(UserMixin, db.Model):
     apellido = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
     activo = db.Column(db.Boolean, default=True)
-    roles = db.relationship('Rol', secondary=usuario_rol)
+    roles = db.relationship('Rol', secondary=usuario_rol, lazy='subquery', backref=db.backref('usuarios', lazy=True))
     
     def tiene_permiso(user_id, permiso):
         """

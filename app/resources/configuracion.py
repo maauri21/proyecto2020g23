@@ -1,7 +1,8 @@
-from flask import render_template, flash, redirect, url_for
-from flask_login import login_required
+from flask import render_template, flash, redirect, url_for, abort
+from flask_login import login_required, current_user
 from app.forms.editarsistema import EditarConfigForm
 from app.models.configuracion import Configuracion
+from app.helpers.permisos import check_permiso
 from app import db
 
 def mantenimiento():
@@ -12,6 +13,9 @@ def editar_configuracion():
     """
     Editar configuracion
     """
+
+    if not check_permiso(current_user, 'config_index'):
+        abort(401)
     
     config = Configuracion.query.first()
     form = EditarConfigForm()

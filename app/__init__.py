@@ -2,11 +2,12 @@ from os import environ
 from flask import Flask, render_template, request, url_for, redirect
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from app.helpers import handler
 from config import config
+
 
 # ORM
 db = SQLAlchemy()
@@ -32,6 +33,8 @@ def create_app(environment="development"):
 
     # No mostrar las modificaciones de los objetos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
     # Flask-Session
@@ -53,6 +56,10 @@ def create_app(environment="development"):
     from app.resources import auth
     from app.resources import usuario
 
+    # Para ocultar en los .html dependiendo los permisos
+    from app.helpers import permisos
+    app.jinja_env.globals.update(tiene_permiso=permisos.check_permiso)
+
     @app.route('/')
     def index():
         """
@@ -72,8 +79,14 @@ def create_app(environment="development"):
     def verificar_mantenimiento():
         config = Configuracion.query.first()
         modo_mantenimiento = config.mantenimiento
+        esAdmin=False
+        # Si soy admin puedo navegar por la pag mientras hay mantenimiento
+        if current_user.is_authenticated:
+            for rol in current_user.roles:
+                if (rol.nombre == 'administrador'):
+                    esAdmin=True
         # Si estoy en modo mantenimiento y puse una url distinta a /mantenimiento
-        if modo_mantenimiento and request.path != url_for('mantenimiento'):
+        if modo_mantenimiento and request.path != url_for('mantenimiento') and not esAdmin:
             return redirect(url_for('mantenimiento'))
 
     #Handlers
