@@ -86,8 +86,9 @@ def create_app(environment="development"):
                 if (rol.nombre == 'administrador'):
                     esAdmin=True
         # Si estoy en modo mantenimiento y puse una url distinta a /mantenimiento
-        if modo_mantenimiento and request.path != url_for('mantenimiento') and not esAdmin:
-            return redirect(url_for('mantenimiento'))
+        if modo_mantenimiento and request.path != url_for('auth_login'):
+            if not esAdmin:
+                return render_template('mantenimiento.html')
 
     #Handlers
     app.register_error_handler(401, handler.unauthorized_error)
