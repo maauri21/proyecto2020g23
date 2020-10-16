@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app.forms.editarsistema import EditarConfigForm
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
-from app import db
+from app.db import db
 
 def mantenimiento():
     return render_template('mantenimiento.html')

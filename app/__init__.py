@@ -7,10 +7,10 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from app.helpers import handler
 from config import config
+from app.db import connection
 
 
-# ORM
-db = SQLAlchemy()
+
 # Para manejar login, logout, sesiones
 login_manager = LoginManager()
 
@@ -40,7 +40,7 @@ def create_app(environment="development"):
     # Flask-Session
     Session(app)
     # inicio app
-    db.init_app(app)
+    connection(app)
     login_manager.init_app(app)
     # Si no está logueado muestra este mensaje y la vista para loguearse
     login_manager.login_message = "Debes estar logueado para acceder a esta página"

@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login_manager
+from app import login_manager
+from app.db import db
 from app.models.relaciones import usuario_rol
 
 class Usuario(UserMixin, db.Model):

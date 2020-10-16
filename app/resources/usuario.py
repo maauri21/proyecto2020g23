@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app.forms.registro import RegistroForm
 from app.forms.buscarusuario import BuscarUsuarioForm
 from app.forms.editarusuario import EditarUsuarioForm
-from app import db
+from app.db import db
 from app.models.usuario import Usuario
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso

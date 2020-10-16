@@ -1,4 +1,4 @@
-from app import db
+from app.db import db
 
 usuario_rol = db.Table('usuario_rol',
     db.Column('id', db.Integer, primary_key=True, autoincrement=True),

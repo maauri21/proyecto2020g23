@@ -1,4 +1,4 @@
-from app import db
+from app.db import db
 from app.models.relaciones import rol_permiso
 
 class Rol(db.Model):
