@@ -80,8 +80,8 @@ def agregar_usuario():
                             apellido=form.apellido.data,
                             password=form.password.data)
 
-        db.session.add(usuario)
-        db.session.commit()
+        Usuario.add(usuario)
+        Usuario.commit()
         flash('Usuario agregado')
 
         # Redirección al listado dsp de agregar
@@ -101,14 +101,14 @@ def editar_usuario(id):
         abort(401)
 
     agregar_usuario = False
-    usuario = Usuario.query.get_or_404(id)
+    usuario = Usuario.buscar_usuario(id)
     form = EditarUsuarioForm()
     if form.validate_on_submit():
         usuario.email = form.email.data
         usuario.usuario = form.usuario.data
         usuario.nombre = form.nombre.data
         usuario.apellido = form.apellido.data
-        db.session.commit()
+        Usuario.commit()
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
@@ -131,9 +131,9 @@ def borrar_usuario(id):
     if not check_permiso(current_user, 'user_destroy'):
         abort(401)
 
-    usuario = Usuario.query.get_or_404(id)
-    db.session.delete(usuario)
-    db.session.commit()
+    usuario = Usuario.buscar_usuario(id)
+    usuario = Usuario.eliminar(usuario)
+    Usuario.commit()
     flash('Usuario borrado')
     # Redirección al listado dsp de borrar
     return redirect(url_for('usuario_buscar'))
@@ -147,13 +147,13 @@ def bloquear_usuario(id):
     if not check_permiso(current_user, 'user_state'):
         abort(401)
 
-    usuario = Usuario.query.get_or_404(id)
+    usuario = Usuario.buscar_usuario(id)
     for rol in usuario.roles:
         if (rol.nombre == 'administrador'):
             flash('No se puede bloquear a un administrador')
             return redirect(url_for('usuario_buscar'))
-    usuario.activo = False
-    db.session.commit()
+    Usuario.desactivar(usuario)
+    Usuario.commit()
     flash('Usuario bloqueado')
     # Redirección al listado dsp de bloquear
     return redirect(url_for('usuario_buscar'))
@@ -167,9 +167,9 @@ def activar_usuario(id):
     if not check_permiso(current_user, 'user_state'):
         abort(401)
 
-    usuario = Usuario.query.get_or_404(id)
-    usuario.activo = True
-    db.session.commit()
+    usuario = Usuario.buscar_usuario(id)
+    Usuario.activar(usuario)
+    Usuario.commit()
     flash('Usuario activado')
     # Redirección al listado dsp de activar
     return redirect(url_for('usuario_buscar'))

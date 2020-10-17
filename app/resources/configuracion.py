@@ -17,7 +17,7 @@ def editar_configuracion():
     if not check_permiso(current_user, 'config_index'):
         abort(401)
     
-    config = Configuracion.query.first()
+    config = Configuracion.buscar_config()
     form = EditarConfigForm()
     if form.validate_on_submit():
         config.titulo = form.titulo.data
@@ -25,7 +25,7 @@ def editar_configuracion():
         config.email = form.email.data
         config.cantPaginacion = form.cantPaginacion.data
         config.mantenimiento = form.mantenimiento.data
-        db.session.commit()
+        Configuracion.commit()
         flash('Configuración modificada')
 
         # Redirección al panel de configuracion

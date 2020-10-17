@@ -58,3 +58,44 @@ class Usuario(UserMixin, db.Model):
 
     def __repr__(self):
         return '<Usuario: {}>'.format(self.usuario)
+
+
+    def add(usuario):
+        """
+        Agrego al usuario en la DB
+        """
+        db.session.add(usuario)
+        
+   
+    def buscar_usuario(user_id):  
+        """
+        Busca al usuario en la DB
+        """
+        return Usuario.query.get(user_id)
+
+    def commit():  
+        """
+        Comiteo a la  DB
+        """
+        
+        return db.session.commit()
+
+    
+    def eliminar(usuario): 
+        """
+        Elimina un usuario en la DB
+        """
+        db.session.delete(usuario)
+        return db.session.commit()     
+
+    def desactivar(usuario): 
+        """
+        Cambia un usuario a desactivado
+        """
+        usuario.activo = False 
+
+    def activar(usuario): 
+        """
+        Cambia un usuario a activado
+        """
+        usuario.activo = True    
