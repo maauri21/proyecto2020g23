@@ -5,9 +5,6 @@ from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 from app.db import db
 
-def mantenimiento():
-    return render_template('mantenimiento.html')
-
 @login_required
 def editar_configuracion():
     """

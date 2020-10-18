@@ -85,7 +85,7 @@ def create_app(environment="development"):
             for rol in current_user.roles:
                 if (rol.nombre == 'administrador'):
                     esAdmin=True
-        # Si estoy en modo mantenimiento y puse una url distinta a /mantenimiento
+        # Si estoy en modo mantenimiento y puse una url distinta a /login
         if modo_mantenimiento and request.path != url_for('auth_login'):
             if not esAdmin:
                 return render_template('mantenimiento.html')
@@ -93,9 +93,6 @@ def create_app(environment="development"):
     #Handlers
     app.register_error_handler(401, handler.unauthorized_error)
     app.register_error_handler(404, handler.not_found_error)
-
-    # Mantenimiento
-    app.add_url_rule("/mantenimiento/", "mantenimiento", configuracion.mantenimiento)
 
     # Login
     app.add_url_rule("/login/", "auth_login", auth.login, methods=['GET', 'POST'])
