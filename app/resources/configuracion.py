@@ -1,19 +1,20 @@
-from flask import render_template, flash, redirect, url_for
-from flask_login import login_required
+from flask import render_template, flash, redirect, url_for, abort
+from flask_login import login_required, current_user
 from app.forms.editarsistema import EditarConfigForm
 from app.models.configuracion import Configuracion
-from app import db
-
-def mantenimiento():
-    return render_template('mantenimiento.html')
+from app.helpers.permisos import check_permiso
+from app.db import db
 
 @login_required
 def editar_configuracion():
     """
     Editar configuracion
     """
+
+    if not check_permiso(current_user, 'config_index'):
+        abort(401)
     
-    config = Configuracion.query.first()
+    config = Configuracion.buscar_config()
     form = EditarConfigForm()
     if form.validate_on_submit():
         config.titulo = form.titulo.data
@@ -21,7 +22,7 @@ def editar_configuracion():
         config.email = form.email.data
         config.cantPaginacion = form.cantPaginacion.data
         config.mantenimiento = form.mantenimiento.data
-        db.session.commit()
+        Configuracion.commit()
         flash('Configuración modificada')
 
         # Redirección al panel de configuracion

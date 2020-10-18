@@ -1,6 +1,8 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login_manager
+from app import login_manager
+from app.db import db
+from app.models.relaciones import usuario_rol
 
 class Usuario(UserMixin, db.Model):
     """
@@ -15,6 +17,17 @@ class Usuario(UserMixin, db.Model):
     apellido = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
     activo = db.Column(db.Boolean, default=True)
+    roles = db.relationship('Rol', secondary=usuario_rol, lazy='subquery', backref=db.backref('usuarios', lazy=True))
+    
+    def tiene_permiso(user_id, permiso):
+        """
+        Busca si el usuario tiene el permiso y retorna True o False
+        """
+        # Agarro los roles del usuario y tengo los permisos de esos roles
+        for rol in user_id.roles:
+            for permi in rol.permisos:
+                if (permi.nombre == permiso):
+                    return True
 
     @property
     def password(self):
@@ -45,3 +58,44 @@ class Usuario(UserMixin, db.Model):
 
     def __repr__(self):
         return '<Usuario: {}>'.format(self.usuario)
+
+
+    def add(usuario):
+        """
+        Agrego al usuario en la DB
+        """
+        db.session.add(usuario)
+        
+   
+    def buscar_usuario(user_id):  
+        """
+        Busca al usuario en la DB
+        """
+        return Usuario.query.get(user_id)
+
+    def commit():  
+        """
+        Comiteo a la  DB
+        """
+        
+        return db.session.commit()
+
+    
+    def eliminar(usuario): 
+        """
+        Elimina un usuario en la DB
+        """
+        db.session.delete(usuario)
+        return db.session.commit()     
+
+    def desactivar(usuario): 
+        """
+        Cambia un usuario a desactivado
+        """
+        usuario.activo = False 
+
+    def activar(usuario): 
+        """
+        Cambia un usuario a activado
+        """
+        usuario.activo = True    

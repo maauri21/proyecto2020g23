@@ -25,7 +25,8 @@ def login():
             flash('Email o contraseña incorrecto')
 
     # Cargar login
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html',
+                            form=form)
 
 # Debo estar logueado para poder hacer logout
 @login_required

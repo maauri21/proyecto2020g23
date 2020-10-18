@@ -1,4 +1,4 @@
-from app import db
+from app.db import db
 
 class Configuracion(db.Model):
     """
@@ -14,3 +14,15 @@ class Configuracion(db.Model):
 
     def __repr__(self):
         return '<Configuracion: {}>'.format(self.titulo)
+
+    def buscar_config():  
+        """
+        Busca la configuracion en la DB
+        """
+        return Configuracion.query.first()
+
+    def commit():  
+       """
+        Comiteo a la DB
+        """
+       return db.session.commit()        
