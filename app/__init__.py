@@ -11,13 +11,14 @@ from app.db import connection
 
 
 
-# Para manejar login, logout, sesiones
+# Para manejar login, logout, sesiones. LoginManager se utiliza para guardar la configuración utilizada para la sesión
 login_manager = LoginManager()
 
 def create_app(environment="development"):
     """
     Cargar configuraciones
     """
+    # Levanta la aplicación Flask. __name__ sirve para obtener el nombre de importación donde se define la app y Flask lo usa para saber donde buscar los resources, templates, static, etc.
     app = Flask(__name__)
     env = environ.get("FLASK_ENV", environment)
     app.config.from_object(config[env])
@@ -99,7 +100,6 @@ def create_app(environment="development"):
     app.add_url_rule("/logout/", "auth_logout", auth.logout)
 
     # Usuarios
-    app.add_url_rule("/registro/", "usuario_registro", usuario.register, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/", "usuario_buscar", usuario.buscar_usuarios, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/agregar/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/editar/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])

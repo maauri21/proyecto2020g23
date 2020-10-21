@@ -9,31 +9,6 @@ from app.models.usuario import Usuario
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 
-def register():
-    """
-    Agregar usuario a la BD a través del registro
-    """
-    # creo un modelo de empleado
-    form = RegistroForm()
-    if form.validate_on_submit():
-        usuario = Usuario(email=form.email.data,
-                            usuario=form.usuario.data,
-                            nombre=form.nombre.data,
-                            apellido=form.apellido.data,
-                            password=form.password.data)
-
-        # Lo guardo en BD
-        db.session.add(usuario)
-        db.session.commit()
-        flash('Registro completado, completa el formulario para iniciar sesión')
-
-        # Redirecciono a la página de login
-        return redirect(url_for('auth_login'))
-
-    # Cargar registro
-    return render_template('auth/register.html',
-                            form=form)
-
 @login_required
 def buscar_usuarios():
     """
@@ -49,6 +24,7 @@ def buscar_usuarios():
     buscar = form.data['search']
     # Para volver a la misma pag dsp de cualquier acción
     # Si no recibo, setea 1
+    # request.args=La parte de la URL después del signo de interrogación
     pag = int(request.args.get('num_pag', 1))
     # Activos + string de busqueda. Error out para que no me tire error cuando pongo un num de pag que no existe
     if form.data['select'] == 'Activo':

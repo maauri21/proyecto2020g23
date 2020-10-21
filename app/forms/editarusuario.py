@@ -8,7 +8,7 @@ from flask import session
 # DataRequired es un validador de flaskwtf
 class EditarUsuarioForm(FlaskForm):
     """
-    Formulario de registro
+    Formulario de editar usuario
     """
     email = StringField('Email', validators=[DataRequired(), Email(message="Email incorrecto"), Length(max=40, message='Máximo 40 caracteres')])
     usuario = StringField('Usuario', validators=[DataRequired(), Length(max=15, message='Máximo 15 caracteres')])

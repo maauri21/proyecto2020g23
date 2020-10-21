@@ -52,7 +52,7 @@ class Usuario(UserMixin, db.Model):
     @login_manager.user_loader
     def load_user(user_id):
         """
-        Usado por flask login para manejar al usuario logueado
+        Usado por flask login para manejar al usuario logueado. Es un callback que toma el id del usuario en sesión y devuelve el objeto Usuario
         """
         return Usuario.query.get(int(user_id))
 
