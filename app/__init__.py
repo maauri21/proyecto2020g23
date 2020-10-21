@@ -8,8 +8,7 @@ from flask_bootstrap import Bootstrap
 from app.helpers import handler
 from config import config
 from app.db import connection
-
-
+from app.db import db
 
 # Para manejar login, logout, sesiones. LoginManager se utiliza para guardar la configuración utilizada para la sesión
 login_manager = LoginManager()
@@ -50,12 +49,13 @@ def create_app(environment="development"):
     migrate = Migrate(app, db)
 
     # orden para las migraciones
-    from app.models import configuracion, rol, usuario, permiso, relaciones
+    from app.models import configuracion, rol, usuario, permiso, relaciones, centro
 
     from app.models.configuracion import Configuracion
     from app.resources import configuracion
     from app.resources import auth
     from app.resources import usuario
+    from app.resources import centro
 
     # Para ocultar en los .html dependiendo los permisos
     from app.helpers import permisos
@@ -100,12 +100,15 @@ def create_app(environment="development"):
     app.add_url_rule("/logout/", "auth_logout", auth.logout)
 
     # Usuarios
-    app.add_url_rule("/usuarios/", "usuario_buscar", usuario.buscar_usuarios, methods=['GET', 'POST'])
+    app.add_url_rule("/usuarios/", "buscar_usuario", usuario.buscar_usuarios, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/agregar/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/editar/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/borrar/<int:id>", "borrar_usuario", usuario.borrar_usuario)
     app.add_url_rule("/usuarios/bloquear/<int:id>", "bloquear_usuario", usuario.bloquear_usuario)
     app.add_url_rule("/usuarios/activar/<int:id>", "activar_usuario", usuario.activar_usuario)
     app.add_url_rule("/panelconfig/", "panel_config", configuracion.editar_configuracion, methods=['GET', 'POST'])
+
+    # Centros
+    app.add_url_rule("/centros/", "buscar_centros", centro.buscar_centros, methods=['GET', 'POST'])
 
     return app

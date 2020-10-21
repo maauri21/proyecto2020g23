@@ -61,7 +61,7 @@ def agregar_usuario():
         flash('Usuario agregado')
 
         # Redirección al listado dsp de agregar
-        return redirect(url_for('usuario_buscar'))
+        return redirect(url_for('buscar_usuario'))
 
     return render_template('usuarios/usuario.html',
                            agregar_usuario=agregar_usuario,
@@ -88,7 +88,7 @@ def editar_usuario(id):
         flash('Usuario modificado')
 
         # Redirección al listado dsp de editar
-        return redirect(url_for('usuario_buscar'))
+        return redirect(url_for('buscar_usuario'))
 
     session['idEditar'] = id
     form.email.data = usuario.email
@@ -112,7 +112,7 @@ def borrar_usuario(id):
     Usuario.commit()
     flash('Usuario borrado')
     # Redirección al listado dsp de borrar
-    return redirect(url_for('usuario_buscar'))
+    return redirect(url_for('buscar_usuario'))
 
 @login_required
 def bloquear_usuario(id):
@@ -127,12 +127,12 @@ def bloquear_usuario(id):
     for rol in usuario.roles:
         if (rol.nombre == 'administrador'):
             flash('No se puede bloquear a un administrador')
-            return redirect(url_for('usuario_buscar'))
+            return redirect(url_for('buscar_usuario'))
     Usuario.desactivar(usuario)
     Usuario.commit()
     flash('Usuario bloqueado')
     # Redirección al listado dsp de bloquear
-    return redirect(url_for('usuario_buscar'))
+    return redirect(url_for('buscar_usuario'))
 
 @login_required
 def activar_usuario(id):
@@ -148,4 +148,4 @@ def activar_usuario(id):
     Usuario.commit()
     flash('Usuario activado')
     # Redirección al listado dsp de activar
-    return redirect(url_for('usuario_buscar'))
+    return redirect(url_for('buscar_usuario'))

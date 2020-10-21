@@ -42,7 +42,10 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ url_for('panel_config') }}">Panel Config</a></li>
                             {% endif %}
                             {% if tiene_permiso(current_user, 'user_index') %}
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('usuario_buscar') }}">Usuarios</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('buscar_usuario') }}">Usuarios</a></li>
+                            {% endif %}
+                            {% if tiene_permiso(current_user, 'centro_index') %}
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('buscar_centros') }}">Centros</a></li>
                             {% endif %}
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ current_user.usuario }}</a>
