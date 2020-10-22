@@ -1,0 +1,33 @@
+{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}
+    {% if agregar_centro %}
+        Agregar centro
+    {% else %}
+        Editar centro
+    {% endif %}
+{% endblock %}
+
+{% block tamañoPanel %}col-md-8{% endblock %}
+
+{% block nombre %}
+  {% if agregar_centro %}
+    Agregar centro
+  {% else %}
+    Editar centro
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+            {{ render_form(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

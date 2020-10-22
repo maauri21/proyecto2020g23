@@ -110,5 +110,6 @@ def create_app(environment="development"):
 
     # Centros
     app.add_url_rule("/centros/", "buscar_centros", centro.buscar_centros, methods=['GET', 'POST'])
+    app.add_url_rule("/centros/agregar/", "agregar_centro", centro.agregar_centro, methods=['GET', 'POST'])
 
     return app

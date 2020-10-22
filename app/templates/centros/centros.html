@@ -25,8 +25,8 @@
                     <td style="width:20%;">Nombre</td>
                     <td style="width:20%;">Dirección</td>
                     <td style="width:15%;">Teléfono</td>
-                    <td style="width:15%;">Apertura</td>
-                    <td style="width:15%;">Cierre</td>
+                    <td style="width:5%;">Apertura</td>
+                    <td style="width:5%;">Cierre</td>
                     <td style="width:15%;">Tipo</td>
                     <td style="width:25%;">Acciones</td>
                   </tr>
@@ -69,7 +69,7 @@
             </div>
           </div>
           {% if tiene_permiso(current_user, 'centro_new') %}
-            <a href="#" class="btn btn-primary">Agregar centro</a>
+            <a href="{{ url_for('agregar_centro') }}" class="btn btn-primary">Agregar centro</a>
           {% endif %}
 
 {% endblock %}

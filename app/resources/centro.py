@@ -20,16 +20,48 @@ def buscar_centros():
     config = Configuracion.query.first()
     form = BuscarCentroForm(formdata=request.args)
     buscar = form.data['search']
+    estado = form.data['select']
     pag = int(request.args.get('num_pag', 1))
 
-    if form.data['select'] == 'Pendiente':
-        centros = Centro.query.filter_by(Centro.estado.contains('pendiente')).filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
-    elif form.data['select'] == 'Aceptado':
-        centros = Centro.query.filter_by(Centro.estado.contains('aceptado')).filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
-    elif form.data['select'] == 'Rechazado':
-        centros = Centro.query.filter_by(Centro.estado.contains('rechazado')).filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
+    if form.data['select'] != 'Todos':
+        centros = Centro.query.filter(Centro.estado.contains(estado)).filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
     else:
         centros = Centro.query.filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
     return render_template('centros/centros.html',
                             form=form,
                             centros=centros)
+
+@login_required
+def agregar_centro():
+    """
+    Agregar centro
+    """
+    agregar_centro = True
+
+    if not check_permiso(current_user, 'centro_new'):
+        abort(401)
+
+    form = CentroForm()
+    if form.validate_on_submit():
+        centro = Centro(nombre=form.nombre.data,
+                            direccion=form.direccion.data,
+                            telefono=form.telefono.data,
+                            apertura=form.apertura.data,
+                            cierre=form.cierre.data,
+                            tipo=form.tipo.data,
+                            municipio=form.municipio.data,
+                            web=form.web.data,
+                            email=form.email.data,
+                            coordenadas=form.coordenadas.data,
+                            estado='Aceptado')
+
+        Centro.agregar(centro)
+        Centro.commit()
+        flash('Centro agregado')
+
+        # Redirección al listado dsp de agregar
+        return redirect(url_for('buscar_centros'))
+
+    return render_template('centros/centro.html',
+                           agregar_centro=agregar_centro,
+                           form=form)
