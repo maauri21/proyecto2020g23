@@ -8,6 +8,10 @@ from app.models.centro import Centro
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 
+from werkzeug.utils import secure_filename
+import os
+from flask import current_app as app
+
 @login_required
 def buscar_centros():
     """
@@ -43,6 +47,13 @@ def agregar_centro():
 
     form = CentroForm()
     if form.validate_on_submit():
+        file = form.protocolo.data
+        filename = secure_filename(file.filename)
+        nombreArchivo = None
+        if file:
+            # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
+            nombreArchivo = form.nombre.data+'_'+filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], nombreArchivo))
         centro = Centro(nombre=form.nombre.data,
                             direccion=form.direccion.data,
                             telefono=form.telefono.data,
@@ -52,8 +63,9 @@ def agregar_centro():
                             municipio=form.municipio.data,
                             web=form.web.data,
                             email=form.email.data,
-                            coordenadas=form.coordenadas.data,
-                            estado='Aceptado')
+                            estado='Aceptado',
+                            protocolo = nombreArchivo,
+                            coordenadas=form.coordenadas.data)
 
         Centro.agregar(centro)
         Centro.commit()

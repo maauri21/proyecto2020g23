@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TimeField, ValidationError
+from wtforms import StringField, SubmitField, TimeField, FileField, ValidationError
 from wtforms.validators import DataRequired, Email, Length, Regexp
 from app.models.centro import Centro
+from flask_wtf.file import FileAllowed
 
 # DataRequired es un validador de flaskwtf
 class CentroForm(FlaskForm):
@@ -17,6 +18,7 @@ class CentroForm(FlaskForm):
     municipio = StringField('Municipio', validators=[DataRequired(), Length(max=30, message='Máximo 30 caracteres')])
     web = StringField('Web', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])
     email = StringField('Email', validators=[DataRequired(), Email(message="Email incorrecto"), Length(max=40, message='Máximo 40 caracteres')])
+    protocolo = FileField('Protocolo', validators=[FileAllowed(['pdf'], 'Solo .pdf')])
     coordenadas = StringField('Coordenadas', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])
     submit = SubmitField('Aceptar')
 

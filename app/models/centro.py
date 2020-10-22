@@ -16,8 +16,9 @@ class Centro(db.Model):
     municipio = db.Column(db.String(30))
     web = db.Column(db.String(40))
     email = db.Column(db.String(40), index=True, unique=True)
-    coordenadas = db.Column(db.String(40))
     estado = db.Column(db.String(10))
+    protocolo = db.Column(db.String(40))
+    coordenadas = db.Column(db.String(40))
 
     def __repr__(self):
         return '<Centro: {}>'.format(self.nombre)

@@ -34,6 +34,9 @@ def create_app(environment="development"):
     # No mostrar las modificaciones de los objetos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Donde meto los pdf
+    app.config['UPLOAD_FOLDER'] = 'app/static/pdf'
+
 
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
