@@ -1,10 +1,10 @@
-from flask import flash, redirect, render_template, url_for, session, request, abort
+from flask import flash, redirect, render_template, url_for, session, request, abort, jsonify
 from flask_login import login_required, current_user
 
 from app.forms.centro import CentroForm
 from app.forms.buscarcentro import BuscarCentroForm
 from app.db import db
-from app.models.centro import Centro
+from app.models.centro import Centro, centro_schema, centros_schema
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 
@@ -77,3 +77,39 @@ def agregar_centro():
     return render_template('centros/centro.html',
                            agregar_centro=agregar_centro,
                            form=form)
+
+
+@login_required
+def devolver_centro(id):
+    """
+    Listar centro en particular via Api
+    """ 
+    if not check_permiso(current_user, 'centro_index'):
+        abort(401)
+    
+    centro = Centro.buscar_centro(id)
+    if centro is None:
+     return jsonify({'message':'401 Not Found'}),401 
+    return centro_schema.jsonify(centro), 200
+
+@login_required
+def buscar_centros_api():
+    """
+    Listar centros via Api
+    """
+    if not check_permiso(current_user, 'centro_index'):
+        abort(401)
+    centros = Centro.devolvertodos()
+    resultado = centros_schema.dump(centros) # con el dump, agarro todos los centros, y uso la variable centros_schema porque me voy a traer varios
+    if centros is None:
+     return ' 500 Internal server Error', 500
+    return jsonify(resultado), 200            # convierte el resultado de string a formato json    
+
+
+def agregar_centro_api():
+    """
+    agregar centros via Api
+    """
+    form = CentroForm
+    data = request.get_json
+    
