@@ -1,0 +1,26 @@
+{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}Validar centro{% endblock %}
+
+{% block tamañoPanel %}col-md-8{% endblock %}
+
+{% block nombre %}Validar centro{% endblock %}
+
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+          <form method="post">
+              {% if centro.protocolo %}
+                <a class="h4" href="{{ url_for('static', filename='pdf/'+pdf) }}">Protocolo</a><div class="mb-3"></div>
+              {% endif %}
+              {{ render_form(form) }}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

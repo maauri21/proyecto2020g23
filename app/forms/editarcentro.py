@@ -7,7 +7,7 @@ from flask import session
 # DataRequired es un validador de flaskwtf
 class EditarCentroForm(FlaskForm):
     """
-    Formulario de agregar/editar centro
+    Formulario de editar centro
     """
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])
     direccion = StringField('Dirección', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])

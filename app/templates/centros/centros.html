@@ -41,7 +41,12 @@
                     <td> {{ centro.cierre }} </td>
                     <td> {{ centro.tipo }} </td>
                     
-                    <td> 
+                    <td>
+                      {% if centro.estado == 'Pendiente' %}
+                        {% if tiene_permiso(current_user, 'centro_validate') %}
+                          <a href="{{ url_for('validar_centro', id=centro.id) }}" class="btn btn-dark btn-sm">Validar</a>
+                        {% endif %}
+                      {% endif %}
                       {% if tiene_permiso(current_user, 'centro_update') %}
                         <a href="{{ url_for('editar_centro', id=centro.id) }}" class="btn btn-warning btn-sm">Editar</a>
                       {% endif %}
