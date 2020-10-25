@@ -9,9 +9,13 @@ from app.helpers import handler
 from config import config
 from app.db import connection
 from app.db import db
+from flask_marshmallow import Marshmallow
 
 # Para manejar login, logout, sesiones. LoginManager se utiliza para guardar la configuración utilizada para la sesión
 login_manager = LoginManager()
+
+# Para API
+ma = Marshmallow()
 
 def create_app(environment="development"):
     """
@@ -114,7 +118,9 @@ def create_app(environment="development"):
     # Centros
     app.add_url_rule("/centros/", "buscar_centros", centro.buscar_centros, methods=['GET', 'POST'])
     app.add_url_rule("/centros/agregar/", "agregar_centro", centro.agregar_centro, methods=['GET', 'POST'])
-    app.add_url_rule("/centros/<int:id>", "devolver_centro_api", centro.devolver_centro, methods=['GET'])
-    app.add_url_rule("/centrosall", "buscar_centros_api", centro.buscar_centros_api, methods=['GET'])  #ver tema de la ruta para que no choque con la primera, por eso esta renombrada
+    app.add_url_rule("/centros/editar/<int:id>", "editar_centro", centro.editar_centro, methods=['GET', 'POST'])
+    app.add_url_rule("/centros/borrar/<int:id>", "borrar_centro", centro.borrar_centro)
+    app.add_url_rule("/centros/<int:id>", "devolver_centro_api", centro.devolver_centro_api, methods=['GET'])
+    app.add_url_rule("/centrosall", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])  #ver tema de la ruta para que no choque con la primera, por eso esta renombrada
     app.add_url_rule("/centros", "agregar_centro_ap", centro.agregar_centro_api, methods=['POST'])
     return app

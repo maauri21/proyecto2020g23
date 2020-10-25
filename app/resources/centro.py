@@ -2,6 +2,7 @@ from flask import flash, redirect, render_template, url_for, session, request, a
 from flask_login import login_required, current_user
 
 from app.forms.centro import CentroForm
+from app.forms.editarcentro import EditarCentroForm
 from app.forms.buscarcentro import BuscarCentroForm
 from app.db import db
 from app.models.centro import Centro, centro_schema, centros_schema
@@ -80,20 +81,79 @@ def agregar_centro():
 
 
 @login_required
-def devolver_centro(id):
+def editar_centro(id):
+    """
+    Editar centro
+    """
+
+    if not check_permiso(current_user, 'centro_update'):
+        abort(401)
+
+    agregar_centro = False
+    centro = Centro.buscar(id)
+    form = EditarCentroForm()
+    if form.validate_on_submit():
+        centro.nombre = form.nombre.data
+        centro.direccion = form.direccion.data
+        centro.telefono = form.telefono.data
+        centro.apertura = form.apertura.data
+        centro.cierre = form.cierre.data
+        centro.tipo = form.tipo.data
+        centro.municipio = form.municipio.data
+        centro.web = form.web.data
+        centro.email = form.email.data
+        centro.coordenadas = form.coordenadas.data
+        Centro.commit()
+        flash('Centro modificado')
+
+        # Redirección al listado dsp de editar
+        return redirect(url_for('buscar_centros'))
+
+    session['idCentro'] = id
+    form.nombre.data = centro.nombre
+    form.direccion.data = centro.direccion
+    form.telefono.data = centro.telefono
+    form.apertura.data = centro.apertura
+    form.cierre.data = centro.cierre
+    form.tipo.data = centro.tipo
+    form.municipio.data = centro.municipio
+    form.web.data = centro.web
+    form.email.data = centro.email
+    form.coordenadas.data = centro.coordenadas
+    return render_template('centros/centro.html',
+                           agregar_centro=agregar_centro, form=form)
+
+@login_required
+def borrar_centro(id):
+    """
+    Borrar centro
+    """
+
+    if not check_permiso(current_user, 'centro_destroy'):
+        abort(401)
+
+    centro = Centro.buscar(id)
+    Centro.eliminar(centro)
+    Centro.commit()
+    flash('Centro borrado')
+    # Redirección al listado dsp de borrar
+    return redirect(url_for('buscar_centros'))
+
+@login_required
+def devolver_centro_api(id):
     """
     Listar centro en particular via Api
     """ 
     if not check_permiso(current_user, 'centro_index'):
         abort(401)
     
-    centro = Centro.buscar_centro(id)
+    centro = Centro.buscar(id)
     if centro is None:
      return jsonify({'message':'401 Not Found'}),401 
     return centro_schema.jsonify(centro), 200
 
 @login_required
-def buscar_centros_api():
+def devolver_centros_api():
     """
     Listar centros via Api
     """

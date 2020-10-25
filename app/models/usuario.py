@@ -67,7 +67,7 @@ class Usuario(UserMixin, db.Model):
         db.session.add(usuario)
         
    
-    def buscar_usuario(user_id):  
+    def buscar(user_id):  
         """
         Busca al usuario en la DB
         """
@@ -85,8 +85,7 @@ class Usuario(UserMixin, db.Model):
         """
         Elimina un usuario en la DB
         """
-        db.session.delete(usuario)
-        return db.session.commit()     
+        return db.session.delete(usuario)
 
     def desactivar(usuario): 
         """

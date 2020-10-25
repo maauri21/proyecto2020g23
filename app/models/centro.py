@@ -1,5 +1,5 @@
 from app.db import db
-from flask_marshmallow import Marshmallow
+from app import ma
 
 class Centro(db.Model):
     """
@@ -36,7 +36,7 @@ class Centro(db.Model):
         """
         return db.session.commit()
 
-    def buscar_centro(id):  
+    def buscar(id):  
         """
         Busca la configuracion en la DB
         """
@@ -46,15 +46,18 @@ class Centro(db.Model):
         """
         Devuelve todos los centros de la db
         """
-        return Centro.query.all()       
+        return Centro.query.all()   
 
-ma = Marshmallow()
+    def eliminar(centro): 
+        """
+        Elimina un centro en la DB
+        """
+        return db.session.delete(centro)
 
 # creo el schema con el cual voy a devolver los campos cuando se acceda a la info via api
 class CentroSchema(ma.Schema):
-        class Meta:
-            fields = ('id', 'nombre', 'direccion', 'telefono', 'apertura', 'cierre', 'tipo', 'municipio', 'web', 'email', 'coordenadas', 'estado')    
-
+    class Meta:
+        fields = ('id', 'nombre', 'direccion', 'telefono', 'apertura', 'cierre', 'tipo', 'municipio', 'web', 'email', 'coordenadas', 'estado')    
 
 # creo 2 variables, una para devolver un centro y otra en caso de que quiera devolver varios    
 centro_schema = CentroSchema()

@@ -77,7 +77,7 @@ def editar_usuario(id):
         abort(401)
 
     agregar_usuario = False
-    usuario = Usuario.buscar_usuario(id)
+    usuario = Usuario.buscar(id)
     form = EditarUsuarioForm()
     if form.validate_on_submit():
         usuario.email = form.email.data
@@ -107,8 +107,8 @@ def borrar_usuario(id):
     if not check_permiso(current_user, 'user_destroy'):
         abort(401)
 
-    usuario = Usuario.buscar_usuario(id)
-    usuario = Usuario.eliminar(usuario)
+    usuario = Usuario.buscar(id)
+    Usuario.eliminar(usuario)
     Usuario.commit()
     flash('Usuario borrado')
     # Redirección al listado dsp de borrar
@@ -123,7 +123,7 @@ def bloquear_usuario(id):
     if not check_permiso(current_user, 'user_state'):
         abort(401)
 
-    usuario = Usuario.buscar_usuario(id)
+    usuario = Usuario.buscar(id)
     for rol in usuario.roles:
         if (rol.nombre == 'administrador'):
             flash('No se puede bloquear a un administrador')
@@ -143,7 +143,7 @@ def activar_usuario(id):
     if not check_permiso(current_user, 'user_state'):
         abort(401)
 
-    usuario = Usuario.buscar_usuario(id)
+    usuario = Usuario.buscar(id)
     Usuario.activar(usuario)
     Usuario.commit()
     flash('Usuario activado')
