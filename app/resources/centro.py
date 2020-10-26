@@ -216,31 +216,30 @@ def validar_centro(id):
     return render_template('centros/validar_centro.html',
                         form=form,pdf=pdf,centro=centro)
 
-@login_required
+
 def devolver_centro_api(id):
     """
     Listar centro en particular via Api
     """ 
-    if not check_permiso(current_user, 'centro_index'):
-        abort(401)
-    
+        
     centro = Centro.buscar(id)
     if centro is None:
-     return jsonify({'message':'401 Not Found'}),401 
+     return [],404 
     return centro_schema.jsonify(centro), 200
 
-@login_required
+
 def devolver_centros_api():
     """
     Listar centros via Api
     """
-    if not check_permiso(current_user, 'centro_index'):
-        abort(401)
-    centros = Centro.devolvertodos()
-    resultado = centros_schema.dump(centros) # con el dump, agarro todos los centros, y uso la variable centros_schema porque me voy a traer varios
+    
+    page = int(request.args.get('num_pag', 1))
+    config = Configuracion.query.first()
+    centros = Centro.query.paginate(per_page=config.cantPaginacion, page=page, error_out=False)
+    resultado = centros_schema.dump(centros.items) # con el dump, agarro todos los centros, y uso la variable centros_schema porque me voy a traer varios
     if centros is None:
-     return ' 500 Internal server Error', 500
-    return jsonify(resultado), 200            # convierte el resultado de string a formato json    
+     return [], 500
+    return jsonify(resultado), 200            # convierte el resultado de string a formato json 
 
 
 def agregar_centro_api():

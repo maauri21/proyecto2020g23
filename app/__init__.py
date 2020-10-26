@@ -124,6 +124,6 @@ def create_app(environment="development"):
     app.add_url_rule("/centros/borrar/<int:id>", "borrar_centro", centro.borrar_centro)
     app.add_url_rule("/centros/validar/<int:id>", "validar_centro", centro.validar_centro, methods=['GET', 'POST'])
     app.add_url_rule("/centros/<int:id>", "devolver_centro_api", centro.devolver_centro_api, methods=['GET'])
-    app.add_url_rule("/centrosall", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])  #ver tema de la ruta para que no choque con la primera, por eso esta renombrada
+    app.add_url_rule("/centrosall/", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])  #ver tema de la ruta para que no choque con la primera, por eso esta renombrada 
     app.add_url_rule("/centros", "agregar_centro_ap", centro.agregar_centro_api, methods=['POST'])
     return app

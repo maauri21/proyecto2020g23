@@ -20,6 +20,7 @@ class TipoCentro(db.Model):
 class TipoCentroSchema(ma.Schema):
     
     nombre = fields.String()
+    
              
 
 tipocentro_schema = TipoCentroSchema()
