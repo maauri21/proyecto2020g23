@@ -225,6 +225,9 @@ def devolver_centros_api():
     config = Configuracion.query.first()
     centros = Centro.query.paginate(per_page=config.cantPaginacion, page=page, error_out=False)
 
+    cant_centros = Centro.query.count()
+    total = cant_centros/config.cantPaginacion
+
     resultado = [ centro.json() for centro in centros.items ] 
 
-    return jsonify({'centros': resultado } , {'total': 0 }, {'pagina': 0 })
+    return jsonify({'centros': resultado } , {'total': round(total) }, {'pagina': page })
