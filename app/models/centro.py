@@ -56,5 +56,6 @@ class Centro(db.Model):
     def json(self):
         return {
             'nombre': self.nombre,
-            'direccion': self.direccion
+            'direccion': self.direccion,
+            'tipo': self.tipo.nombre
         }
