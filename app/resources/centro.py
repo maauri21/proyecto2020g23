@@ -38,6 +38,46 @@ def buscar_centros():
                             form=form,
                             centros=centros)
 
+
+def registrar_centro():
+    """
+    Registrar centro
+    """
+    agregar_centro = True
+
+    form = CentroForm()
+    if form.validate_on_submit():
+        tipo = form.tipo.data
+        file = form.protocolo.data
+        filename = secure_filename(file.filename)
+        nombreArchivo = None
+        if file:
+            # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
+            nombreArchivo = form.nombre.data+'_'+filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], nombreArchivo))
+        centro = Centro(nombre=form.nombre.data,
+                            direccion=form.direccion.data,
+                            telefono=form.telefono.data,
+                            apertura=form.apertura.data,
+                            cierre=form.cierre.data,
+                            municipio=form.municipio.data,
+                            web=form.web.data,
+                            email=form.email.data,
+                            estado='Pendiente',
+                            protocolo = nombreArchivo,
+                            coordenadas=form.coordenadas.data)
+        tipo.centros.append(centro)
+        Centro.agregar(centro)
+        Centro.commit()
+        flash('Centro agregado, pendiente de aprobación')
+
+        # Redirección al listado dsp de agregar
+        return redirect(url_for('index'))
+
+    return render_template('centros/centro.html',
+                            agregar_centro=agregar_centro,
+                            form=form)
+
 @login_required
 def agregar_centro():
     """
