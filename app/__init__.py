@@ -9,13 +9,9 @@ from app.helpers import handler
 from config import config
 from app.db import connection
 from app.db import db
-from flask_marshmallow import Marshmallow
 
 # Para manejar login, logout, sesiones. LoginManager se utiliza para guardar la configuración utilizada para la sesión
 login_manager = LoginManager()
-
-# Para API
-ma = Marshmallow()
 
 def create_app(environment="development"):
     """
@@ -41,8 +37,6 @@ def create_app(environment="development"):
     # Donde meto los pdf
     app.config['UPLOAD_FOLDER'] = 'app/static/pdf'
 
-    # Para que la API se duvuelva en el orden que quiero
-    app.config['JSON_SORT_KEYS'] = False
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
     # Flask-Session
@@ -123,7 +117,6 @@ def create_app(environment="development"):
     app.add_url_rule("/centros/editar/<int:id>", "editar_centro", centro.editar_centro, methods=['GET', 'POST'])
     app.add_url_rule("/centros/borrar/<int:id>", "borrar_centro", centro.borrar_centro)
     app.add_url_rule("/centros/validar/<int:id>", "validar_centro", centro.validar_centro, methods=['GET', 'POST'])
-    app.add_url_rule("/centros/<int:id>", "devolver_centro_api", centro.devolver_centro_api, methods=['GET'])
-    app.add_url_rule("/centrosall/", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])  #ver tema de la ruta para que no choque con la primera, por eso esta renombrada 
-    app.add_url_rule("/centros", "agregar_centro_ap", centro.agregar_centro_api, methods=['POST'])
+    app.add_url_rule("/api/v1/centros", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])
+
     return app

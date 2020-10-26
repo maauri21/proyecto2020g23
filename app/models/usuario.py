@@ -98,3 +98,9 @@ class Usuario(UserMixin, db.Model):
         Cambia un usuario a activado
         """
         usuario.activo = True    
+
+    def buscar_email(mail): 
+        """
+        Busco si el mail ya está en la BD
+        """
+        return Usuario.query.filter_by(email=mail).first()

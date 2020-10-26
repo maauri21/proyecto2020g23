@@ -18,7 +18,7 @@ class RegistroForm(FlaskForm):
 
     # Validar que el mail no esté usado
     def validate_email(self, field):
-        if Usuario.query.filter_by(email=field.data).first():
+        if Usuario.buscar_email(field.data):
             raise ValidationError('Este email ya se encuentra en uso')
 
     # Validar que el usuario no esté usado

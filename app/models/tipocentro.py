@@ -1,6 +1,5 @@
 from app.db import db
-from app import ma
-from marshmallow import fields
+
 class TipoCentro(db.Model):
     """
     Crear una tabla con los tipos de centro
@@ -16,11 +15,3 @@ class TipoCentro(db.Model):
 
     def mostrar():      
         return TipoCentro.query.all()
-
-class TipoCentroSchema(ma.Schema):
-    
-    nombre = fields.String()
-    
-             
-
-tipocentro_schema = TipoCentroSchema()

@@ -6,7 +6,7 @@ from app.forms.editarcentro import EditarCentroForm
 from app.forms.validar_centro import ValidarCentroForm
 from app.forms.buscarcentro import BuscarCentroForm
 from app.db import db
-from app.models.centro import Centro, centro_schema, centros_schema
+from app.models.centro import Centro
 from app.models.tipocentro import TipoCentro
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
@@ -216,18 +216,6 @@ def validar_centro(id):
     return render_template('centros/validar_centro.html',
                         form=form,pdf=pdf,centro=centro)
 
-
-def devolver_centro_api(id):
-    """
-    Listar centro en particular via Api
-    """ 
-        
-    centro = Centro.buscar(id)
-    if centro is None:
-     return [],404 
-    return centro_schema.jsonify(centro), 200
-
-
 def devolver_centros_api():
     """
     Listar centros via Api
@@ -236,16 +224,7 @@ def devolver_centros_api():
     page = int(request.args.get('num_pag', 1))
     config = Configuracion.query.first()
     centros = Centro.query.paginate(per_page=config.cantPaginacion, page=page, error_out=False)
-    resultado = centros_schema.dump(centros.items) # con el dump, agarro todos los centros, y uso la variable centros_schema porque me voy a traer varios
-    if centros is None:
-     return [], 500
-    return jsonify(resultado), 200            # convierte el resultado de string a formato json 
 
+    resultado = [ centro.json() for centro in centros.items ] 
 
-def agregar_centro_api():
-    """
-    agregar centros via Api
-    """
-    form = CentroForm
-    data = request.get_json
-    
+    return jsonify({'centros': resultado } , {'total': 0 }, {'pagina': 0 })
