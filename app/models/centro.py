@@ -1,5 +1,8 @@
 from app.db import db
-from app import ma
+from app import ma 
+from app.models.tipocentro import TipoCentro, TipoCentroSchema, tipocentro_schema
+from flask_marshmallow import Marshmallow, fields
+from marshmallow import schema, fields 
 
 class Centro(db.Model):
     """
@@ -56,8 +59,21 @@ class Centro(db.Model):
 
 # creo el schema con el cual voy a devolver los campos cuando se acceda a la info via api
 class CentroSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'nombre', 'direccion', 'telefono', 'apertura', 'cierre', 'tipocentro_id', 'municipio', 'web', 'email', 'coordenadas', 'estado')    
+    class Meta():
+        ordered = True
+    nombre = fields.String()
+    direccion = fields.String()
+    telefono = fields.String()
+    apertura = fields.String()
+    cierre = fields.String()
+    municipio = fields.String()
+    web = fields.String()
+    email = fields.Email()
+    estado = fields.String()
+    protocolo = fields.String()
+    coordenadas = fields.String()
+    tipo = fields.Nested(TipoCentroSchema)
+
 
 # creo 2 variables, una para devolver un centro y otra en caso de que quiera devolver varios    
 centro_schema = CentroSchema()

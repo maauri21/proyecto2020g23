@@ -41,7 +41,8 @@ def create_app(environment="development"):
     # Donde meto los pdf
     app.config['UPLOAD_FOLDER'] = 'app/static/pdf'
 
-
+    # Para que la API se duvuelva en el orden que quiero
+    app.config['JSON_SORT_KEYS'] = False
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
     # Flask-Session
