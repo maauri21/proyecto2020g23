@@ -13,13 +13,13 @@ class Centro(db.Model):
     telefono = db.Column(db.String(20))
     apertura = db.Column(db.Time())
     cierre = db.Column(db.Time())
-    tipo = db.Column(db.String(30))
     municipio = db.Column(db.String(30))
     web = db.Column(db.String(40))
     email = db.Column(db.String(40), index=True, unique=True)
     estado = db.Column(db.String(10))
     protocolo = db.Column(db.String(40))
     coordenadas = db.Column(db.String(40))
+    tipo_id = db.Column(db.Integer, db.ForeignKey('tipocentros.id'))
 
     def __repr__(self):
         return '<Centro: {}>'.format(self.nombre)
@@ -57,7 +57,7 @@ class Centro(db.Model):
 # creo el schema con el cual voy a devolver los campos cuando se acceda a la info via api
 class CentroSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'nombre', 'direccion', 'telefono', 'apertura', 'cierre', 'tipo', 'municipio', 'web', 'email', 'coordenadas', 'estado')    
+        fields = ('id', 'nombre', 'direccion', 'telefono', 'apertura', 'cierre', 'tipocentro_id', 'municipio', 'web', 'email', 'coordenadas', 'estado')    
 
 # creo 2 variables, una para devolver un centro y otra en caso de que quiera devolver varios    
 centro_schema = CentroSchema()

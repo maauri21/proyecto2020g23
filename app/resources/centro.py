@@ -7,6 +7,7 @@ from app.forms.validar_centro import ValidarCentroForm
 from app.forms.buscarcentro import BuscarCentroForm
 from app.db import db
 from app.models.centro import Centro, centro_schema, centros_schema
+from app.models.tipocentro import TipoCentro
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 
@@ -49,6 +50,7 @@ def agregar_centro():
 
     form = CentroForm()
     if form.validate_on_submit():
+        tipo = form.tipo.data
         file = form.protocolo.data
         filename = secure_filename(file.filename)
         nombreArchivo = None
@@ -61,14 +63,13 @@ def agregar_centro():
                             telefono=form.telefono.data,
                             apertura=form.apertura.data,
                             cierre=form.cierre.data,
-                            tipo=form.tipo.data,
                             municipio=form.municipio.data,
                             web=form.web.data,
                             email=form.email.data,
                             estado='Aceptado',
                             protocolo = nombreArchivo,
                             coordenadas=form.coordenadas.data)
-
+        tipo.centros.append(centro)
         Centro.agregar(centro)
         Centro.commit()
         flash('Centro agregado')
@@ -166,7 +167,7 @@ def validar_centro(id):
     form.telefono.data = centro.telefono
     form.apertura.data = centro.apertura
     form.cierre.data = centro.cierre
-    form.tipo.data = centro.tipo
+    form.tipo.data = centro.tipo.nombre
     form.municipio.data = centro.municipio
     form.web.data = centro.web
     form.email.data = centro.email

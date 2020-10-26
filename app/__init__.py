@@ -56,7 +56,7 @@ def create_app(environment="development"):
     migrate = Migrate(app, db)
 
     # orden para las migraciones
-    from app.models import configuracion, rol, usuario, permiso, relaciones, centro
+    from app.models import configuracion, rol, usuario, permiso, relaciones, tipocentro, centro
 
     from app.models.configuracion import Configuracion
     from app.resources import configuracion

@@ -24,10 +24,10 @@
                   <tr>
                     <td style="width:20%;">Nombre</td>
                     <td style="width:20%;">Dirección</td>
-                    <td style="width:15%;">Teléfono</td>
+                    <td style="width:12%;">Teléfono</td>
                     <td style="width:5%;">Apertura</td>
                     <td style="width:5%;">Cierre</td>
-                    <td style="width:15%;">Tipo</td>
+                    <td style="width:16%;">Tipo</td>
                     <td style="width:25%;">Acciones</td>
                   </tr>
                 </thead>
@@ -39,7 +39,7 @@
                     <td> {{ centro.telefono }} </td>
                     <td> {{ centro.apertura }} </td>
                     <td> {{ centro.cierre }} </td>
-                    <td> {{ centro.tipo }} </td>
+                    <td> {{ centro.tipo.nombre }} </td>
                     
                     <td>
                       {% if centro.estado == 'Pendiente' %}
