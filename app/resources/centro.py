@@ -231,3 +231,13 @@ def devolver_centros_api():
     resultado = [ centro.json() for centro in centros.items ] 
 
     return jsonify({'centros': resultado } , {'total': round(total) }, {'pagina': page })
+
+def devolver_centro_api(id):
+    """
+    Listar un centro es especifico via Api
+    """
+
+    centro = Centro.buscar(id)
+    if centro is None:
+     return jsonify({ 'No se encontro el centro': []}), 404 #preguntar un poco el tema de devolver
+    return jsonify({'atributos': centro.json() }), 200    

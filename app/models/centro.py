@@ -57,5 +57,11 @@ class Centro(db.Model):
         return {
             'nombre': self.nombre,
             'direccion': self.direccion,
-            'tipo': self.tipo.nombre
+            'telefono': self.telefono,
+            'hora_apertura': str(self.apertura),   #lo transformo a string sino jsonifi no puede serializarlo
+            'hora_cierre': str(self.cierre),
+            'tipo': self.tipo.nombre,
+            'web': self.web,
+            'email': self.email
         }
+
