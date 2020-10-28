@@ -1,5 +1,6 @@
 from app.db import db
 
+
 class Centro(db.Model):
     """
     Crear una tabla centros
@@ -53,6 +54,7 @@ class Centro(db.Model):
         """
         return db.session.delete(centro)
 
+
     def json(self):
         return {
             'nombre': self.nombre,
@@ -65,3 +67,5 @@ class Centro(db.Model):
             'email': self.email
         }
 
+
+  

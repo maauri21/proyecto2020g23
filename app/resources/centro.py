@@ -239,5 +239,36 @@ def devolver_centro_api(id):
 
     centro = Centro.buscar(id)
     if centro is None:
-     return jsonify({ 'No se encontro el centro': []}), 404 #preguntar un poco el tema de devolver
+     return jsonify({ 'No se encontro el centro': []}), 404 #preguntar un poco el tema de devolver el error
     return jsonify({'atributos': centro.json() }), 200    
+
+
+
+def registrar_centro_api():
+    """
+    Crear centro via Api
+    """
+
+    json = request.get_json(force=True)
+
+    if json.get('nombre') is None:
+        return jsonify({'message': 'Bad request'}), 400
+
+    centro = Centro(nombre=json['nombre'],
+                        direccion=json['direccion'],
+                        telefono=json['telefono'],
+                        apertura=json['hora_apertura'],
+                        cierre=json['hora_cierre'],
+                        municipio='asd',
+                        web=json['web'],
+                        email=json['email'],
+                        estado='Pendiente',
+                        protocolo = 'asd.pdf',
+                        coordenadas='1010')
+
+    # Busco el nombre que puso para conectar la clave foranea
+    tipo = TipoCentro.query.filter_by(nombre=json['tipo']).first()
+    tipo.centros.append(centro)
+    Centro.agregar(centro)
+    Centro.commit()
+    return jsonify({'atributos': centro.json() }), 201    
