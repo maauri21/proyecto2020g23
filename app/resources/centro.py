@@ -239,7 +239,7 @@ def devolver_centro_api(id):
 
     centro = Centro.buscar(id)
     if centro is None:
-     return jsonify({ 'No se encontro el centro': []}), 404 #preguntar un poco el tema de devolver el error
+     return jsonify({'atributos':[]}), 404
     return jsonify({'atributos': centro.json() }), 200    
 
 
@@ -252,7 +252,7 @@ def registrar_centro_api():
     json = request.get_json(force=True)
 
     if json.get('nombre') is None:
-        return jsonify({'message': 'Bad request'}), 400
+        abort(400)
 
     centro = Centro(nombre=json['nombre'],
                         direccion=json['direccion'],

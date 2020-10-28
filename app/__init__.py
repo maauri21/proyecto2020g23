@@ -96,6 +96,9 @@ def create_app(environment="development"):
     #Handlers
     app.register_error_handler(401, handler.unauthorized_error)
     app.register_error_handler(404, handler.not_found_error)
+    app.register_error_handler(500, handler.internal_server_error_api)
+    app.register_error_handler(400, handler.bad_request_error_api)
+
 
     # Login
     app.add_url_rule("/login/", "auth_login", auth.login, methods=['GET', 'POST'])
