@@ -24,13 +24,13 @@ class CentroForm(FlaskForm):
     coordenadas = StringField('Coordenadas', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])
     submit = SubmitField('Aceptar')
 
-    def validate_nombre(self, field):
-        if Centro.query.filter_by(nombre=field.data).first():
-            raise ValidationError('Este nombre de centro ya se encuentra en uso')
+   # def validate_nombre(self, field):
+   #     if Centro.query.filter_by(nombre=field.data).first():
+   #         raise ValidationError('Este nombre de centro ya se encuentra en uso')
 
-    def validate_email(self, field):
-        if Centro.query.filter_by(email=field.data).first():
-            raise ValidationError('Este email de centro ya se encuentra en uso')
+    #def validate_email(self, field):
+    #    if Centro.query.filter_by(email=field.data).first():
+    #        raise ValidationError('Este email de centro ya se encuentra en uso')
 
     def validate_cierre(form, field):
         if field.data < form.apertura.data:

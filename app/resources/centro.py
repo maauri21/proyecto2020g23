@@ -98,7 +98,9 @@ def agregar_centro():
             # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
             nombreArchivo = form.nombre.data+'_'+filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], nombreArchivo))
-        centro = Centro(nombre=form.nombre.data,
+             
+        try:
+            centro = Centro(nombre=form.nombre.data,
                             direccion=form.direccion.data,
                             telefono=form.telefono.data,
                             apertura=form.apertura.data,
@@ -109,11 +111,18 @@ def agregar_centro():
                             estado='Aceptado',
                             protocolo = nombreArchivo,
                             coordenadas=form.coordenadas.data)
-        tipo.centros.append(centro)
-        Centro.agregar(centro)
-        Centro.commit()
-        flash('Centro agregado')
-
+            tipo.centros.append(centro)
+            Centro.agregar(centro)
+            Centro.commit()
+            flash('Centro agregado')
+        # Levanto las excepciones del modelo por sino pasa alguna validacion
+        except AssertionError as e:
+        #recorro el diccionario y listo el error de validacion correspondiente   
+            for elementos in e.args:
+                form[elementos['campo']].errors.append(elementos['mensaje'])
+            return render_template('centros/centro.html',
+                            agregar_centro=agregar_centro,
+                            form=form)
         # Redirección al listado dsp de agregar
         return redirect(url_for('buscar_centros'))
 

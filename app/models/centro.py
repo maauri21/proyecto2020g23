@@ -1,4 +1,7 @@
 from app.db import db
+from sqlalchemy.orm import validates
+from flask import jsonify
+
 
 
 class Centro(db.Model):
@@ -67,5 +70,43 @@ class Centro(db.Model):
             'email': self.email
         }
 
-
+    
   
+
+    @validates('email')
+    def validate_email(self, key, email):
+                
+        if not email:
+            raise AssertionError({'campo':'email','mensaje':'El email no puede estar vacio'})
+        if not '@' in email:
+            raise AssertionError({'campo':'email','mensaje':'El email es incorrecto'})
+                
+        if Centro.query.filter(Centro.email == email).first():
+           
+            raise AssertionError({'campo':'email','mensaje':'El email ya esta siendo usado'}) 
+           
+        return email    
+
+    @validates('nombre')
+    def validate_nombre(self, key, nombre): 
+        
+        letras = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y","z"
+	    ,"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y","Z", " "]    
+        
+        
+        if not nombre:
+            raise AssertionError({'campo':'nombre','mensaje':'El nombre no puede estar vacio'})  
+            
+        if Centro.query.filter(Centro.nombre == nombre).first():
+            raise AssertionError({'campo':'nombre','mensaje':'El nombre ya esta en uso pa'})
+            
+
+        for elemento in nombre:
+            if elemento not in letras:
+                 raise AssertionError({'campo':'nombre','mensaje':'El nombre solo puede contener letras'})    
+        
+        return nombre
+
+       
+
+             
