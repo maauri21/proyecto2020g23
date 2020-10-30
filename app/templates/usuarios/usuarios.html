@@ -25,8 +25,8 @@
                     <td style="width:30%;">Email</td>
                     <td style="width:20%;">Usuario</td>
                     <td style="width:15%;">Nombre</td>
-                    <td style="width:15%;">Apellido</td>
-                    <td style="width:25%;">Acciones</td>
+                    <td style="width:20%;">Apellido</td>
+                    <td style="width:20%;">Acciones</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -49,9 +49,6 @@
                       {% endif %}
                       {% if tiene_permiso(current_user, 'user_update') %}
                         <a href="{{ url_for('editar_usuario', id=usuario.id) }}" class="btn btn-warning btn-sm">Editar</a>
-                      {% endif %}
-                      {% if tiene_permiso(current_user, 'user_destroy') %}
-                        <a href="{{ url_for('borrar_usuario', id=usuario.id) }}" class="btn btn-danger btn-sm" onclick=" return confirm ('Esta seguro que desea eliminar al usuario?')" >Borrar</a>
                       {% endif %}
                     </td>
                   </tr>

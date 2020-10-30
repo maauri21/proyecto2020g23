@@ -37,6 +37,9 @@ def create_app(environment="development"):
     # Donde meto los pdf
     app.config['UPLOAD_FOLDER'] = 'app/static/pdf'
 
+    # Para que la API se duvuelva en el orden que quiero
+    app.config['JSON_SORT_KEYS'] = False
+
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
     # Flask-Session
@@ -108,7 +111,6 @@ def create_app(environment="development"):
     app.add_url_rule("/usuarios/", "buscar_usuario", usuario.buscar_usuarios, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/agregar/", "agregar_usuario", usuario.agregar_usuario, methods=['GET', 'POST'])
     app.add_url_rule("/usuarios/editar/<int:id>", "editar_usuario", usuario.editar_usuario, methods=['GET', 'POST'])
-    app.add_url_rule("/usuarios/borrar/<int:id>", "borrar_usuario", usuario.borrar_usuario)
     app.add_url_rule("/usuarios/bloquear/<int:id>", "bloquear_usuario", usuario.bloquear_usuario)
     app.add_url_rule("/usuarios/activar/<int:id>", "activar_usuario", usuario.activar_usuario)
     app.add_url_rule("/panelconfig/", "panel_config", configuracion.editar_configuracion, methods=['GET', 'POST'])

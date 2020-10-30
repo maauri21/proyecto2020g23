@@ -99,22 +99,6 @@ def editar_usuario(id):
                            agregar_usuario=agregar_usuario, form=form)
 
 @login_required
-def borrar_usuario(id):
-    """
-    Borrar usuario
-    """
-
-    if not check_permiso(current_user, 'user_destroy'):
-        abort(401)
-
-    usuario = Usuario.buscar(id)
-    Usuario.eliminar(usuario)
-    Usuario.commit()
-    flash('Usuario borrado')
-    # Redirección al listado dsp de borrar
-    return redirect(url_for('buscar_usuario'))
-
-@login_required
 def bloquear_usuario(id):
     """
     Bloquear usuario

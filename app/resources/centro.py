@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for, session, request, abort, jsonify
+from flask import flash, redirect, render_template, url_for, session, request, abort, jsonify, json
 from flask_login import login_required, current_user
 
 from app.forms.centro import CentroForm
@@ -13,6 +13,7 @@ from app.helpers.permisos import check_permiso
 
 from werkzeug.utils import secure_filename
 import os
+import requests
 from flask import current_app as app
 
 @login_required
@@ -45,7 +46,20 @@ def registrar_centro():
     """
     agregar_centro = True
 
+    # Agarrar los municipios de la API
+    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    Jresponse = req.text
+    data = json.loads(Jresponse)
+
     form = CentroForm()
+    i=str(1)
+    for item in data['data']['Town']:
+        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+        form.municipio.choices += items
+        i=int(i)
+        i += 1
+        i=str(i)
+
     if form.validate_on_submit():
         tipo = form.tipo.data
         file = form.protocolo.data
@@ -88,7 +102,20 @@ def agregar_centro():
     if not check_permiso(current_user, 'centro_new'):
         abort(401)
 
+    # Agarrar los municipios de la API
+    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    Jresponse = req.text
+    data = json.loads(Jresponse)
+
     form = CentroForm()
+    i=str(1)
+    for item in data['data']['Town']:
+        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+        form.municipio.choices += items
+        i=int(i)
+        i += 1
+        i=str(i)
+
     if form.validate_on_submit():
         tipo = form.tipo.data
         file = form.protocolo.data
@@ -142,7 +169,21 @@ def editar_centro(id):
 
     agregar_centro = False
     centro = Centro.buscar(id)
+
+    # Agarrar los municipios de la API
+    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    Jresponse = req.text
+    data = json.loads(Jresponse)
+
     form = EditarCentroForm()
+    i=str(1)
+    for item in data['data']['Town']:
+        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+        form.municipio.choices += items
+        i=int(i)
+        i += 1
+        i=str(i)
+
     if form.validate_on_submit():
         centro.nombre = form.nombre.data
         centro.direccion = form.direccion.data
@@ -229,7 +270,7 @@ def devolver_centros_api():
     """
     Listar centros via Api
     """
-    
+
     page = int(request.args.get('num_pag', 1))
     config = Configuracion.query.first()
     centros = Centro.query.paginate(per_page=config.cantPaginacion, page=page, error_out=False)
@@ -250,8 +291,6 @@ def devolver_centro_api(id):
     if centro is None:
      return jsonify({'atributos':[]}), 404
     return jsonify({'atributos': centro.json() }), 200    
-
-
 
 def registrar_centro_api():
     """
@@ -280,4 +319,4 @@ def registrar_centro_api():
     tipo.centros.append(centro)
     Centro.agregar(centro)
     Centro.commit()
-    return jsonify({'atributos': centro.json() }), 201    
+    return jsonify({'atributos': centro.json() }), 201
