@@ -5,15 +5,16 @@ from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 from app.db import db
 
+
 @login_required
 def editar_configuracion():
     """
     Editar configuracion
     """
 
-    if not check_permiso(current_user, 'config_index'):
+    if not check_permiso(current_user, "config_index"):
         abort(401)
-    
+
     config = Configuracion.buscar_config()
     form = EditarConfigForm()
     if form.validate_on_submit():
@@ -23,16 +24,14 @@ def editar_configuracion():
         config.cantPaginacion = form.cantPaginacion.data
         config.mantenimiento = form.mantenimiento.data
         Configuracion.commit()
-        flash('Configuración modificada')
+        flash("Configuración modificada")
 
         # Redirección al panel de configuracion
-        return redirect(url_for('panel_config'))
+        return redirect(url_for("panel_config"))
 
-    
     form.titulo.data = config.titulo
     form.descripcion.data = config.descripcion
     form.email.data = config.email
     form.cantPaginacion.data = config.cantPaginacion
     form.mantenimiento.data = config.mantenimiento
-    return render_template('config/panelconfig.html',
-                            form=form)
+    return render_template("config/panelconfig.html", form=form)

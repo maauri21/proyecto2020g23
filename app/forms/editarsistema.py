@@ -7,11 +7,25 @@ class EditarConfigForm(FlaskForm):
     """
     Formulario de Configuracion
     """
-    titulo = StringField('Titulo', validators=[DataRequired(), Length(max=20, message='Máximo 20 caracteres')])
-    descripcion = StringField('Descripcion', validators=[DataRequired(), Length(max=40, message='Máximo 40 caracteres')])
-    email = StringField('Email', validators=[DataRequired(), Email(message="Email incorrecto"), Length(max=40, message='Máximo 40 caracteres')])
-    cantPaginacion = IntegerField('Cantidad Paginacion', validators=[DataRequired('Número incorrecto')])
-    mantenimiento = BooleanField('Mantenimiento')
-    submit = SubmitField('Aceptar')
 
-
+    titulo = StringField(
+        "Titulo",
+        validators=[DataRequired(), Length(max=20, message="Máximo 20 caracteres")],
+    )
+    descripcion = StringField(
+        "Descripcion",
+        validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
+    )
+    email = StringField(
+        "Email",
+        validators=[
+            DataRequired(),
+            Email(message="Email incorrecto"),
+            Length(max=40, message="Máximo 40 caracteres"),
+        ],
+    )
+    cantPaginacion = IntegerField(
+        "Cantidad Paginacion", validators=[DataRequired("Número incorrecto")]
+    )
+    mantenimiento = BooleanField("Mantenimiento")
+    submit = SubmitField("Aceptar")

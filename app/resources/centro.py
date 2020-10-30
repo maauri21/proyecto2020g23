@@ -1,4 +1,14 @@
-from flask import flash, redirect, render_template, url_for, session, request, abort, jsonify, json
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    url_for,
+    session,
+    request,
+    abort,
+    jsonify,
+    json,
+)
 from flask_login import login_required, current_user
 
 from app.forms.centro import CentroForm
@@ -16,28 +26,33 @@ import os
 import requests
 from flask import current_app as app
 
+
 @login_required
 def buscar_centros():
     """
     Listar centros
     """
 
-    if not check_permiso(current_user, 'centro_index'):
+    if not check_permiso(current_user, "centro_index"):
         abort(401)
 
     config = Configuracion.query.first()
     form = BuscarCentroForm(formdata=request.args)
-    buscar = form.data['search']
-    estado = form.data['select']
-    pag = int(request.args.get('num_pag', 1))
+    buscar = form.data["search"]
+    estado = form.data["select"]
+    pag = int(request.args.get("num_pag", 1))
 
-    if form.data['select'] != 'Todos':
-        centros = Centro.query.filter(Centro.estado.contains(estado)).filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
+    if form.data["select"] != "Todos":
+        centros = (
+            Centro.query.filter(Centro.estado.contains(estado))
+            .filter(Centro.nombre.contains(buscar))
+            .paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
+        )
     else:
-        centros = Centro.query.filter(Centro.nombre.contains(buscar)).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
-    return render_template('centros/centros.html',
-                            form=form,
-                            centros=centros)
+        centros = Centro.query.filter(Centro.nombre.contains(buscar)).paginate(
+            per_page=config.cantPaginacion, page=pag, error_out=False
+        )
+    return render_template("centros/centros.html", form=form, centros=centros)
 
 
 def registrar_centro():
@@ -47,18 +62,20 @@ def registrar_centro():
     agregar_centro = True
 
     # Agarrar los municipios de la API
-    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    req = requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+    )
     Jresponse = req.text
     data = json.loads(Jresponse)
 
     form = CentroForm()
-    i=str(1)
-    for item in data['data']['Town']:
-        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+    i = str(1)
+    for item in data["data"]["Town"]:
+        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
-        i=int(i)
+        i = int(i)
         i += 1
-        i=str(i)
+        i = str(i)
 
     if form.validate_on_submit():
         tipo = form.tipo.data
@@ -67,30 +84,33 @@ def registrar_centro():
         nombreArchivo = None
         if file:
             # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
-            nombreArchivo = form.nombre.data+'_'+filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], nombreArchivo))
-        centro = Centro(nombre=form.nombre.data,
-                            direccion=form.direccion.data,
-                            telefono=form.telefono.data,
-                            apertura=form.apertura.data,
-                            cierre=form.cierre.data,
-                            municipio=form.municipio.data,
-                            web=form.web.data,
-                            email=form.email.data,
-                            estado='Pendiente',
-                            protocolo = nombreArchivo,
-                            coordenadas=form.coordenadas.data)
+            nombreArchivo = form.nombre.data + "_" + filename
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
+        centro = Centro(
+            nombre=form.nombre.data,
+            direccion=form.direccion.data,
+            telefono=form.telefono.data,
+            apertura=form.apertura.data,
+            cierre=form.cierre.data,
+            municipio=form.municipio.data,
+            web=form.web.data,
+            email=form.email.data,
+            estado="Pendiente",
+            protocolo=nombreArchivo,
+            coordenadas=form.coordenadas.data,
+        )
         tipo.centros.append(centro)
         Centro.agregar(centro)
         Centro.commit()
-        flash('Centro agregado, pendiente de aprobación')
+        flash("Centro agregado, pendiente de aprobación")
 
         # Redirección al listado dsp de agregar
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
 
-    return render_template('centros/centro.html',
-                            agregar_centro=agregar_centro,
-                            form=form)
+    return render_template(
+        "centros/centro.html", agregar_centro=agregar_centro, form=form
+    )
+
 
 @login_required
 def agregar_centro():
@@ -99,22 +119,24 @@ def agregar_centro():
     """
     agregar_centro = True
 
-    if not check_permiso(current_user, 'centro_new'):
+    if not check_permiso(current_user, "centro_new"):
         abort(401)
 
     # Agarrar los municipios de la API
-    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    req = requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+    )
     Jresponse = req.text
     data = json.loads(Jresponse)
 
     form = CentroForm()
-    i=str(1)
-    for item in data['data']['Town']:
-        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+    i = str(1)
+    for item in data["data"]["Town"]:
+        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
-        i=int(i)
+        i = int(i)
         i += 1
-        i=str(i)
+        i = str(i)
 
     if form.validate_on_submit():
         tipo = form.tipo.data
@@ -123,39 +145,41 @@ def agregar_centro():
         nombreArchivo = None
         if file:
             # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
-            nombreArchivo = form.nombre.data+'_'+filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], nombreArchivo))
-             
+            nombreArchivo = form.nombre.data + "_" + filename
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
+
         try:
-            centro = Centro(nombre=form.nombre.data,
-                            direccion=form.direccion.data,
-                            telefono=form.telefono.data,
-                            apertura=form.apertura.data,
-                            cierre=form.cierre.data,
-                            municipio=form.municipio.data,
-                            web=form.web.data,
-                            email=form.email.data,
-                            estado='Aceptado',
-                            protocolo = nombreArchivo,
-                            coordenadas=form.coordenadas.data)
+            centro = Centro(
+                nombre=form.nombre.data,
+                direccion=form.direccion.data,
+                telefono=form.telefono.data,
+                apertura=form.apertura.data,
+                cierre=form.cierre.data,
+                municipio=form.municipio.data,
+                web=form.web.data,
+                email=form.email.data,
+                estado="Aceptado",
+                protocolo=nombreArchivo,
+                coordenadas=form.coordenadas.data,
+            )
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
-            flash('Centro agregado')
+            flash("Centro agregado")
         # Levanto las excepciones del modelo por sino pasa alguna validacion
         except AssertionError as e:
-        #recorro el diccionario y listo el error de validacion correspondiente   
+            # recorro el diccionario y listo el error de validacion correspondiente
             for elementos in e.args:
-                form[elementos['campo']].errors.append(elementos['mensaje'])
-            return render_template('centros/centro.html',
-                            agregar_centro=agregar_centro,
-                            form=form)
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "centros/centro.html", agregar_centro=agregar_centro, form=form
+            )
         # Redirección al listado dsp de agregar
-        return redirect(url_for('buscar_centros'))
+        return redirect(url_for("buscar_centros"))
 
-    return render_template('centros/centro.html',
-                            agregar_centro=agregar_centro,
-                            form=form)
+    return render_template(
+        "centros/centro.html", agregar_centro=agregar_centro, form=form
+    )
 
 
 @login_required
@@ -164,25 +188,27 @@ def editar_centro(id):
     Editar centro
     """
 
-    if not check_permiso(current_user, 'centro_update'):
+    if not check_permiso(current_user, "centro_update"):
         abort(401)
 
     agregar_centro = False
     centro = Centro.buscar(id)
 
     # Agarrar los municipios de la API
-    req = requests.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+    req = requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+    )
     Jresponse = req.text
     data = json.loads(Jresponse)
 
     form = EditarCentroForm()
-    i=str(1)
-    for item in data['data']['Town']:
-        items = [(data['data']['Town'][i]['name'], data['data']['Town'][i]['name'])]
+    i = str(1)
+    for item in data["data"]["Town"]:
+        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
-        i=int(i)
+        i = int(i)
         i += 1
-        i=str(i)
+        i = str(i)
 
     if form.validate_on_submit():
         centro.nombre = form.nombre.data
@@ -196,12 +222,12 @@ def editar_centro(id):
         centro.email = form.email.data
         centro.coordenadas = form.coordenadas.data
         Centro.commit()
-        flash('Centro modificado')
+        flash("Centro modificado")
 
         # Redirección al listado dsp de editar
-        return redirect(url_for('buscar_centros'))
+        return redirect(url_for("buscar_centros"))
 
-    session['idCentro'] = id
+    session["idCentro"] = id
     form.nombre.data = centro.nombre
     form.direccion.data = centro.direccion
     form.telefono.data = centro.telefono
@@ -212,8 +238,10 @@ def editar_centro(id):
     form.web.data = centro.web
     form.email.data = centro.email
     form.coordenadas.data = centro.coordenadas
-    return render_template('centros/centro.html',
-                            agregar_centro=agregar_centro, form=form)
+    return render_template(
+        "centros/centro.html", agregar_centro=agregar_centro, form=form
+    )
+
 
 @login_required
 def borrar_centro(id):
@@ -221,15 +249,16 @@ def borrar_centro(id):
     Borrar centro
     """
 
-    if not check_permiso(current_user, 'centro_destroy'):
+    if not check_permiso(current_user, "centro_destroy"):
         abort(401)
 
     centro = Centro.buscar(id)
     Centro.eliminar(centro)
     Centro.commit()
-    flash('Centro borrado')
+    flash("Centro borrado")
     # Redirección al listado dsp de borrar
-    return redirect(url_for('buscar_centros'))
+    return redirect(url_for("buscar_centros"))
+
 
 @login_required
 def validar_centro(id):
@@ -237,21 +266,21 @@ def validar_centro(id):
     Validar centro
     """
 
-    if not check_permiso(current_user, 'centro_validate'):
+    if not check_permiso(current_user, "centro_validate"):
         abort(401)
 
     centro = Centro.buscar(id)
     form = ValidarCentroForm()
     if form.validate_on_submit():
         if form.aceptar.data:
-            centro.estado = 'Aceptado'
+            centro.estado = "Aceptado"
         elif form.rechazar.data:
-            centro.estado = 'Rechazado'
+            centro.estado = "Rechazado"
         Centro.commit()
-        flash('Centro validado')
-        return redirect(url_for('buscar_centros'))
+        flash("Centro validado")
+        return redirect(url_for("buscar_centros"))
 
-    session['idCentro'] = id
+    session["idCentro"] = id
     form.nombre.data = centro.nombre
     form.direccion.data = centro.direccion
     form.telefono.data = centro.telefono
@@ -263,24 +292,29 @@ def validar_centro(id):
     form.email.data = centro.email
     pdf = centro.protocolo
     form.coordenadas.data = centro.coordenadas
-    return render_template('centros/validar_centro.html',
-                        form=form,pdf=pdf,centro=centro)
+    return render_template(
+        "centros/validar_centro.html", form=form, pdf=pdf, centro=centro
+    )
+
 
 def devolver_centros_api():
     """
     Listar centros via Api
     """
 
-    page = int(request.args.get('num_pag', 1))
+    page = int(request.args.get("num_pag", 1))
     config = Configuracion.query.first()
-    centros = Centro.query.paginate(per_page=config.cantPaginacion, page=page, error_out=False)
+    centros = Centro.query.paginate(
+        per_page=config.cantPaginacion, page=page, error_out=False
+    )
 
     cant_centros = Centro.query.count()
-    total = cant_centros/config.cantPaginacion
+    total = cant_centros / config.cantPaginacion
 
-    resultado = [ centro.json() for centro in centros.items ] 
+    resultado = [centro.json() for centro in centros.items]
 
-    return jsonify({'centros': resultado } , {'total': round(total) }, {'pagina': page })
+    return jsonify({"centros": resultado}, {"total": round(total)}, {"pagina": page})
+
 
 def devolver_centro_api(id):
     """
@@ -289,8 +323,9 @@ def devolver_centro_api(id):
 
     centro = Centro.buscar(id)
     if centro is None:
-     return jsonify({'atributos':[]}), 404
-    return jsonify({'atributos': centro.json() }), 200    
+        return jsonify({"atributos": []}), 404
+    return jsonify({"atributos": centro.json()}), 200
+
 
 def registrar_centro_api():
     """
@@ -299,24 +334,26 @@ def registrar_centro_api():
 
     json = request.get_json(force=True)
 
-    if json.get('nombre') is None:
+    if json.get("nombre") is None:
         abort(400)
 
-    centro = Centro(nombre=json['nombre'],
-                        direccion=json['direccion'],
-                        telefono=json['telefono'],
-                        apertura=json['hora_apertura'],
-                        cierre=json['hora_cierre'],
-                        municipio='asd',
-                        web=json['web'],
-                        email=json['email'],
-                        estado='Pendiente',
-                        protocolo = 'asd.pdf',
-                        coordenadas='1010')
+    centro = Centro(
+        nombre=json["nombre"],
+        direccion=json["direccion"],
+        telefono=json["telefono"],
+        apertura=json["hora_apertura"],
+        cierre=json["hora_cierre"],
+        municipio="asd",
+        web=json["web"],
+        email=json["email"],
+        estado="Pendiente",
+        protocolo="asd.pdf",
+        coordenadas="1010",
+    )
 
     # Busco el nombre que puso para conectar la clave foranea
-    tipo = TipoCentro.query.filter_by(nombre=json['tipo']).first()
+    tipo = TipoCentro.query.filter_by(nombre=json["tipo"]).first()
     tipo.centros.append(centro)
     Centro.agregar(centro)
     Centro.commit()
-    return jsonify({'atributos': centro.json() }), 201
+    return jsonify({"atributos": centro.json()}), 201
