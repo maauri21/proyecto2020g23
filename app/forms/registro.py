@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp
-from app.models.usuario import Usuario
 
 # DataRequired es un validador de flaskwtf
 class RegistroForm(FlaskForm):
@@ -51,13 +50,3 @@ class RegistroForm(FlaskForm):
     )
     confirm_password = PasswordField("Confirmar contraseña")
     submit = SubmitField("Aceptar")
-
-    # Validar que el mail no esté usado
-    def validate_email(self, field):
-        if Usuario.buscar_email(field.data):
-            raise ValidationError("Este email ya se encuentra en uso")
-
-    # Validar que el usuario no esté usado
-    def validate_usuario(self, field):
-        if Usuario.query.filter_by(usuario=field.data).first():
-            raise ValidationError("Este nombre de usuario ya se encuentra en uso")

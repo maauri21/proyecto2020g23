@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for, session, request, abort
+from flask import flash, redirect, render_template, url_for, request, abort
 from flask_login import login_required, current_user
 
 from app.forms.registro import RegistroForm
@@ -60,18 +60,25 @@ def agregar_usuario():
 
     form = RegistroForm()
     if form.validate_on_submit():
-        usuario = Usuario(
-            email=form.email.data,
-            usuario=form.usuario.data,
-            nombre=form.nombre.data,
-            apellido=form.apellido.data,
-            password=form.password.data,
-        )
-
-        Usuario.add(usuario)
-        Usuario.commit()
-        flash("Usuario agregado")
-
+        try:
+            usuario = Usuario(
+                email=form.email.data,
+                usuario=form.usuario.data,
+                nombre=form.nombre.data,
+                apellido=form.apellido.data,
+                password=form.password.data,
+            )
+            Usuario.add(usuario)
+            Usuario.commit()
+            flash("Usuario agregado")
+        # Levanto las excepciones del modelo por sino pasa alguna validacion
+        except AssertionError as e:
+            # recorro el diccionario y listo el error de validacion correspondiente
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "usuarios/usuario.html", agregar_usuario=agregar_usuario, form=form
+            )
         # Redirección al listado dsp de agregar
         return redirect(url_for("buscar_usuario"))
 
@@ -93,17 +100,22 @@ def editar_usuario(id):
     usuario = Usuario.buscar(id)
     form = EditarUsuarioForm()
     if form.validate_on_submit():
-        usuario.email = form.email.data
-        usuario.usuario = form.usuario.data
-        usuario.nombre = form.nombre.data
-        usuario.apellido = form.apellido.data
-        Usuario.commit()
-        flash("Usuario modificado")
 
-        # Redirección al listado dsp de editar
+        try:
+            usuario.email = form.email.data
+            usuario.usuario = form.usuario.data
+            usuario.nombre = form.nombre.data
+            usuario.apellido = form.apellido.data
+            Usuario.commit()
+            flash("Usuario modificado")
+        except AssertionError as e:
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "usuarios/usuario.html", agregar_usuario=agregar_usuario, form=form
+            )
         return redirect(url_for("buscar_usuario"))
 
-    session["idEditar"] = id
     form.email.data = usuario.email
     form.usuario.data = usuario.usuario
     form.nombre.data = usuario.nombre

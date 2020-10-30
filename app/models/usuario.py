@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
 from app.db import db
 from app.models.relaciones import usuario_rol
+from sqlalchemy.orm import validates
 
 
 class Usuario(UserMixin, db.Model):
@@ -108,3 +109,49 @@ class Usuario(UserMixin, db.Model):
         Busco si el mail ya está en la BD
         """
         return Usuario.query.filter_by(email=mail).first()
+
+    @validates("email")
+    def validate_email(self, key, email):
+        usuarioAEditar = Usuario.query.get(self.id)
+
+        if (usuarioAEditar is not None):
+            if (email != usuarioAEditar.email):
+                if Usuario.query.filter(Usuario.email == email).first():
+                    raise AssertionError(
+                        {
+                            "campo": "email",
+                            "mensaje": "Este email de usuario ya se encuentra en uso",
+                        }
+                    )
+        else:
+            if Usuario.query.filter(Usuario.email == email).first():
+                raise AssertionError(
+                    {
+                        "campo": "email",
+                        "mensaje": "Este email de usuario ya se encuentra en uso",
+                    }
+                )
+        return email
+
+    @validates("usuario")
+    def validate_usuario(self, key, usuario):
+        usuarioAEditar = Usuario.query.get(self.id)
+
+        if (usuarioAEditar is not None):
+            if (usuario != usuarioAEditar.usuario):
+                if Usuario.query.filter(Usuario.usuario == usuario).first():
+                    raise AssertionError(
+                        {
+                            "campo": "usuario",
+                            "mensaje": "Este usuario ya se encuentra en uso",
+                        }
+                    )
+        else:
+            if Usuario.query.filter(Usuario.usuario == usuario).first():
+                raise AssertionError(
+                    {
+                        "campo": "usuario",
+                        "mensaje": "Este usuario ya se encuentra en uso",
+                    }
+                )
+        return usuario

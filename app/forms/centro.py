@@ -9,7 +9,6 @@ from wtforms import (
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp
-from app.models.centro import Centro
 from app.models.tipocentro import TipoCentro
 from flask_wtf.file import FileAllowed
 

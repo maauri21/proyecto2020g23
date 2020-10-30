@@ -1,7 +1,5 @@
 from app.db import db
 from sqlalchemy.orm import validates
-from flask import jsonify
-
 
 class Centro(db.Model):
     """
@@ -73,7 +71,7 @@ class Centro(db.Model):
 
     @validates("email")
     def validate_email(self, key, email):
-
+        centroAEditar = Centro.query.get(self.id)
         if not email:
             raise AssertionError(
                 {"campo": "email", "mensaje": "El email no puede estar vacio"}
@@ -82,18 +80,28 @@ class Centro(db.Model):
             raise AssertionError(
                 {"campo": "email", "mensaje": "El email es incorrecto"}
             )
-        if Centro.query.filter(Centro.email == email).first():
-            raise AssertionError(
-                {
-                    "campo": "email",
-                    "mensaje": "Este email de centro ya se encuentra en uso",
-                }
-            )
+        if (centroAEditar is not None):
+            if (email != centroAEditar.email):
+                if Centro.query.filter(Centro.email == email).first():
+                    raise AssertionError(
+                        {
+                            "campo": "email",
+                            "mensaje": "Este email de centro ya se encuentra en uso",
+                        }
+                    )
+        else:
+            if Centro.query.filter(Centro.email == email).first():
+                raise AssertionError(
+                    {
+                        "campo": "email",
+                        "mensaje": "Este email de centro ya se encuentra en uso",
+                    }
+                )
         return email
 
     @validates("nombre")
     def validate_nombre(self, key, nombre):
-
+        centroAEditar = Centro.query.get(self.id)
         letras = [
             "a",
             "b",
@@ -156,13 +164,25 @@ class Centro(db.Model):
             raise AssertionError(
                 {"campo": "nombre", "mensaje": "El nombre no puede estar vacio"}
             )
-        if Centro.query.filter(Centro.nombre == nombre).first():
-            raise AssertionError(
-                {
-                    "campo": "nombre",
-                    "mensaje": "Este nombre de centro ya se encuentra en uso",
-                }
-            )
+
+        if (centroAEditar is not None):
+            if (nombre != centroAEditar.nombre):
+                if Centro.query.filter(Centro.nombre == nombre).first():
+                    raise AssertionError(
+                        {
+                            "campo": "nombre",
+                            "mensaje": "Este nombre de centro ya se encuentra en uso",
+                        }
+                    )
+        else:
+            if Centro.query.filter(Centro.nombre == nombre).first():
+                raise AssertionError(
+                    {
+                        "campo": "nombre",
+                        "mensaje": "Este nombre de centro ya se encuentra en uso",
+                    }
+                )
+
         for elemento in nombre:
             if elemento not in letras:
                 raise AssertionError(

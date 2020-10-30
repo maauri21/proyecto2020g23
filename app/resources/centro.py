@@ -3,7 +3,6 @@ from flask import (
     redirect,
     render_template,
     url_for,
-    session,
     request,
     abort,
     jsonify,
@@ -86,25 +85,33 @@ def registrar_centro():
             # Por si suben 2 archivos con el mismo nombre, lo renombro poniendole el nombre del centro 1ro
             nombreArchivo = form.nombre.data + "_" + filename
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
-        centro = Centro(
-            nombre=form.nombre.data,
-            direccion=form.direccion.data,
-            telefono=form.telefono.data,
-            apertura=form.apertura.data,
-            cierre=form.cierre.data,
-            municipio=form.municipio.data,
-            web=form.web.data,
-            email=form.email.data,
-            estado="Pendiente",
-            protocolo=nombreArchivo,
-            coordenadas=form.coordenadas.data,
-        )
-        tipo.centros.append(centro)
-        Centro.agregar(centro)
-        Centro.commit()
-        flash("Centro agregado, pendiente de aprobación")
-
-        # Redirección al listado dsp de agregar
+        try:
+            centro = Centro(
+                nombre=form.nombre.data,
+                direccion=form.direccion.data,
+                telefono=form.telefono.data,
+                apertura=form.apertura.data,
+                cierre=form.cierre.data,
+                municipio=form.municipio.data,
+                web=form.web.data,
+                email=form.email.data,
+                estado="Pendiente",
+                protocolo=nombreArchivo,
+                coordenadas=form.coordenadas.data,
+            )
+            tipo.centros.append(centro)
+            Centro.agregar(centro)
+            Centro.commit()
+            flash("Centro agregado, pendiente de aprobación")
+        # Levanto las excepciones del modelo por sino pasa alguna validacion
+        except AssertionError as e:
+            # recorro el diccionario y listo el error de validacion correspondiente
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "centros/centro.html", agregar_centro=agregar_centro, form=form
+            )
+        # Redirección dsp de agregar
         return redirect(url_for("index"))
 
     return render_template(
@@ -211,23 +218,28 @@ def editar_centro(id):
         i = str(i)
 
     if form.validate_on_submit():
-        centro.nombre = form.nombre.data
-        centro.direccion = form.direccion.data
-        centro.telefono = form.telefono.data
-        centro.apertura = form.apertura.data
-        centro.cierre = form.cierre.data
-        centro.tipo = form.tipo.data
-        centro.municipio = form.municipio.data
-        centro.web = form.web.data
-        centro.email = form.email.data
-        centro.coordenadas = form.coordenadas.data
-        Centro.commit()
-        flash("Centro modificado")
-
-        # Redirección al listado dsp de editar
+        try:
+            centro.nombre = form.nombre.data
+            centro.direccion = form.direccion.data
+            centro.telefono = form.telefono.data
+            centro.apertura = form.apertura.data
+            centro.cierre = form.cierre.data
+            centro.tipo = form.tipo.data
+            centro.municipio = form.municipio.data
+            centro.web = form.web.data
+            centro.email = form.email.data
+            centro.coordenadas = form.coordenadas.data
+            Centro.commit()
+            flash("Centro modificado")
+        except AssertionError as e:
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "centros/centro.html", agregar_centro=agregar_centro, form=form
+            )
+        # Redirección al listado dsp de agregar
         return redirect(url_for("buscar_centros"))
 
-    session["idCentro"] = id
     form.nombre.data = centro.nombre
     form.direccion.data = centro.direccion
     form.telefono.data = centro.telefono
@@ -280,7 +292,6 @@ def validar_centro(id):
         flash("Centro validado")
         return redirect(url_for("buscar_centros"))
 
-    session["idCentro"] = id
     form.nombre.data = centro.nombre
     form.direccion.data = centro.direccion
     form.telefono.data = centro.telefono
@@ -337,23 +348,29 @@ def registrar_centro_api():
     if json.get("nombre") is None:
         abort(400)
 
-    centro = Centro(
-        nombre=json["nombre"],
-        direccion=json["direccion"],
-        telefono=json["telefono"],
-        apertura=json["hora_apertura"],
-        cierre=json["hora_cierre"],
-        municipio="asd",
-        web=json["web"],
-        email=json["email"],
-        estado="Pendiente",
-        protocolo="asd.pdf",
-        coordenadas="1010",
-    )
-
-    # Busco el nombre que puso para conectar la clave foranea
-    tipo = TipoCentro.query.filter_by(nombre=json["tipo"]).first()
-    tipo.centros.append(centro)
-    Centro.agregar(centro)
-    Centro.commit()
+    try:
+        centro = Centro(
+            nombre=json["nombre"],
+            direccion=json["direccion"],
+            telefono=json["telefono"],
+            apertura=json["hora_apertura"],
+            cierre=json["hora_cierre"],
+            municipio="asd",
+            web=json["web"],
+            email=json["email"],
+            estado="Pendiente",
+            protocolo="asd.pdf",
+            coordenadas="1010",
+        )
+        # Busco el nombre que puso para conectar la clave foranea
+        tipo = TipoCentro.query.filter_by(nombre=json["tipo"]).first()
+        tipo.centros.append(centro)
+        Centro.agregar(centro)
+        Centro.commit()
+    except AssertionError as e:
+        for elementos in e.args:
+            return jsonify({"Error": elementos["mensaje"]})
     return jsonify({"atributos": centro.json()}), 201
+
+
+    
