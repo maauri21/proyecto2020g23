@@ -54,13 +54,14 @@ def create_app(environment="development"):
     migrate = Migrate(app, db)
 
     # orden para las migraciones
-    from app.models import configuracion, rol, usuario, permiso, relaciones, tipocentro, centro
+    from app.models import configuracion, rol, usuario, permiso, relaciones, tipocentro, centro, turno
 
     from app.models.configuracion import Configuracion
     from app.resources import configuracion
     from app.resources import auth
     from app.resources import usuario
     from app.resources import centro
+    from app.resources import turno
 
     # Para ocultar en los .html dependiendo los permisos
     from app.helpers import permisos
@@ -125,5 +126,8 @@ def create_app(environment="development"):
     app.add_url_rule("/api/v1/centros", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])
     app.add_url_rule("/api/v1/centros/<int:id>", "devolver_centro_api", centro.devolver_centro_api, methods=['GET'])
     app.add_url_rule("/api/v1/centros", "registrar_centros_api", centro.registrar_centro_api, methods=['POST'])
+
+    # Turnos
+    app.add_url_rule("/turnos/", "buscar_turno", turno.buscar_turno, methods=['GET', 'POST'])
 
     return app

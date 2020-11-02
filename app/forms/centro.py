@@ -30,6 +30,7 @@ class CentroForm(FlaskForm):
         "Teléfono",
         validators=[
             DataRequired(),
+            Length(min=7, message="Mínimo 7 caracteres"), 
             Length(max=20, message="Máximo 20 caracteres"),
             Regexp("^[0-9\-]+$", message="Solo números y -"),
         ],
@@ -69,5 +70,6 @@ class CentroForm(FlaskForm):
     submit = SubmitField("Aceptar")
 
     def validate_cierre(form, field):
-        if field.data < form.apertura.data:
-            raise ValidationError("La hora de cierre debe ser mayor a la de apartura")
+        if form.apertura.data is not None:
+            if field.data < form.apertura.data:
+                raise ValidationError("La hora de cierre debe ser mayor a la de apartura")

@@ -14,7 +14,7 @@
         <div class="center">
           <form method="post">
               {% if centro.protocolo %}
-                <a class="h4" href="{{ url_for('static', filename='pdf/'+pdf) }}">Protocolo</a><div class="mb-3"></div>
+                <a class="h4" target="_blank" href="{{ url_for('static', filename='pdf/'+pdf) }}">Protocolo</a><div class="mb-3"></div>
               {% endif %}
               {{ render_form(form) }}
           </form>

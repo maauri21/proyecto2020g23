@@ -355,15 +355,15 @@ def registrar_centro_api():
             telefono=json["telefono"],
             apertura=json["hora_apertura"],
             cierre=json["hora_cierre"],
-            municipio="asd",
             web=json["web"],
             email=json["email"],
             estado="Pendiente",
-            protocolo="asd.pdf",
-            coordenadas="1010",
         )
-        # Busco el nombre que puso para conectar la clave foranea
+
         tipo = TipoCentro.query.filter_by(nombre=json["tipo"]).first()
+        if (tipo is None):
+            return jsonify({"Error": "Este tipo de centro no existe"})
+
         tipo.centros.append(centro)
         Centro.agregar(centro)
         Centro.commit()

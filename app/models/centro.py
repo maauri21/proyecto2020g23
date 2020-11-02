@@ -21,6 +21,7 @@ class Centro(db.Model):
     protocolo = db.Column(db.String(40))
     coordenadas = db.Column(db.String(40))
     tipo_id = db.Column(db.Integer, db.ForeignKey("tipocentros.id"))
+    turnos = db.relationship("Turno", backref="centro", lazy=True)
 
     def __repr__(self):
         return "<Centro: {}>".format(self.nombre)

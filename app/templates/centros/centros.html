@@ -22,13 +22,13 @@
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
-                    <td style="width:20%;">Nombre</td>
-                    <td style="width:20%;">Dirección</td>
-                    <td style="width:12%;">Teléfono</td>
-                    <td style="width:5%;">Apertura</td>
-                    <td style="width:5%;">Cierre</td>
-                    <td style="width:16%;">Tipo</td>
-                    <td style="width:25%;">Acciones</td>
+                    <td class="text-primary" style="width:20%">Nombre</td>
+                    <td class="text-primary" style="width:15%">Dirección</td>
+                    <td class="text-primary" style="width:12%">Teléfono</td>
+                    <td class="text-primary">Apertura</td>
+                    <td class="text-primary">Cierre</td>
+                    <td class="text-primary" style="width:16%">Tipo</td>
+                    <td class="text-primary" style="width:25%">Acciones</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -37,11 +37,16 @@
                     <td> {{ centro.nombre }} </td>
                     <td> {{ centro.direccion }} </td>
                     <td> {{ centro.telefono }} </td>
-                    <td> {{ centro.apertura }} </td>
-                    <td> {{ centro.cierre }} </td>
+                    <td> {{ centro.apertura.strftime("%H:%M") }} </td>
+                    <td> {{ centro.cierre.strftime("%H:%M") }} </td>
                     <td> {{ centro.tipo.nombre }} </td>
                     
                     <td>
+                      {% if centro.estado == 'Aceptado' %}
+                        {% if tiene_permiso(current_user, 'turno_index') %}
+                          <a href="{{ url_for('buscar_turno', id=centro.id) }}" class="btn btn-primary btn-sm">Turnos</a>
+                        {% endif %}
+                      {% endif %}
                       {% if centro.estado == 'Pendiente' %}
                         {% if tiene_permiso(current_user, 'centro_validate') %}
                           <a href="{{ url_for('validar_centro', id=centro.id) }}" class="btn btn-dark btn-sm">Validar</a>
