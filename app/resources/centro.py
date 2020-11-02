@@ -369,7 +369,7 @@ def registrar_centro_api():
         Centro.commit()
     except AssertionError as e:
         for elementos in e.args:
-            return jsonify({"Error": elementos["mensaje"]})
+            return jsonify({"Error": elementos["mensaje"]}), 400
     return jsonify({"atributos": centro.json()}), 201
 
 
