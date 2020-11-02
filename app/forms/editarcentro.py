@@ -61,5 +61,5 @@ class EditarCentroForm(FlaskForm):
     submit = SubmitField("Aceptar")
 
     def validate_cierre(form, field):
-        if field.data < form.apertura.data:
+       if field.data < form.apertura.data:
             raise ValidationError("La hora de cierre debe ser mayor a la de apartura")

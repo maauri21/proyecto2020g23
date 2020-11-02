@@ -177,12 +177,12 @@ class Centro(db.Model):
     def validate_apertura(self, key, apertura):
         expresion = (string.digits + (":"))
         
-        if not apertura:
+        if not str(apertura):
             raise AssertionError(
                 {"campo": "apertura", "mensaje": "El horario de apertura no puede estar vacio"}
             )
 
-        if not ":" in apertura:
+        if not ":" in str(apertura):
             raise AssertionError(
                 {"campo": "apertura", "mensaje": "El horario debe estar en el formato hh:mm"}
             ) 
@@ -202,12 +202,12 @@ class Centro(db.Model):
     def validate_cierre(self, key, cierre):
        expresion = (string.digits + (":"))
        
-       if not cierre:
+       if not str(cierre):
            raise AssertionError(
                {"campo": "cierre", "mensaje": "El horario de cierre no puede estar vacio"}
            )
 
-       if not ":" in cierre:
+       if not ":" in str(cierre):
             raise AssertionError(
                 {"campo": "cierre", "mensaje": "El horario debe estar en el formato hh:mm"}
             ) 
