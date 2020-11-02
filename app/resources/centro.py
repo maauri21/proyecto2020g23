@@ -315,7 +315,7 @@ def devolver_centros_api():
 
     page = int(request.args.get("num_pag", 1))
     config = Configuracion.query.first()
-    centros = Centro.query.paginate(
+    centros = Centro.query.filter_by(estado='Aceptado').paginate(
         per_page=config.cantPaginacion, page=page, error_out=False
     )
 
