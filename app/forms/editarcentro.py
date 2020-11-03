@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TimeField, ValidationError, SelectField
+from wtforms import StringField, SubmitField, TimeField, ValidationError, SelectField, HiddenField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp
 from app.models.tipocentro import TipoCentro
@@ -55,14 +55,8 @@ class EditarCentroForm(FlaskForm):
             Length(max=40, message="Máximo 40 caracteres"),
         ],
     )
-    lat = StringField(
-        "Latitud",
-        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
-    )
-    lng = StringField(
-        "Longitud",
-        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
-    )
+    lat = HiddenField("lat")
+    lng = HiddenField("lng")
     submit = SubmitField("Aceptar")
 
     def validate_cierre(form, field):

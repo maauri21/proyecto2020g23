@@ -2,6 +2,12 @@
 {% extends "base.html" %}
 {% block title %}Validar centro{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script lat="{{centro.lat}}" lng="{{centro.lng}}" src="{{ url_for('static', filename='js/validarmapa.js') }}"></script>
+{% endblock %}
+
 {% block tamañoPanel %}col-md-8{% endblock %}
 
 {% block nombre %}Validar centro{% endblock %}
@@ -16,6 +22,7 @@
               {% if centro.protocolo %}
                 <a class="h4" target="_blank" href="{{ url_for('static', filename='pdf/'+pdf) }}">Protocolo</a><div class="mb-3"></div>
               {% endif %}
+              <div class="mb-3" style="height: 250px;" id="mapid"></div>
               {{ render_form(form) }}
           </form>
         </div>

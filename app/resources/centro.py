@@ -238,7 +238,7 @@ def editar_centro(id):
             for elementos in e.args:
                 form[elementos["campo"]].errors.append(elementos["mensaje"])
             return render_template(
-                "centros/centro.html", agregar_centro=agregar_centro, form=form
+                "centros/centro.html", agregar_centro=agregar_centro, form=form, centro=centro
             )
         # Redirección al listado dsp de agregar
         return redirect(url_for("buscar_centros"))
@@ -255,7 +255,7 @@ def editar_centro(id):
     form.lat.data = centro.lat
     form.lng.data = centro.lng
     return render_template(
-        "centros/centro.html", agregar_centro=agregar_centro, form=form
+        "centros/centro.html", agregar_centro=agregar_centro, form=form, centro=centro
     )
 
 
@@ -314,8 +314,6 @@ def validar_centro(id):
     form.web.data = centro.web
     form.email.data = centro.email
     pdf = centro.protocolo
-    form.lat.data = centro.lat
-    form.lng.data = centro.lng
     return render_template(
         "centros/validar_centro.html", form=form, pdf=pdf, centro=centro
     )
