@@ -140,7 +140,7 @@ def agregar_centro():
     form = CentroForm()
     i = str(1)
     for item in data["data"]["Town"]:
-        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
+        items = [(data["data"]["Town"][i]["id"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
         i = int(i)
         i += 1
@@ -213,7 +213,7 @@ def editar_centro(id):
     form = EditarCentroForm()
     i = str(1)
     for item in data["data"]["Town"]:
-        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
+        items = [(data["data"]["Town"][i]["id"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
         i = int(i)
         i += 1
@@ -302,7 +302,15 @@ def validar_centro(id):
     form.apertura.data = centro.apertura
     form.cierre.data = centro.cierre
     form.tipo.data = centro.tipo.nombre
-    form.municipio.data = centro.municipio
+
+    # Agarrar el nombre teniendo el id (centro.municipio)
+    req = requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+    )
+    Jresponse = req.text
+    data = json.loads(Jresponse)
+    form.municipio.data = data["data"]["Town"][str(centro.municipio)]["name"]
+
     form.web.data = centro.web
     form.email.data = centro.email
     pdf = centro.protocolo
@@ -360,6 +368,7 @@ def registrar_centro_api():
             telefono=json["telefono"],
             apertura=json["hora_apertura"],
             cierre=json["hora_cierre"],
+            municipio=json["municipio"],
             web=json["web"],
             email=json["email"],
             estado="Pendiente",

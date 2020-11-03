@@ -1,26 +1,24 @@
 {% from 'bootstrap/form.html' import render_form %}
 {% extends "base.html" %}
 {% block title %}
-    {% if agregar_centro %}
-        Agregar centro
+    {% if agregar_turno %}
+        Agregar turno
     {% else %}
-        Editar centro
+        Editar turno
     {% endif %}
 {% endblock %}
 
 {% block tamañoPanel %}col-md-8{% endblock %}
 
 {% block nombre %}
-  {% if agregar_centro %}
-    Agregar centro
+  {% if agregar_turno %}
+    Agregar turno
   {% else %}
-    Editar centro
+    Editar turno
   {% endif %}
 {% endblock %}
 
 {% block body %}
-<script src="{{ url_for('static', filename='js/mapa.js') }}"></script>
-
 <div class="content-section">
  <div class="outer">
     <div class="middle">

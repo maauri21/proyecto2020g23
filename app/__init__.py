@@ -129,5 +129,6 @@ def create_app(environment="development"):
 
     # Turnos
     app.add_url_rule("/turnos/", "buscar_turno", turno.buscar_turno, methods=['GET', 'POST'])
+    app.add_url_rule("/turnos/agregar/<int:id>", "agregar_turno", turno.agregar_turno, methods=['GET', 'POST']) 
 
     return app

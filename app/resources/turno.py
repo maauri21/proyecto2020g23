@@ -69,4 +69,20 @@ def buscar_turno():
         turnos = turnos.filter(Turno.centro_id.contains(session['centro'])).paginate(
             per_page=config.cantPaginacion, page=pag, error_out=False
         )
-    return render_template("turnos/turnos.html", form=form, turnos=turnos)
+    return render_template("turnos/turnos.html", form=form, turnos=turnos, id=session['centro'])
+
+@login_required
+def agregar_turno(id):
+    """
+    Agregar turno
+    """
+    agregar_turno = True
+
+    if not check_permiso(current_user, "turno_new"):
+        abort(401)
+
+    form = TurnoForm()
+
+    return render_template(
+        "turnos/turno.html", agregar_turno=agregar_turno, form=form
+    )

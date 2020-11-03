@@ -1,6 +1,8 @@
 from app.db import db
 from sqlalchemy.orm import validates
 import string 
+import requests
+from flask import json
 
 class Centro(db.Model):
     """
@@ -15,7 +17,7 @@ class Centro(db.Model):
     telefono = db.Column(db.String(20))
     apertura = db.Column(db.Time())
     cierre = db.Column(db.Time())
-    municipio = db.Column(db.String(30))
+    municipio = db.Column(db.Integer)
     web = db.Column(db.String(40))
     email = db.Column(db.String(40), index=True, unique=True)
     estado = db.Column(db.String(10))
@@ -59,14 +61,20 @@ class Centro(db.Model):
         return db.session.delete(centro)
 
     def json(self):
+        req = requests.get(
+            "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+        )
+        Jresponse = req.text
+        data = json.loads(Jresponse)
         return {
             "nombre": self.nombre,
             "direccion": self.direccion,
             "telefono": self.telefono,
             "hora_apertura": str(
                 self.apertura
-            ),  # lo transformo a string sino jsonifi no puede serializarlo
+            ),
             "hora_cierre": str(self.cierre),
+            "municipio": data["data"]["Town"][str(self.municipio)]["name"],
             "tipo": self.tipo.nombre,
             "web": self.web,
             "email": self.email,
@@ -224,6 +232,31 @@ class Centro(db.Model):
                    }
                )
        return cierre   
+
+    @validates("municipio")
+    def validate_direccion(self, key, municipio):
+        expresion = string.digits
+        
+        if not municipio:
+            raise AssertionError(
+                {"campo": "municipio", "mensaje": "El municipio es obligatorio"}
+            )
+        
+        for elemento in municipio:
+            if elemento not in expresion:
+                raise AssertionError(
+                    {
+                        "campo": "municipio",
+                        "mensaje": "El municipio solo puede tener números",
+                    }
+                )
+
+        if int(municipio) < 1 or int(municipio) > 135:
+            raise AssertionError(
+                {"campo": "municipio", "mensaje": "El municipio debe estar entre 1 y 135"}
+            )
+
+        return municipio  
 
     @validates("web")
     def validate_web(self, key, web):
