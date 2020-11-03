@@ -97,7 +97,8 @@ def registrar_centro():
                 email=form.email.data,
                 estado="Pendiente",
                 protocolo=nombreArchivo,
-                coordenadas=form.coordenadas.data,
+                lat=form.lat.data,
+                lng=form.lng.data,
             )
             tipo.centros.append(centro)
             Centro.agregar(centro)
@@ -167,7 +168,8 @@ def agregar_centro():
                 email=form.email.data,
                 estado="Aceptado",
                 protocolo=nombreArchivo,
-                coordenadas=form.coordenadas.data,
+                lat=form.lat.data,
+                lng=form.lng.data,
             )
             tipo.centros.append(centro)
             Centro.agregar(centro)
@@ -228,7 +230,8 @@ def editar_centro(id):
             centro.municipio = form.municipio.data
             centro.web = form.web.data
             centro.email = form.email.data
-            centro.coordenadas = form.coordenadas.data
+            centro.lat = form.lat.data
+            centro.lng = form.lng.data
             Centro.commit()
             flash("Centro modificado")
         except AssertionError as e:
@@ -249,7 +252,8 @@ def editar_centro(id):
     form.municipio.data = centro.municipio
     form.web.data = centro.web
     form.email.data = centro.email
-    form.coordenadas.data = centro.coordenadas
+    form.lat.data = centro.lat
+    form.lng.data = centro.lng
     return render_template(
         "centros/centro.html", agregar_centro=agregar_centro, form=form
     )
@@ -302,7 +306,8 @@ def validar_centro(id):
     form.web.data = centro.web
     form.email.data = centro.email
     pdf = centro.protocolo
-    form.coordenadas.data = centro.coordenadas
+    form.lat.data = centro.lat
+    form.lng.data = centro.lng
     return render_template(
         "centros/validar_centro.html", form=form, pdf=pdf, centro=centro
     )

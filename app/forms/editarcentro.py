@@ -55,9 +55,13 @@ class EditarCentroForm(FlaskForm):
             Length(max=40, message="Máximo 40 caracteres"),
         ],
     )
-    coordenadas = StringField(
-        "Coordenadas",
-        validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
+    lat = StringField(
+        "Latitud",
+        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
+    )
+    lng = StringField(
+        "Longitud",
+        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
     )
     submit = SubmitField("Aceptar")
 

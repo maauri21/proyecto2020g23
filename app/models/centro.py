@@ -20,7 +20,8 @@ class Centro(db.Model):
     email = db.Column(db.String(40), index=True, unique=True)
     estado = db.Column(db.String(10))
     protocolo = db.Column(db.String(40))
-    coordenadas = db.Column(db.String(40))
+    lat = db.Column(db.String(15))
+    lng = db.Column(db.String(15))
     tipo_id = db.Column(db.Integer, db.ForeignKey("tipocentros.id"))
     turnos = db.relationship("Turno", backref="centro", lazy=True)
 

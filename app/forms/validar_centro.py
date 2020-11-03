@@ -16,6 +16,7 @@ class ValidarCentroForm(FlaskForm):
     municipio = StringField("Municipio", render_kw={"readonly": True})
     web = StringField("Web", render_kw={"readonly": True})
     email = StringField("Email", render_kw={"readonly": True})
-    coordenadas = StringField("Coordenadas", render_kw={"readonly": True})
+    lat = StringField("Latitud", render_kw={"readonly": True})
+    lng = StringField("Longitud", render_kw={"readonly": True})
     aceptar = SubmitField()
     rechazar = SubmitField()
