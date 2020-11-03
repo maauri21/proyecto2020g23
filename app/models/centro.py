@@ -1,5 +1,6 @@
 from app.db import db
 from sqlalchemy.orm import validates
+import string 
 
 class Centro(db.Model):
     """
@@ -81,6 +82,12 @@ class Centro(db.Model):
             raise AssertionError(
                 {"campo": "email", "mensaje": "El email es incorrecto"}
             )
+
+        if len(email) > 40:
+            raise AssertionError(
+                {"campo": "email", "mensaje": "El email no puede tener mas de 40 caracteres"}
+            ) 
+
         if (centroAEditar is not None):
             if (email != centroAEditar.email):
                 if Centro.query.filter(Centro.email == email).first():
@@ -103,67 +110,16 @@ class Centro(db.Model):
     @validates("nombre")
     def validate_nombre(self, key, nombre):
         centroAEditar = Centro.query.get(self.id)
-        letras = [
-            "a",
-            "b",
-            "c",
-            "d",
-            "e",
-            "f",
-            "g",
-            "h",
-            "i",
-            "j",
-            "k",
-            "l",
-            "m",
-            "n",
-            "ñ",
-            "o",
-            "p",
-            "q",
-            "r",
-            "s",
-            "t",
-            "u",
-            "v",
-            "w",
-            "x",
-            "y",
-            "z",
-            "A",
-            "B",
-            "C",
-            "D",
-            "E",
-            "F",
-            "G",
-            "H",
-            "I",
-            "J",
-            "K",
-            "L",
-            "M",
-            "N",
-            "Ñ",
-            "O",
-            "P",
-            "Q",
-            "R",
-            "S",
-            "T",
-            "U",
-            "V",
-            "W",
-            "X",
-            "Y",
-            "Z",
-            " ",
-        ]
+        letras = string.ascii_letters + string.whitespace
 
         if not nombre:
             raise AssertionError(
                 {"campo": "nombre", "mensaje": "El nombre no puede estar vacio"}
+            )
+
+        if len(nombre) > 40:
+            raise AssertionError(
+                {"campo": "nombre", "mensaje": "El nombre no puede tener mas de 40 caracteres"}
             )
 
         if (centroAEditar is not None):
@@ -193,3 +149,128 @@ class Centro(db.Model):
                     }
                 )
         return nombre
+
+    @validates("direccion")
+    def validate_direccion(self, key, direccion):
+        expresion = (string.ascii_letters + string.whitespace + string.digits + ("#") + ("°") + (","))
+        
+        if not direccion:
+            raise AssertionError(
+                {"campo": "direccion", "mensaje": "La direccion no puede estar vacio"}
+            )
+
+        if len(direccion) > 40:
+            raise AssertionError(
+                {"campo": "direccion", "mensaje": "La direccion no puede tener mas de 40 caracteres"}
+            )
+
+        for elemento in direccion:
+            if elemento not in expresion:
+                raise AssertionError(
+                    {
+                        "campo": "direccion",
+                        "mensaje": "La direccion solo puede contener letras, numeros , # Y ° ",
+                    }
+                )
+        return direccion  
+
+    @validates("apertura")
+    def validate_apertura(self, key, apertura):
+        expresion = (string.digits + (":"))
+        
+        if not str(apertura):
+            raise AssertionError(
+                {"campo": "apertura", "mensaje": "El horario de apertura no puede estar vacio"}
+            )
+
+        if not ":" in str(apertura):
+            raise AssertionError(
+                {"campo": "apertura", "mensaje": "El horario debe estar en el formato hh:mm"}
+            ) 
+
+            
+        for elemento in str(apertura):
+            if elemento not in expresion:
+                raise AssertionError(
+                    {
+                        "campo": "apertura",
+                        "mensaje": "El horario de apertura solo puede contener numeros y :, ingresar un formato del tipo hh:mm ",
+                    }
+                )
+        return apertura
+
+    @validates("cierre")
+    def validate_cierre(self, key, cierre):
+       expresion = (string.digits + (":"))
+       
+       if not str(cierre):
+           raise AssertionError(
+               {"campo": "cierre", "mensaje": "El horario de cierre no puede estar vacio"}
+           )
+
+       if not ":" in str(cierre):
+            raise AssertionError(
+                {"campo": "cierre", "mensaje": "El horario debe estar en el formato hh:mm"}
+            ) 
+
+        
+       for elemento in str(cierre):
+           if elemento not in expresion:              # transformo a string sino no puedo iterar sobre la hora, porque datetime no es un tipo iterable
+               raise AssertionError(
+                   {
+                       "campo": "cierre",
+                       "mensaje": "El horario de cierre solo puede contener numeros y : ",
+                   }
+               )
+       return cierre   
+
+    @validates("web")
+    def validate_web(self, key, web):
+       expresion = (string.printable)
+       
+              
+       if not "." in web:
+            raise AssertionError(
+                {"campo": "web", "mensaje": "Ingrese una pagina web valida"}
+            )    
+        
+       for elemento in web:
+           if elemento not in expresion:              
+               raise AssertionError(
+                   {
+                       "campo": "web",
+                       "mensaje": "La pagina web puede contener solo numeros,letras y sinos de puntuacion ",
+                   }
+               )
+
+               
+       return web   
+
+    @validates("telefono")
+    def validate_telefono(self, key, telefono):
+        expresion = (string.digits + ("-") )
+        
+        if not telefono:
+            raise AssertionError(
+                {"campo": "telefono", "mensaje": "El telefono no puede estar vacio"}
+            )
+
+        if len(telefono) > 40:
+            raise AssertionError(
+                {"campo": "telefono", "mensaje": "El telefono no puede tener mas de 40 caracteres"}
+            )
+
+        if len(telefono) < 8:
+            raise AssertionError(
+                {"campo": "telefono", "mensaje": "Ingrese un numero de telefono valido"}
+            )    
+
+        for elemento in telefono:
+            if elemento not in expresion:
+                raise AssertionError(
+                    {
+                        "campo": "telefono",
+                        "mensaje": "El telefono solo puede contener numeros y el caracter - , ingrese formato 221-4259320 ",
+                    }
+                )
+        return telefono    
