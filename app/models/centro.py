@@ -260,7 +260,7 @@ class Centro(db.Model):
                 {"campo": "telefono", "mensaje": "El telefono no puede tener mas de 40 caracteres"}
             )
 
-        if len(telefono) < 8:
+        if len(telefono) < 7:
             raise AssertionError(
                 {"campo": "telefono", "mensaje": "Ingrese un numero de telefono valido"}
             )    
