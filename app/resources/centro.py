@@ -70,7 +70,7 @@ def registrar_centro():
     form = CentroForm()
     i = str(1)
     for item in data["data"]["Town"]:
-        items = [(data["data"]["Town"][i]["name"], data["data"]["Town"][i]["name"])]
+        items = [(data["data"]["Town"][i]["id"], data["data"]["Town"][i]["name"])]
         form.municipio.choices += items
         i = int(i)
         i += 1

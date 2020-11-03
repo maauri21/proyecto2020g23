@@ -6,6 +6,7 @@ from wtforms import (
     FileField,
     ValidationError,
     SelectField,
+    HiddenField,
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp
@@ -63,14 +64,10 @@ class CentroForm(FlaskForm):
         ],
     )
     protocolo = FileField("Protocolo", validators=[FileAllowed(["pdf"], "Solo .pdf")])
-    lat = StringField(
-        "Latitud",
-        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
-    )
-    lng = StringField(
-        "Longitud",
-        validators=[DataRequired(), Length(max=15, message="Máximo 15 caracteres")],
-    )
+
+    lat = HiddenField("lat")
+    lng = HiddenField("lng")
+
     submit = SubmitField("Aceptar")
 
     def validate_cierre(form, field):
