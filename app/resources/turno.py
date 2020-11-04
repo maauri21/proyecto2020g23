@@ -83,14 +83,7 @@ def agregar_turno(id):
 
     form = TurnoForm()
 
-    turnos_ocupados = Turno.query.filter_by(centro_id=id).all()
-    lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
-    
-    for item in turnos_ocupados:
-        lista.remove(item.hora.strftime("%H:%M"))
-
-    for item in lista:
-        form.hora.choices += [(item, item)]
+    form.centro_id.data = id
 
     if form.validate_on_submit():
         turno = Turno(

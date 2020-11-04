@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email, Length
 from datetime import date, timedelta
 
@@ -8,6 +8,8 @@ class TurnoForm(FlaskForm):
     """
     Formulario de turnos
     """
+
+    centro_id = HiddenField("centro_id")
 
     email = StringField(
         "Email",
@@ -21,7 +23,7 @@ class TurnoForm(FlaskForm):
     dia = SelectField(
         "Dia:",
         choices=[
-            (date.today().strftime("%d/%m/%Y"), date.today().strftime("%d/%m/%Y")),
+            (date.today(), date.today()),
             (
                 (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
                 (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
