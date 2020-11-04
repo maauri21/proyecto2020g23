@@ -82,7 +82,16 @@ def agregar_turno(id):
         abort(401)
 
     form = TurnoForm()
+
+    turnos_ocupados = Turno.query.filter_by(centro_id=id).all()
+    lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
     
+    for item in turnos_ocupados:
+        lista.remove(item.hora.strftime("%H:%M"))
+
+    for item in lista:
+        form.hora.choices += [(item, item)]
+
     if form.validate_on_submit():
         turno = Turno(
             email=form.email.data,
@@ -99,3 +108,28 @@ def agregar_turno(id):
     return render_template(
         "turnos/turno.html", agregar_turno=agregar_turno, form=form
     )
+
+
+def devolver_turnos_api(id):
+    """
+    Devolver turnos en api
+    """
+
+    fecha = request.args.get("fecha")
+
+    turnos_ocupados = Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
+
+    # hacerlo con while
+    lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
+    
+    for item in turnos_ocupados:
+        lista.remove(item.hora.strftime("%H:%M"))
+    # usar un map en vez de array con for
+    array = []
+    for item in lista:
+        diccionario = {'centro_id':id, 'fecha':fecha, 'hora_inicio':item, 'horafin':'09:30'}
+        array.append(diccionario)
+
+    return jsonify({"turnos": array})
+
+
