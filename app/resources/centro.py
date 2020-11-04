@@ -369,8 +369,8 @@ def registrar_centro_api():
             municipio=json["municipio"],
             web=json["web"],
             email=json["email"],
-            lat=json["lat"],
-            lng=json["lng"],
+            lat=json["latitud"],
+            lng=json["longitud"],
             estado="Pendiente",
         )
 

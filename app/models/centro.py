@@ -70,16 +70,14 @@ class Centro(db.Model):
             "nombre": self.nombre,
             "direccion": self.direccion,
             "telefono": self.telefono,
-            "hora_apertura": str(
-                self.apertura
-            ),
+            "hora_apertura": str(self.apertura),
             "hora_cierre": str(self.cierre),
             "municipio": data["data"]["Town"][str(self.municipio)]["name"],
             "tipo": self.tipo.nombre,
             "web": self.web,
             "email": self.email,
-            "lat":self.lat,
-            "lng":self.lng,
+            "latitud":self.lat,
+            "longitud":self.lng,
         }
 
     @validates("email")
@@ -313,11 +311,11 @@ class Centro(db.Model):
 
     @validates("lat")
     def validate_lat(self, key, lat):
-        expresion = (string.digits + ("-") + (",") + (".") )
+        expresion = (string.digits + ("-") + (".") )
         
         if not lat:
             raise AssertionError(
-                {"campo": "lat", "mensaje": "El campo lat no puede estar vacio"}
+                {"campo": "lat", "mensaje": "El campo latitud no puede estar vacio"}
             )
 
         if len(lat) > 25:
@@ -331,18 +329,18 @@ class Centro(db.Model):
                 raise AssertionError(
                     {
                         "campo": "lat",
-                        "mensaje": "El campo lat solo puede contener numeros ",
+                        "mensaje": "El campo latitud solo puede contener numeros ",
                     }
                 )
         return lat  
 
     @validates("lng")
     def validate_lng(self, key, lng):
-        expresion = (string.digits + ("-") + (",") + (".") )
+        expresion = (string.digits + ("-") + (".") )
         
         if not lng:
             raise AssertionError(
-                {"campo": "lng", "mensaje": "El campo lng no puede estar vacio"}
+                {"campo": "lng", "mensaje": "El campo longitud no puede estar vacio"}
             )
 
         if len(lng) > 25:
@@ -355,7 +353,7 @@ class Centro(db.Model):
                 raise AssertionError(
                     {
                         "campo": "lng",
-                        "mensaje": "El campo lng solo puede contener numeros ",
+                        "mensaje": "El campo longitud solo puede contener numeros ",
                     }
                 )
         return lng          
