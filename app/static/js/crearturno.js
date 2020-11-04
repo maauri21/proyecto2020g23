@@ -6,7 +6,7 @@ $('#dia').change(function(event){   // toda la funion se ejecuta cada vez que ca
       .then((response) => response.json())  // .json xq estoy usando api
       .then((response) => {
           response.turnos.map((turno) => {  // turnos es lo que aparece en la api
-            $('#hora').append(`<option value="${turno.hora_inicio}">${turno.hora_inicio}</option>`)
+            $('#hora').append(`<option value='${turno.hora_inicio}'>${turno.hora_inicio}</option>`)
           })
       })
 });

@@ -3,7 +3,6 @@ from wtforms import StringField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email, Length
 from datetime import date, timedelta
 
-
 class TurnoForm(FlaskForm):
     """
     Formulario de turnos
@@ -23,7 +22,7 @@ class TurnoForm(FlaskForm):
     dia = SelectField(
         "Dia:",
         choices=[
-            (date.today(), date.today()),
+            (date.today().strftime("%d/%m/%Y"), date.today().strftime("%d/%m/%Y")),
             (
                 (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
                 (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
@@ -55,6 +54,6 @@ class TurnoForm(FlaskForm):
         ],
     )
 
-    hora = SelectField("Hora", choices=[])
+    hora = SelectField("Hora", choices=[], validate_choice=False)
 
     submit = SubmitField("Aceptar")

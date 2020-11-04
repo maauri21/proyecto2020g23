@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectField
-#from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from app.models.turno import Turno
 
 class BuscarTurnoForm(FlaskForm):

@@ -108,7 +108,7 @@ def devolver_turnos_api(id):
     Devolver turnos en api
     """
 
-    fecha = request.args.get("fecha")
+    fecha = datetime.strptime(request.args.get("fecha"), '%d/%m/%Y')
 
     turnos_ocupados = Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
 
@@ -120,7 +120,7 @@ def devolver_turnos_api(id):
     # usar un map en vez de array con for
     array = []
     for item in lista:
-        diccionario = {'centro_id':id, 'fecha':fecha, 'hora_inicio':item, 'horafin':'09:30'}
+        diccionario = {'centro_id':id, 'fecha':fecha.strftime("%d/%m/%Y"), 'hora_inicio':item, 'horafin':'09:30'}
         array.append(diccionario)
 
     return jsonify({"turnos": array})
