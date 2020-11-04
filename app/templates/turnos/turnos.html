@@ -31,7 +31,7 @@
                 {% for turno in turnos.items %}
                   <tr>
                     <td> {{ turno.email }} </td>
-                    <td> {{ (turno.turno).strftime("%d/%m/%Y - %H:%M")}}</td>
+                    <td> {{ (turno.dia).strftime("%d/%m/%Y") + ' - ' + (turno.hora).strftime("%H:%M")}}</td>
                     <td>
                       {% if tiene_permiso(current_user, 'turno_update') %}
                         <a href="#" class="btn btn-warning btn-sm">Editar</a>

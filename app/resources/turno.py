@@ -19,7 +19,7 @@ from app.models.centro import Centro
 from app.models.configuracion import Configuracion
 from app.helpers.permisos import check_permiso
 from sqlalchemy import distinct
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from werkzeug.utils import secure_filename
 import os
@@ -59,12 +59,12 @@ def buscar_turno():
     if form.data["select"] != "Todos":
         turnos = (
             Turno.query.filter(Turno.email.contains(estado))
-            .filter(Turno.centro_id.contains(session['centro'])).order_by(Turno.turno.asc())
+            .filter(Turno.centro_id.contains(session['centro'])).order_by(Turno.dia.asc(), Turno.hora.asc())
             .paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
         )
     else:
         # Turnos de hoy y 2 días más, ordenados
-        turnos = Turno.query.filter(Turno.turno.between(date.today(), date.today() + timedelta(days=3))).order_by(Turno.turno.asc())
+        turnos = Turno.query.filter(Turno.dia.between(date.today(), date.today() + timedelta(days=2))).order_by(Turno.dia.asc(), Turno.hora.asc())
         # Que sean de este centro
         turnos = turnos.filter(Turno.centro_id.contains(session['centro'])).paginate(
             per_page=config.cantPaginacion, page=pag, error_out=False
@@ -82,6 +82,19 @@ def agregar_turno(id):
         abort(401)
 
     form = TurnoForm()
+    
+    if form.validate_on_submit():
+        turno = Turno(
+            email=form.email.data,
+            dia=datetime.strptime(form.dia.data, '%d/%m/%Y'),
+            hora=form.hora.data,
+        )
+        centro = Centro.buscar(id)
+        centro.turnos.append(turno)
+        Turno.agregar(turno)
+        Turno.commit()
+        flash("Turno agregado")
+        return redirect(url_for("buscar_turno"))
 
     return render_template(
         "turnos/turno.html", agregar_turno=agregar_turno, form=form
