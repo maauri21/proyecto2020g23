@@ -17,3 +17,9 @@ class TipoCentro(db.Model):
 
     def mostrar():
         return TipoCentro.query.all()
+
+    def buscar_nombre(nombre):
+        """
+        Busco si el nombre está en la DB
+        """
+        return TipoCentro.query.filter_by(nombre=nombre).first()

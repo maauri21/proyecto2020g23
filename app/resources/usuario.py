@@ -20,7 +20,7 @@ def buscar_usuarios():
         abort(401)
 
     # Saber cuantos mostrar por pag
-    config = Configuracion.query.first()
+    config = Configuracion.buscar_config()
     form = BuscarUsuarioForm(formdata=request.args)
     buscar = form.data["search"]
     # Para volver a la misma pag dsp de cualquier acción
@@ -30,13 +30,13 @@ def buscar_usuarios():
     # Activos + string de busqueda. Error out para que no me tire error cuando pongo un num de pag que no existe
     if form.data["select"] == "Activo":
         usuarios = (
-            Usuario.query.filter_by(activo=True)
+            Usuario.buscar_activos(True)
             .filter(Usuario.usuario.contains(buscar))
             .paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
         )
     elif form.data["select"] == "Bloqueado":
         usuarios = (
-            Usuario.query.filter_by(activo=False)
+            Usuario.buscar_activos(False)
             .filter(Usuario.usuario.contains(buscar))
             .paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
         )

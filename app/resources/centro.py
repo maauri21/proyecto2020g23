@@ -24,6 +24,7 @@ from werkzeug.utils import secure_filename
 import os
 import requests
 from flask import current_app as app
+import math
 
 
 @login_required
@@ -35,7 +36,7 @@ def buscar_centros():
     if not check_permiso(current_user, "centro_index"):
         abort(401)
 
-    config = Configuracion.query.first()
+    config = Configuracion.buscar_config()
     form = BuscarCentroForm(formdata=request.args)
     buscar = form.data["search"]
     estado = form.data["select"]
@@ -269,9 +270,15 @@ def borrar_centro(id):
         abort(401)
 
     centro = Centro.buscar(id)
+
+    # Borrar el archivo si subió pdf
+    if (centro.protocolo is not None):
+        os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
+
     Centro.eliminar(centro)
     Centro.commit()
     flash("Centro borrado")
+
     # Redirección al listado dsp de borrar
     return redirect(url_for("buscar_centros"))
 
@@ -325,17 +332,17 @@ def devolver_centros_api():
     """
 
     page = int(request.args.get("num_pag", 1))
-    config = Configuracion.query.first()
-    centros = Centro.query.filter_by(estado='Aceptado').paginate(
+    config = Configuracion.buscar_config()
+    centros = Centro.buscar_estado('Aceptado').paginate(
         per_page=config.cantPaginacion, page=page, error_out=False
     )
 
-    cant_centros = Centro.query.count()
-    total = cant_centros / config.cantPaginacion
+    cant_centrosAceptados = Centro.cantidad()
+    total = cant_centrosAceptados / config.cantPaginacion
 
     resultado = [centro.json() for centro in centros.items]
 
-    return jsonify({"centros": resultado}, {"total": round(total)}, {"pagina": page})
+    return jsonify({"centros": resultado}, {"total": math.ceil(total)}, {"pagina": page})
 
 
 def devolver_centro_api(id):
@@ -374,7 +381,7 @@ def registrar_centro_api():
             estado="Pendiente",
         )
 
-        tipo = TipoCentro.query.filter_by(nombre=json["tipo"]).first()
+        tipo = TipoCentro.buscar_nombre(json["tipo"])
         if (tipo is None):
             return jsonify({"Error": "Este tipo de centro no existe"})
 

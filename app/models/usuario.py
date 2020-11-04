@@ -110,6 +110,12 @@ class Usuario(UserMixin, db.Model):
         """
         return Usuario.query.filter_by(email=mail).first()
 
+    def buscar_activos(activo):
+        """
+        Busco los usuarios activos en la DB
+        """
+        return Usuario.query.filter_by(activo=activo)
+
     @validates("email")
     def validate_email(self, key, email):
         usuarioAEditar = Usuario.query.get(self.id)

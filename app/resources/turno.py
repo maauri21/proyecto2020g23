@@ -35,12 +35,12 @@ def buscar_turno():
     if not check_permiso(current_user, "turno_index"):
         abort(401)
 
-    config = Configuracion.query.first()
+    config = Configuracion.buscar_config()
     form = BuscarTurnoForm(formdata=request.args)
 
     # Para que no se rompa cuando busco guardo el id en sesion
     if (request.args.get("id")) is not None:
-        centro = Centro.query.get(int(request.args.get("id")))
+        centro = Centro.buscar(int(request.args.get("id")))
         session['centro'] = centro.id
 
     # Me traigo una vez (distinct) los email de los turnos de este centro (session)

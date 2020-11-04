@@ -79,12 +79,12 @@ def create_app(environment="development"):
         """
         context_processor se ejecuta antes que se procese la plantilla
         """
-        config = Configuracion.query.first()
+        config = Configuracion.buscar_config()
         return dict(mostrar_config=config)
 
     @app.before_request
     def verificar_mantenimiento():
-        config = Configuracion.query.first()
+        config = Configuracion.buscar_config()
         modo_mantenimiento = config.mantenimiento
         esAdmin=False
         # Si soy admin puedo navegar por la pag mientras hay mantenimiento

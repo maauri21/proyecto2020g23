@@ -12,7 +12,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
 
-        usuario = Usuario.query.filter_by(email=form.email.data).first()
+        usuario = Usuario.buscar_email(form.email.data)
         # Datos correctos pero bloqueado
         if (
             usuario is not None

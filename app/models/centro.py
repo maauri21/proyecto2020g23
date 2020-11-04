@@ -44,7 +44,7 @@ class Centro(db.Model):
 
     def buscar(id):
         """
-        Busca la configuracion en la DB
+        Busca un centro en la DB
         """
         return Centro.query.get(id)
 
@@ -59,6 +59,18 @@ class Centro(db.Model):
         Elimina un centro en la DB
         """
         return db.session.delete(centro)
+
+    def cantidad():
+        """
+        Devuelve la cantidad de centros aceptados
+        """
+        return Centro.query.filter_by(estado='Aceptado').count()
+
+    def buscar_estado(estado):
+        """
+        Busco el estado en la DB
+        """
+        return Centro.query.filter_by(estado=estado)
 
     def json(self):
         req = requests.get(

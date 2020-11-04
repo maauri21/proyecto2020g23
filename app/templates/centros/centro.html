@@ -17,7 +17,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css"></script>
 
 {% if agregar_centro %}
-  <script src="{{ url_for('static', filename='js/mapa.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/crearmapa.js') }}"></script>
 {% else %}
   <script lat="{{centro.lat}}" lng="{{centro.lng}}" src="{{ url_for('static', filename='js/editarmapa.js') }}"></script>
 {% endif %}
