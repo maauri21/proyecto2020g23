@@ -107,8 +107,18 @@ def devolver_turnos_api(id):
     """
     Devolver turnos en api
     """
+    # Si no puse fecha, le asigno la de hoy
+    fecha = request.args.get("fecha", date.today().strftime("%d/%m/%Y"))
 
-    fecha = datetime.strptime(request.args.get("fecha"), '%d/%m/%Y')
+    try:
+        valid_date = datetime.strptime(fecha, '%d/%m/%Y').date()
+        if not (date(2020, 1, 1) <= valid_date <= date(2120, 1, 1)):
+            raise ValueError()
+    except ValueError:
+        return jsonify({"Error": "Fecha inválida"})
+
+    # Convierto a time para buscarlo en DB
+    fecha = datetime.strptime(fecha, '%d/%m/%Y')
 
     turnos_ocupados = Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
 
@@ -120,7 +130,8 @@ def devolver_turnos_api(id):
     # usar un map en vez de array con for
     array = []
     for item in lista:
-        diccionario = {'centro_id':id, 'fecha':fecha.strftime("%d/%m/%Y"), 'hora_inicio':item, 'horafin':'09:30'}
+        horafin = datetime.strptime(item, '%H:%M') + timedelta(minutes=30)  # Lo convierto a time y le sumo 30
+        diccionario = {'centro_id':id, 'fecha':fecha.strftime("%d/%m/%Y"), 'hora_inicio':item, 'horafin': horafin.strftime("%H:%M")}
         array.append(diccionario)
 
     return jsonify({"turnos": array})
