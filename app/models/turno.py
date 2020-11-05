@@ -2,6 +2,8 @@ from app.db import db
 from sqlalchemy.orm import validates
 from flask import json
 import string
+from flask import session
+
 class Turno(db.Model):
     """
     Crear una tabla turnos
@@ -29,6 +31,21 @@ class Turno(db.Model):
         Comiteo a la  DB
         """
         return db.session.commit()
+
+    def email_distintos():
+        """
+        Email distintos de los que solicitaron turno en este centro
+        """
+        query = db.session.query(Turno.email, Turno.centro_id)
+        query = query.filter(Turno.centro_id == session['centro'])
+        query = query.distinct(Turno.email).group_by(Turno.email)
+        return query
+
+    def turnos_ocupados(id, fecha):
+        """
+        Devuelvo turnos ocupados
+        """
+        return Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
 
     def json(self):
      return {
@@ -81,6 +98,6 @@ class Turno(db.Model):
         
         if hora not in lista:
             raise AssertionError(
-                {"campo": "hora", "mensaje": "La hora debe estar en el formato hh:mm"}
+                {"campo": "hora", "mensaje": "Hora incorrecta"}
             )
         return hora

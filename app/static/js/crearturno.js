@@ -1,4 +1,6 @@
+document.getElementById("hora").disabled = true;
 $('#dia').change(function(event){   // toda la funion se ejecuta cada vez que cambie el valor del input dia
+    document.getElementById("hora").disabled = false;
     fecha = $(event.target).val();  // event.target tiene el select que levantó el evento (valor de dia)
     centro_id = $('#centro_id').val();
     $('#hora').empty(); // vaciar el select

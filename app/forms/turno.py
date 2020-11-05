@@ -19,8 +19,12 @@ class TurnoForm(FlaskForm):
         ],
     )
 
-    dia = DateField('Dia')
+    dia = DateField('Dia',
+        validators=[DataRequired()],
+    )
 
-    hora = SelectField("Hora", choices=[], validate_choice=False)
+    hora = SelectField("Hora", choices=[], validate_choice=False,
+        validators=[DataRequired()],
+    )
 
     submit = SubmitField("Aceptar")

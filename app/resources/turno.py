@@ -21,11 +21,6 @@ from app.helpers.permisos import check_permiso
 from sqlalchemy import distinct
 from datetime import date, timedelta, datetime
 
-from werkzeug.utils import secure_filename
-import os
-import requests
-from flask import current_app as app
-
 @login_required
 def buscar_turno():
     """
@@ -44,9 +39,7 @@ def buscar_turno():
         session['centro'] = centro.id
 
     # Me traigo una vez (distinct) los email de los turnos de este centro (session)
-    query = db.session.query(Turno.email, Turno.centro_id)
-    query = query.filter(Turno.centro_id == session['centro'])
-    query = query.distinct(Turno.email).group_by(Turno.email)
+    query = Turno.email_distintos()
 
     for item in query:
         items = [(item.email, item.email)]
@@ -86,16 +79,25 @@ def agregar_turno(id):
     form.centro_id.data = id
     
     if form.validate_on_submit():
-        turno = Turno(
-            email=form.email.data,
-            dia=form.dia.data,
-            hora=form.hora.data,
-        )
-        centro = Centro.buscar(id)
-        centro.turnos.append(turno)
-        Turno.agregar(turno)
-        Turno.commit()
-        flash("Turno agregado")
+        try:
+            turno = Turno(
+                email=form.email.data,
+                dia=form.dia.data,
+                hora=form.hora.data,
+            )
+            centro = Centro.buscar(id)
+            centro.turnos.append(turno)
+            Turno.agregar(turno)
+            Turno.commit()
+            flash("Turno agregado")
+
+        except AssertionError as e:
+            # recorro el diccionario y listo el error de validacion correspondiente
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "turnos/turno.html", agregar_turno=agregar_turno, form=form
+            )
         return redirect(url_for("buscar_turno"))
 
     return render_template(
@@ -117,7 +119,7 @@ def devolver_turnos_api(id):
     except ValueError:
         return jsonify({"Error": "Fecha inválida"})
 
-    turnos_ocupados = Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
+    turnos_ocupados = Turno.turnos_ocupados(id, fecha)
 
     # hacerlo con while
     lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
@@ -139,9 +141,8 @@ def registrar_turno_api(id):
     Registrar turno en api
     """
     json = request.get_json(force=True)
-    turnos = Turno.query.filter_by(centro_id=id).filter_by(dia=json["fecha"]).all()
+    turnos = Turno.turnos_ocupados(id, json["fecha"])
     for item in turnos:
-               
         if item.hora.strftime("%H:%M") == json["hora_inicio"]:
             return jsonify({"Error": "Turno ocupado"})   
     try:
@@ -156,7 +157,6 @@ def registrar_turno_api(id):
         centro.turnos.append(turno)
         Turno.agregar(turno)
         Turno.commit()
-
     except AssertionError as e:
         for elementos in e.args:
             return jsonify({"Error": elementos["mensaje"]}), 400
