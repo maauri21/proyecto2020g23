@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email, Length
-from datetime import date, timedelta
+from wtforms.fields.html5 import DateField
 
 class TurnoForm(FlaskForm):
     """
@@ -19,40 +19,7 @@ class TurnoForm(FlaskForm):
         ],
     )
 
-    dia = SelectField(
-        "Dia:",
-        choices=[
-            (date.today().strftime("%d/%m/%Y"), date.today().strftime("%d/%m/%Y")),
-            (
-                (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=1)).strftime("%d/%m/%Y"),
-            ),
-            (
-                (date.today() + timedelta(days=2)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=2)).strftime("%d/%m/%Y"),
-            ),
-                        (
-                (date.today() + timedelta(days=3)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=3)).strftime("%d/%m/%Y"),
-            ),
-                        (
-                (date.today() + timedelta(days=4)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=4)).strftime("%d/%m/%Y"),
-            ),
-                        (
-                (date.today() + timedelta(days=5)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=5)).strftime("%d/%m/%Y"),
-            ),
-                        (
-                (date.today() + timedelta(days=6)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=6)).strftime("%d/%m/%Y"),
-            ),
-                        (
-                (date.today() + timedelta(days=7)).strftime("%d/%m/%Y"),
-                (date.today() + timedelta(days=7)).strftime("%d/%m/%Y"),
-            ),
-        ],
-    )
+    dia = DateField('Dia')
 
     hora = SelectField("Hora", choices=[], validate_choice=False)
 
