@@ -25,5 +25,4 @@ def bad_request_error_api(e):
     return jsonify({"msg": "Bad Request"}), 400
 
 
-# def not_found_error_api(e):
-#    return jsonify({'msg': 'Not Found error'}), 404    # No activar, choca con el 404 original
+

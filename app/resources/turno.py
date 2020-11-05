@@ -84,7 +84,7 @@ def agregar_turno(id):
     form = TurnoForm()
 
     form.centro_id.data = id
-
+    
     if form.validate_on_submit():
         turno = Turno(
             email=form.email.data,
@@ -134,3 +134,30 @@ def devolver_turnos_api(id):
     return jsonify({"turnos": array})
 
 
+def registrar_turno_api(id):
+    """
+    Registrar turno en api
+    """
+    json = request.get_json(force=True)
+    turnos = Turno.query.filter_by(centro_id=id).filter_by(dia=json["fecha"]).all()
+    for item in turnos:
+               
+        if item.hora.strftime("%H:%M") == json["hora_inicio"]:
+            return jsonify({"Error": "Turno ocupado"})   
+    try:
+        turno = Turno(
+            centro_id=id,
+            email=json["email_donante"],
+            hora=json["hora_inicio"],
+            dia=json["fecha"],
+        )
+        
+        centro = Centro.buscar(id)
+        centro.turnos.append(turno)
+        Turno.agregar(turno)
+        Turno.commit()
+
+    except AssertionError as e:
+        for elementos in e.args:
+            return jsonify({"Error": elementos["mensaje"]}), 400
+    return jsonify({"atributos": turno.json()}), 201
