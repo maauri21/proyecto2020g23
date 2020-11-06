@@ -32,6 +32,18 @@ class Turno(db.Model):
         """
         return db.session.commit()
 
+    def buscar(id):
+        """
+        Busca un turno en la DB
+        """
+        return Turno.query.get(id)
+
+    def eliminar(turno):
+        """
+        Elimina un turno en la DB
+        """
+        return db.session.delete(turno)   
+
     def email_distintos():
         """
         Email distintos de los que solicitaron turno en este centro

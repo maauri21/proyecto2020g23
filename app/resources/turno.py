@@ -103,7 +103,24 @@ def agregar_turno(id):
     return render_template(
         "turnos/turno.html", agregar_turno=agregar_turno, form=form
     )
+    
+@login_required
+def borrar_turno(id):
+    """
+    Borrar turno
+    """
 
+    if not check_permiso(current_user, "turno_destroy"):
+        abort(401)
+
+    turno = Turno.buscar(id)
+
+    Turno.eliminar(turno)
+    Turno.commit()
+    flash("Turno borrado")
+
+    # Redirección al listado de turnos dsp de borrar
+    return redirect(url_for("buscar_turno"))
 
 def devolver_turnos_api(id):
     """
