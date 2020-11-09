@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TimeField, ValidationError, SelectField, HiddenField
+from wtforms import StringField, SubmitField, ValidationError, SelectField, HiddenField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp
 from app.models.tipocentro import TipoCentro
+from wtforms.fields.html5 import TimeField
 
 # DataRequired es un validador de flaskwtf
 class EditarCentroForm(FlaskForm):
@@ -31,13 +32,11 @@ class EditarCentroForm(FlaskForm):
     apertura = TimeField(
         "Hora de apertura",
         format="%H:%M",
-        validators=[DataRequired(message="Hora incorrecta")],
-        description="Estilo 12:10",
+        validators=[DataRequired(message="Hora incorrecta")]
     )
     cierre = TimeField(
         "Hora de cierre",
-        validators=[DataRequired(message="Hora incorrecta")],
-        description="Estilo 12:10",
+        validators=[DataRequired(message="Hora incorrecta")]
     )
     tipo = QuerySelectField(
         "Tipo", validators=[DataRequired()], query_factory=TipoCentro.mostrar
@@ -61,5 +60,5 @@ class EditarCentroForm(FlaskForm):
 
     def validate_cierre(form, field):
         if form.apertura.data is not None:
-            if field.data < form.apertura.data:
+            if field.data <= form.apertura.data:
                 raise ValidationError("La hora de cierre debe ser mayor a la de apartura")

@@ -352,7 +352,7 @@ def devolver_centro_api(id):
 
     centro = Centro.buscar(id)
     if centro is None or centro.estado != 'Aceptado':
-        return jsonify({"atributos": []}), 404
+        return jsonify({"Error": "El centro no existe o no fue aceptado"}), 404
     return jsonify({"atributos": centro.json()}), 200
 
 

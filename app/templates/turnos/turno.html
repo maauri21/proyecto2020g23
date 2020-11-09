@@ -25,7 +25,11 @@
       <div class="inner">
         <div class="center">
           {{ render_form(form) }}
-          <script src="{{ url_for('static', filename='js/crearturno.js') }}"></script>
+          {% if agregar_turno %}
+            <script src="{{ url_for('static', filename='js/crearturno.js') }}"></script>
+          {% else %}
+            <script horaa="{{turno.hora}}" src="{{ url_for('static', filename='js/editarturno.js') }}"></script>
+          {% endif %}
         </div>
       </div>
     </div>

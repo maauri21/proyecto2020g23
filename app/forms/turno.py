@@ -23,6 +23,7 @@ class TurnoForm(FlaskForm):
         validators=[DataRequired()],
     )
 
+    # agregarlo al choices la hora si está en la db
     hora = SelectField("Hora", choices=[], validate_choice=False,
         validators=[DataRequired()],
     )

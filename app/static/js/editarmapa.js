@@ -13,9 +13,8 @@ const addMarker = ({ lat, lng }) => {
 // Crea el mapa
 const initializeMap = (selector) => {
     // traigo las coordenadas 
-    var js = $('script[src*=editarmapa]');
-    var lat = js.attr('lat');   
-    var lng = js.attr('lng');  
+    let lat = $('#lat').val();
+    let lng = $('#lng').val();
 
     // Arranco donde está el punto
     map = L.map(selector).setView([lat, lng], 13);

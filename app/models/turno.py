@@ -3,6 +3,7 @@ from sqlalchemy.orm import validates
 from flask import json
 import string
 from flask import session
+from datetime import date, timedelta
 
 class Turno(db.Model):
     """
@@ -53,11 +54,23 @@ class Turno(db.Model):
         query = query.distinct(Turno.email).group_by(Turno.email)
         return query
 
+    def hoy_y_2dias():
+        """
+        Turnos de hoy y 2 días más, ordenados
+        """
+        return Turno.query.filter(Turno.dia.between(date.today(), date.today() + timedelta(days=2))).order_by(Turno.dia.asc(), Turno.hora.asc())
+
     def turnos_ocupados(id, fecha):
         """
         Devuelvo turnos ocupados
         """
         return Turno.query.filter_by(centro_id=id).filter_by(dia=fecha).all()
+
+    def buscar_con_email(email, id):
+        """
+        Devuelvo los turnos para ese email
+        """
+        return Turno.query.filter(Turno.email.contains(email)).filter(Turno.centro_id.contains(id)).order_by(Turno.dia.asc(), Turno.hora.asc())
 
     def json(self):
      return {
@@ -87,8 +100,8 @@ class Turno(db.Model):
         return email
 
        
-    @validates("hora")
-    def validate_hora(self, key, hora):
+    @validates("hora", "dia")
+    def validate_hora(self, key, hora, dia):
                  
                        
         if not str(hora):

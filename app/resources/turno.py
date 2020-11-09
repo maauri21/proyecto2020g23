@@ -39,25 +39,23 @@ def buscar_turno():
         session['centro'] = centro.id
 
     # Me traigo una vez (distinct) los email de los turnos de este centro (session)
-    query = Turno.email_distintos()
+    email_distintos = Turno.email_distintos()
 
-    for item in query:
+    for item in email_distintos:
         items = [(item.email, item.email)]
         form.select.choices += items
 
-    estado = form.data["select"]
+    email = form.data["select"]
     pag = int(request.args.get("num_pag", 1))
 
 
     if form.data["select"] != "Todos":
         turnos = (
-            Turno.query.filter(Turno.email.contains(estado))
-            .filter(Turno.centro_id.contains(session['centro'])).order_by(Turno.dia.asc(), Turno.hora.asc())
-            .paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
+            Turno.buscar_con_email(email, session['centro']).paginate(per_page=config.cantPaginacion, page=pag, error_out=False)
         )
     else:
         # Turnos de hoy y 2 días más, ordenados
-        turnos = Turno.query.filter(Turno.dia.between(date.today(), date.today() + timedelta(days=2))).order_by(Turno.dia.asc(), Turno.hora.asc())
+        turnos = Turno.hoy_y_2dias()
         # Que sean de este centro
         turnos = turnos.filter(Turno.centro_id.contains(session['centro'])).paginate(
             per_page=config.cantPaginacion, page=pag, error_out=False
@@ -75,7 +73,6 @@ def agregar_turno(id):
         abort(401)
 
     form = TurnoForm()
-
     form.centro_id.data = id
     
     if form.validate_on_submit():
@@ -103,6 +100,43 @@ def agregar_turno(id):
     return render_template(
         "turnos/turno.html", agregar_turno=agregar_turno, form=form
     )
+
+@login_required
+def editar_turno(id):
+    """
+    Editar turno
+    """
+
+    if not check_permiso(current_user, "turno_update"):
+        abort(401)
+
+    agregar_turno = False
+    turno = Turno.buscar(id)
+
+    form = TurnoForm()
+    form.centro_id.data = turno.centro_id
+
+    if form.validate_on_submit():
+        try:
+            turno.email = form.email.data
+            turno.dia = form.dia.data
+            turno.hora = form.hora.data
+            Turno.commit()
+            flash("Turno modificado")
+        except AssertionError as e:
+            for elementos in e.args:
+                form[elementos["campo"]].errors.append(elementos["mensaje"])
+            return render_template(
+                "turnos/turno.html", agregar_turno=agregar_turno, form=form, turno=turno
+            )
+        return redirect(url_for("buscar_turno"))
+
+    form.email.data = turno.email
+    form.dia.data = turno.dia
+    form.hora.data = turno.hora
+    return render_template(
+        "turnos/turno.html", agregar_turno=agregar_turno, form=form, turno=turno
+    )
     
 @login_required
 def borrar_turno(id):
@@ -128,6 +162,10 @@ def devolver_turnos_api(id):
     """
     # Si no puse fecha, le asigno la de hoy
     fecha = request.args.get("fecha", date.today().strftime("%Y-%m-%d"))
+
+    centro = Centro.buscar(id)
+    if centro is None or centro.estado != 'Aceptado':
+        return jsonify({"Error": "El centro no existe o no fue aceptado"}), 404
 
     try:
         valid_date = datetime.strptime(fecha, '%Y-%m-%d').date()

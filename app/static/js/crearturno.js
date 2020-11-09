@@ -7,8 +7,8 @@ $('#dia').change(function(event){   // toda la funion se ejecuta cada vez que ca
     fetch(`/api/v1/centros/${centro_id}/turnos_disponibles?fecha=${fecha}`) // request de la api, devuelve una promesa
       .then((response) => response.json())  // .json xq estoy usando api
       .then((response) => {
-          response.turnos.map((turno) => {  // turnos es lo que aparece en la api
-            $('#hora').append(`<option value='${turno.hora_inicio}'>${turno.hora_inicio}</option>`)
-          })
-      })
+        response.turnos.map((turno) => {  // turnos es lo que aparece en la api
+          $('#hora').append(`<option value='${turno.hora_inicio}'>${turno.hora_inicio}</option>`)
+        })
+    })
 });

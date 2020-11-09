@@ -17,7 +17,7 @@ class Centro(db.Model):
     telefono = db.Column(db.String(20))
     apertura = db.Column(db.Time())
     cierre = db.Column(db.Time())
-    municipio = db.Column(db.Integer)
+    municipio = db.Column(db.String(3))
     web = db.Column(db.String(40))
     email = db.Column(db.String(40), index=True, unique=True)
     estado = db.Column(db.String(10))

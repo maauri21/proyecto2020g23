@@ -19,7 +19,7 @@
 {% if agregar_centro %}
   <script src="{{ url_for('static', filename='js/crearmapa.js') }}"></script>
 {% else %}
-  <script lat="{{centro.lat}}" lng="{{centro.lng}}" src="{{ url_for('static', filename='js/editarmapa.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/editarmapa.js') }}"></script>
 {% endif %}
 
 {% endblock %}
