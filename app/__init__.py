@@ -35,7 +35,7 @@ def create_app(environment="development"):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Donde meto los pdf
-    app.config['UPLOAD_FOLDER'] = 'app/static/pdf'
+    app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
 
     # Para que la API se duvuelva en el orden que quiero
     app.config['JSON_SORT_KEYS'] = False

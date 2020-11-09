@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TimeField
+from wtforms import StringField, SubmitField, TimeField, HiddenField
 
 
 class ValidarCentroForm(FlaskForm):
@@ -16,5 +16,7 @@ class ValidarCentroForm(FlaskForm):
     municipio = StringField("Municipio", render_kw={"readonly": True})
     web = StringField("Web", render_kw={"readonly": True})
     email = StringField("Email", render_kw={"readonly": True})
+    lat = HiddenField("lat")
+    lng = HiddenField("lng")
     aceptar = SubmitField()
     rechazar = SubmitField()

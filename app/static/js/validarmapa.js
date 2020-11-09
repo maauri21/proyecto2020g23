@@ -5,9 +5,8 @@ let marker;
 const initializeMap = (selector) => {
 
     // traigo las coordenadas 
-    var js = $('script[src*=validarmapa]');
-    var lat = js.attr('lat');   
-    var lng = js.attr('lng');  
+    let lat = $('#lat').val();
+    let lng = $('#lng').val(); 
 
     // Arranco donde está el punto
     map = L.map(selector).setView([lat, lng], 13);

@@ -100,8 +100,8 @@ class Turno(db.Model):
         return email
 
        
-    @validates("hora", "dia")
-    def validate_hora(self, key, hora, dia):
+    @validates("hora")
+    def validate_hora(self, key, hora):
                  
                        
         if not str(hora):
@@ -119,7 +119,11 @@ class Turno(db.Model):
                 {"campo": "hora", "mensaje": "La hora debe tener 5 caracteres"}
             ) 
 
-        lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
+        lista = []
+        horario = datetime.strptime('09:00', '%H:%M')
+        while horario < datetime.strptime('16:00', '%H:%M'):
+            horario = (horario + timedelta(minutes=30))
+            lista.append(horario.strftime("%H:%M"))
         
         if hora not in lista:
             raise AssertionError(

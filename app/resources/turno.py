@@ -116,6 +116,8 @@ def editar_turno(id):
     form = TurnoForm()
     form.centro_id.data = turno.centro_id
 
+    form.hora.choices += [(turno.hora.strftime("%H:%M"), turno.hora.strftime("%H:%M"))]
+
     if form.validate_on_submit():
         try:
             turno.email = form.email.data
@@ -133,7 +135,6 @@ def editar_turno(id):
 
     form.email.data = turno.email
     form.dia.data = turno.dia
-    form.hora.data = turno.hora
     return render_template(
         "turnos/turno.html", agregar_turno=agregar_turno, form=form, turno=turno
     )
@@ -176,12 +177,14 @@ def devolver_turnos_api(id):
 
     turnos_ocupados = Turno.turnos_ocupados(id, fecha)
 
-    # hacerlo con while
-    lista = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"]
+    lista = []
+    horario = datetime.strptime('09:00', '%H:%M')
+    while horario < datetime.strptime('16:00', '%H:%M'):
+        horario = (horario + timedelta(minutes=30))
+        lista.append(horario.strftime("%H:%M"))
     
     for item in turnos_ocupados:
         lista.remove(item.hora.strftime("%H:%M"))
-    # usar un map en vez de array con for
     array = []
     for item in lista:
         horafin = datetime.strptime(item, '%H:%M') + timedelta(minutes=30)  # Lo convierto a time y le sumo 30

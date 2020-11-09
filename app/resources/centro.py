@@ -309,6 +309,8 @@ def validar_centro(id):
     form.apertura.data = centro.apertura
     form.cierre.data = centro.cierre
     form.tipo.data = centro.tipo.nombre
+    form.lat.data = centro.lat
+    form.lng.data = centro.lng
 
     # Agarrar el nombre teniendo el id (centro.municipio)
     req = requests.get(
