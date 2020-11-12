@@ -1,0 +1,52 @@
+{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}
+    {% if agregar_centro %}
+        Agregar centro
+    {% else %}
+        Editar centro
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
+<script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css"></script>
+
+{% if agregar_centro %}
+  <script src="{{ url_for('static', filename='js/crearmapa.js') }}"></script>
+{% else %}
+  <script src="{{ url_for('static', filename='js/editarmapa.js') }}"></script>
+{% endif %}
+
+{% endblock %}
+
+{% block tamañoPanel %}col-md-8{% endblock %}
+
+{% block nombre %}
+  {% if agregar_centro %}
+    Agregar centro
+  {% else %}
+    Editar centro
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+          <form method="POST" onsubmit="submitHandler(event)" enctype="multipart/form-data">
+            <div class="mb-3" style="height: 250px;" id="mapid"></div>
+            {{ render_form(form) }}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

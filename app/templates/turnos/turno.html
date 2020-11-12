@@ -1,0 +1,38 @@
+{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% block title %}
+    {% if agregar_turno %}
+        Agregar turno
+    {% else %}
+        Editar turno
+    {% endif %}
+{% endblock %}
+
+{% block tamañoPanel %}col-md-8{% endblock %}
+
+{% block nombre %}
+  {% if agregar_turno %}
+    Agregar turno
+  {% else %}
+    Editar turno
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+          {{ render_form(form) }}
+          {% if agregar_turno %}
+            <script src="{{ url_for('static', filename='js/crearturno.js') }}"></script>
+          {% else %}
+            <script horaa="{{turno.hora}}" src="{{ url_for('static', filename='js/editarturno.js') }}"></script>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

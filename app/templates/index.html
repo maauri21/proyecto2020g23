@@ -1,9 +1,14 @@
+{% from 'bootstrap/utils.html' import render_messages %}
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 
 {% block tamañoPanel %}col-md-8{% endblock %}
 {% block nombre %}Home{% endblock %}
 
+{% block alerta %}
+  {{ render_messages() }}
+{% endblock %}
+
 {% block body %}
-  El home
+  <a href="{{ url_for('registrar_centro') }}" class="btn btn-primary">Agregar centro</a>
 {% endblock %}
