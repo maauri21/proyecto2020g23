@@ -102,8 +102,9 @@ class Turno(db.Model):
        
     @validates("hora")
     def validate_hora(self, key, hora):
-                 
-                       
+      
+       
+                         
         if not str(hora):
             raise AssertionError(
                 {"campo": "hora", "mensaje": "La hora no puede estar vacio"}

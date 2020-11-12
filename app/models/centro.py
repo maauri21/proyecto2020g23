@@ -150,7 +150,7 @@ class Centro(db.Model):
     @validates("nombre")
     def validate_nombre(self, key, nombre):
         centroAEditar = Centro.query.get(self.id)
-        letras = (string.ascii_letters + string.whitespace + ("ñ"))
+        letras = (string.ascii_letters + string.whitespace + string.digits + ("ñ"))
 
         if not nombre:
             raise AssertionError(

@@ -74,9 +74,17 @@ def agregar_turno(id):
 
     form = TurnoForm()
     form.centro_id.data = id
+    turnos = Turno.turnos_ocupados(id, form.dia.data)
+  
     
     if form.validate_on_submit():
+       
         try:
+            for item in turnos:
+                if item.hora.strftime("%H:%M") == (form.hora.data):
+                    flash ("Turno ocupado") 
+                    return redirect(url_for("buscar_turno"))
+                    
             turno = Turno(
                 email=form.email.data,
                 dia=form.dia.data,
