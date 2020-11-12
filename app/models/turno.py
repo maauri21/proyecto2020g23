@@ -5,6 +5,7 @@ import string
 from flask import session
 from datetime import date, timedelta, datetime
 
+
 class Turno(db.Model):
     """
     Crear una tabla turnos
@@ -43,14 +44,14 @@ class Turno(db.Model):
         """
         Elimina un turno en la DB
         """
-        return db.session.delete(turno)   
+        return db.session.delete(turno)
 
     def email_distintos():
         """
         Email distintos de los que solicitaron turno en este centro
         """
         query = db.session.query(Turno.email, Turno.centro_id)
-        query = query.filter(Turno.centro_id == session['centro'])
+        query = query.filter(Turno.centro_id == session["centro"])
         query = query.distinct(Turno.email).group_by(Turno.email)
         return query
 
@@ -58,7 +59,9 @@ class Turno(db.Model):
         """
         Turnos de hoy y 2 días más, ordenados
         """
-        return Turno.query.filter(Turno.dia.between(date.today(), date.today() + timedelta(days=2))).order_by(Turno.dia.asc(), Turno.hora.asc())
+        return Turno.query.filter(
+            Turno.dia.between(date.today(), date.today() + timedelta(days=2))
+        ).order_by(Turno.dia.asc(), Turno.hora.asc())
 
     def turnos_ocupados(id, fecha):
         """
@@ -70,16 +73,19 @@ class Turno(db.Model):
         """
         Devuelvo los turnos para ese email
         """
-        return Turno.query.filter(Turno.email.contains(email)).filter(Turno.centro_id.contains(id)).order_by(Turno.dia.asc(), Turno.hora.asc())
+        return (
+            Turno.query.filter(Turno.email.contains(email))
+            .filter(Turno.centro_id.contains(id))
+            .order_by(Turno.dia.asc(), Turno.hora.asc())
+        )
 
     def json(self):
-     return {
+        return {
             "centro_id": self.centro_id,
             "email_donante": self.email,
             "hora_inicio": str(self.hora),
             "fecha": str(self.dia),
-          
-        }   
+        }
 
     @validates("email")
     def validate_email(self, key, email):
@@ -94,17 +100,17 @@ class Turno(db.Model):
 
         if len(email) > 40:
             raise AssertionError(
-                {"campo": "email", "mensaje": "El email no puede tener mas de 40 caracteres"}
-            )       
+                {
+                    "campo": "email",
+                    "mensaje": "El email no puede tener mas de 40 caracteres",
+                }
+            )
 
         return email
 
-       
     @validates("hora")
     def validate_hora(self, key, hora):
-      
-       
-                         
+
         if not str(hora):
             raise AssertionError(
                 {"campo": "hora", "mensaje": "La hora no puede estar vacio"}
@@ -113,21 +119,19 @@ class Turno(db.Model):
         if not ":" in str(hora):
             raise AssertionError(
                 {"campo": "hora", "mensaje": "La hora debe estar en el formato hh:mm"}
-            )     
-        
+            )
+
         if len(hora) != 5:
             raise AssertionError(
                 {"campo": "hora", "mensaje": "La hora debe tener 5 caracteres"}
-            ) 
+            )
 
         lista = []
-        horario = datetime.strptime('08:30', '%H:%M')
-        while horario < datetime.strptime('16:00', '%H:%M'):
-            horario = (horario + timedelta(minutes=30))
+        horario = datetime.strptime("08:30", "%H:%M")
+        while horario < datetime.strptime("16:00", "%H:%M"):
+            horario = horario + timedelta(minutes=30)
             lista.append(horario.strftime("%H:%M"))
-        
+
         if hora not in lista:
-            raise AssertionError(
-                {"campo": "hora", "mensaje": "Hora incorrecta"}
-            )
+            raise AssertionError({"campo": "hora", "mensaje": "Hora incorrecta"})
         return hora

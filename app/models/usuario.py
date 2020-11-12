@@ -120,8 +120,8 @@ class Usuario(UserMixin, db.Model):
     def validate_email(self, key, email):
         usuarioAEditar = Usuario.query.get(self.id)
 
-        if (usuarioAEditar is not None):
-            if (email != usuarioAEditar.email):
+        if usuarioAEditar is not None:
+            if email != usuarioAEditar.email:
                 if Usuario.query.filter(Usuario.email == email).first():
                     raise AssertionError(
                         {
@@ -143,8 +143,8 @@ class Usuario(UserMixin, db.Model):
     def validate_usuario(self, key, usuario):
         usuarioAEditar = Usuario.query.get(self.id)
 
-        if (usuarioAEditar is not None):
-            if (usuario != usuarioAEditar.usuario):
+        if usuarioAEditar is not None:
+            if usuario != usuarioAEditar.usuario:
                 if Usuario.query.filter(Usuario.usuario == usuario).first():
                     raise AssertionError(
                         {

@@ -13,6 +13,7 @@ from app.db import db
 # Para manejar login, logout, sesiones. LoginManager se utiliza para guardar la configuración utilizada para la sesión
 login_manager = LoginManager()
 
+
 def create_app(environment="development"):
     """
     Cargar configuraciones
@@ -22,23 +23,25 @@ def create_app(environment="development"):
     env = environ.get("FLASK_ENV", environment)
     app.config.from_object(config[env])
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{username}:{password}@{host}/{database}'.format(
-            username=app.config["DB_USER"],
-            password=app.config["DB_PASS"],
-            host=app.config["DB_HOST"],
-            database=app.config["DB_NAME"],
-        )
+    app.config[
+        "SQLALCHEMY_DATABASE_URI"
+    ] = "mysql+pymysql://{username}:{password}@{host}/{database}".format(
+        username=app.config["DB_USER"],
+        password=app.config["DB_PASS"],
+        host=app.config["DB_HOST"],
+        database=app.config["DB_NAME"],
+    )
 
     app.config["SESSION_TYPE"] = "filesystem"
 
     # No mostrar las modificaciones de los objetos
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Donde meto los pdf
-    app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
+    app.config["UPLOAD_FOLDER"] = "app/static/uploads"
 
     # Para que la API se duvuelva en el orden que quiero
-    app.config['JSON_SORT_KEYS'] = False
+    app.config["JSON_SORT_KEYS"] = False
 
     # Para generar los formularios de forms.py y para mostrar los mensajes flash
     Bootstrap(app)
@@ -54,7 +57,16 @@ def create_app(environment="development"):
     migrate = Migrate(app, db)
 
     # orden para las migraciones
-    from app.models import configuracion, rol, usuario, permiso, relaciones, tipocentro, centro, turno
+    from app.models import (
+        configuracion,
+        rol,
+        usuario,
+        permiso,
+        relaciones,
+        tipocentro,
+        centro,
+        turno,
+    )
 
     from app.models.configuracion import Configuracion
     from app.resources import configuracion
@@ -65,14 +77,15 @@ def create_app(environment="development"):
 
     # Para ocultar en los .html dependiendo los permisos
     from app.helpers import permisos
+
     app.jinja_env.globals.update(tiene_permiso=permisos.check_permiso)
 
-    @app.route('/')
+    @app.route("/")
     def index():
         """
         Pagina principal
         """
-        return render_template('index.html')
+        return render_template("index.html")
 
     @app.context_processor
     def mostrar_config():
@@ -86,16 +99,16 @@ def create_app(environment="development"):
     def verificar_mantenimiento():
         config = Configuracion.buscar_config()
         modo_mantenimiento = config.mantenimiento
-        esAdmin=False
+        esAdmin = False
         # Si soy admin puedo navegar por la pag mientras hay mantenimiento
         if current_user.is_authenticated:
             for rol in current_user.roles:
-                if (rol.nombre == 'administrador'):
-                    esAdmin=True
+                if rol.nombre == "administrador":
+                    esAdmin = True
         # Si estoy en modo mantenimiento y puse una url distinta a /login
-        if modo_mantenimiento and request.path != url_for('auth_login'):
+        if modo_mantenimiento and request.path != url_for("auth_login"):
             if not esAdmin:
-                return render_template('mantenimiento.html')
+                return render_template("mantenimiento.html")
 
     #Handlers
     app.register_error_handler(401, handler.unauthorized_error)

@@ -87,7 +87,20 @@ def registrar_centro():
             nombreArchivo = form.nombre.data + "_" + filename
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
         try:
-            centro = Centro.crear(tipo, form.nombre.data, form.direccion.data, form.telefono.data, form.apertura.data, form.cierre.data, form.municipio.data, form.web.data, form.email.data, "Pendiente", nombreArchivo, form.lat.data, form.lng.data)
+            centro = Centro.crear(
+                form.nombre.data,
+                form.direccion.data,
+                form.telefono.data,
+                form.apertura.data,
+                form.cierre.data,
+                form.municipio.data,
+                form.web.data,
+                form.email.data,
+                "Pendiente",
+                nombreArchivo,
+                form.lat.data,
+                form.lng.data,
+            )
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
@@ -145,7 +158,20 @@ def agregar_centro():
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
 
         try:
-            centro = Centro.crear(tipo, form.nombre.data, form.direccion.data, form.telefono.data, form.apertura.data, form.cierre.data, form.municipio.data, form.web.data, form.email.data, "Aceptado", nombreArchivo, form.lat.data, form.lng.data)
+            centro = Centro.crear(
+                form.nombre.data,
+                form.direccion.data,
+                form.telefono.data,
+                form.apertura.data,
+                form.cierre.data,
+                form.municipio.data,
+                form.web.data,
+                form.email.data,
+                "Aceptado",
+                nombreArchivo,
+                form.lat.data,
+                form.lng.data,
+            )
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
@@ -213,7 +239,10 @@ def editar_centro(id):
             for elementos in e.args:
                 form[elementos["campo"]].errors.append(elementos["mensaje"])
             return render_template(
-                "centros/centro.html", agregar_centro=agregar_centro, form=form, centro=centro
+                "centros/centro.html",
+                agregar_centro=agregar_centro,
+                form=form,
+                centro=centro,
             )
         # Redirección al listado dsp de agregar
         return redirect(url_for("buscar_centros"))
@@ -246,7 +275,7 @@ def borrar_centro(id):
     centro = Centro.buscar(id)
 
     # Borrar el archivo si subió pdf
-    if (centro.protocolo is not None):
+    if centro.protocolo is not None:
         os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
 
     Centro.eliminar(centro)
@@ -309,7 +338,7 @@ def devolver_centros_api():
 
     page = int(request.args.get("num_pag", 1))
     config = Configuracion.buscar_config()
-    centros = Centro.buscar_estado('Aceptado').paginate(
+    centros = Centro.buscar_estado("Aceptado").paginate(
         per_page=config.cantPaginacion, page=page, error_out=False
     )
 
@@ -318,7 +347,9 @@ def devolver_centros_api():
 
     resultado = [centro.json() for centro in centros.items]
 
-    return jsonify({"centros": resultado}, {"total": math.ceil(total)}, {"pagina": page})
+    return jsonify(
+        {"centros": resultado}, {"total": math.ceil(total)}, {"pagina": page}
+    )
 
 
 def devolver_centro_api(id):
@@ -327,7 +358,7 @@ def devolver_centro_api(id):
     """
 
     centro = Centro.buscar(id)
-    if centro is None or centro.estado != 'Aceptado':
+    if centro is None or centro.estado != "Aceptado":
         return jsonify({"Error": "El centro no existe o no fue aceptado"}), 404
     return jsonify({"atributos": centro.json()}), 200
 
@@ -344,10 +375,23 @@ def registrar_centro_api():
 
     try:
         tipo = TipoCentro.buscar_nombre(json["tipo"])
-        if (tipo is None):
+        if tipo is None:
             return jsonify({"Error": "Este tipo de centro no existe"})
 
-        centro = Centro.crear(tipo, json["nombre"], json["direccion"], json["telefono"], json["hora_apertura"], json["hora_cierre"], json["municipio"], json["web"], json["email"], "Pendiente", None, json["latitud"], json["longitud"])
+        centro = Centro.crear(
+            json["nombre"],
+            json["direccion"],
+            json["telefono"],
+            json["hora_apertura"],
+            json["hora_cierre"],
+            json["municipio"],
+            json["web"],
+            json["email"],
+            "Pendiente",
+            None,
+            json["latitud"],
+            json["longitud"],
+        )
 
         tipo.centros.append(centro)
         Centro.agregar(centro)
@@ -356,6 +400,3 @@ def registrar_centro_api():
         for elementos in e.args:
             return jsonify({"Error": elementos["mensaje"]}), 400
     return jsonify({"atributos": centro.json()}), 201
-
-
-    

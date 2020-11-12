@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields.html5 import DateField
 
+
 class TurnoForm(FlaskForm):
     """
     Formulario de turnos
@@ -19,12 +20,16 @@ class TurnoForm(FlaskForm):
         ],
     )
 
-    dia = DateField('Dia',
+    dia = DateField(
+        "Dia",
         validators=[DataRequired()],
     )
 
     # agregarlo al choices la hora si está en la db
-    hora = SelectField("Hora", choices=[], validate_choice=False,
+    hora = SelectField(
+        "Hora",
+        choices=[],
+        validate_choice=False,
         validators=[DataRequired()],
     )
 

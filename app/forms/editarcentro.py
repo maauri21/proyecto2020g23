@@ -23,7 +23,7 @@ class EditarCentroForm(FlaskForm):
         "Teléfono",
         validators=[
             DataRequired(),
-            Length(min=7, message="Mínimo 7 caracteres"), 
+            Length(min=7, message="Mínimo 7 caracteres"),
             Length(max=20, message="Máximo 20 caracteres"),
             Regexp("^[0-9\-]+$", message="Solo números y -"),
         ],
@@ -32,11 +32,10 @@ class EditarCentroForm(FlaskForm):
     apertura = TimeField(
         "Hora de apertura",
         format="%H:%M",
-        validators=[DataRequired(message="Hora incorrecta")]
+        validators=[DataRequired(message="Hora incorrecta")],
     )
     cierre = TimeField(
-        "Hora de cierre",
-        validators=[DataRequired(message="Hora incorrecta")]
+        "Hora de cierre", validators=[DataRequired(message="Hora incorrecta")]
     )
     tipo = QuerySelectField(
         "Tipo", validators=[DataRequired()], query_factory=TipoCentro.mostrar
@@ -61,4 +60,6 @@ class EditarCentroForm(FlaskForm):
     def validate_cierre(form, field):
         if form.apertura.data is not None:
             if field.data <= form.apertura.data:
-                raise ValidationError("La hora de cierre debe ser mayor a la de apartura")
+                raise ValidationError(
+                    "La hora de cierre debe ser mayor a la de apartura"
+                )

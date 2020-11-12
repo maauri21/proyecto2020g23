@@ -23,6 +23,3 @@ def internal_server_error_api(e):
 
 def bad_request_error_api(e):
     return jsonify({"msg": "Bad Request"}), 400
-
-
-

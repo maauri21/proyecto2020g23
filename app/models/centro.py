@@ -1,8 +1,9 @@
 from app.db import db
 from sqlalchemy.orm import validates
-import string 
+import string
 import requests
 from flask import json
+
 
 class Centro(db.Model):
     """
@@ -36,9 +37,22 @@ class Centro(db.Model):
         """
         db.session.add(centro)
 
-    def crear(tipo, nombre, direccion, telefono, apertura, cierre, municipio, web, email, estado, protocolo, lat, lng):
+    def crear(
+        nombre,
+        direccion,
+        telefono,
+        apertura,
+        cierre,
+        municipio,
+        web,
+        email,
+        estado,
+        protocolo,
+        lat,
+        lng,
+    ):
         """
-        Crea un centro
+        Setea un centro
         """
         return Centro(
             nombre=nombre,
@@ -83,7 +97,7 @@ class Centro(db.Model):
         """
         Devuelve la cantidad de centros aceptados
         """
-        return Centro.query.filter_by(estado='Aceptado').count()
+        return Centro.query.filter_by(estado="Aceptado").count()
 
     def buscar_estado(estado):
         """
@@ -107,8 +121,8 @@ class Centro(db.Model):
             "tipo": self.tipo.nombre,
             "web": self.web,
             "email": self.email,
-            "latitud":self.lat,
-            "longitud":self.lng,
+            "latitud": self.lat,
+            "longitud": self.lng,
         }
 
     @validates("email")
@@ -125,11 +139,14 @@ class Centro(db.Model):
 
         if len(email) > 40:
             raise AssertionError(
-                {"campo": "email", "mensaje": "El email no puede tener mas de 40 caracteres"}
-            ) 
+                {
+                    "campo": "email",
+                    "mensaje": "El email no puede tener mas de 40 caracteres",
+                }
+            )
 
-        if (centroAEditar is not None):
-            if (email != centroAEditar.email):
+        if centroAEditar is not None:
+            if email != centroAEditar.email:
                 if Centro.query.filter(Centro.email == email).first():
                     raise AssertionError(
                         {
@@ -150,7 +167,7 @@ class Centro(db.Model):
     @validates("nombre")
     def validate_nombre(self, key, nombre):
         centroAEditar = Centro.query.get(self.id)
-        letras = (string.ascii_letters + string.whitespace + string.digits + ("ñ"))
+        letras = string.ascii_letters + string.whitespace + string.digits + ("ñ")
 
         if not nombre:
             raise AssertionError(
@@ -159,11 +176,14 @@ class Centro(db.Model):
 
         if len(nombre) > 40:
             raise AssertionError(
-                {"campo": "nombre", "mensaje": "El nombre no puede tener mas de 40 caracteres"}
+                {
+                    "campo": "nombre",
+                    "mensaje": "El nombre no puede tener mas de 40 caracteres",
+                }
             )
 
-        if (centroAEditar is not None):
-            if (nombre != centroAEditar.nombre):
+        if centroAEditar is not None:
+            if nombre != centroAEditar.nombre:
                 if Centro.query.filter(Centro.nombre == nombre).first():
                     raise AssertionError(
                         {
@@ -192,8 +212,15 @@ class Centro(db.Model):
 
     @validates("direccion")
     def validate_direccion(self, key, direccion):
-        expresion = (string.ascii_letters + string.whitespace + string.digits + ("#") + ("°") + (","))
-        
+        expresion = (
+            string.ascii_letters
+            + string.whitespace
+            + string.digits
+            + ("#")
+            + ("°")
+            + (",")
+        )
+
         if not direccion:
             raise AssertionError(
                 {"campo": "direccion", "mensaje": "La direccion no puede estar vacio"}
@@ -201,7 +228,10 @@ class Centro(db.Model):
 
         if len(direccion) > 40:
             raise AssertionError(
-                {"campo": "direccion", "mensaje": "La direccion no puede tener mas de 40 caracteres"}
+                {
+                    "campo": "direccion",
+                    "mensaje": "La direccion no puede tener mas de 40 caracteres",
+                }
             )
 
         for elemento in direccion:
@@ -212,23 +242,28 @@ class Centro(db.Model):
                         "mensaje": "La direccion solo puede contener letras, numeros , # Y ° ",
                     }
                 )
-        return direccion  
+        return direccion
 
     @validates("apertura")
     def validate_apertura(self, key, apertura):
-        expresion = (string.digits + (":"))
-        
+        expresion = string.digits + (":")
+
         if not str(apertura):
             raise AssertionError(
-                {"campo": "apertura", "mensaje": "El horario de apertura no puede estar vacio"}
+                {
+                    "campo": "apertura",
+                    "mensaje": "El horario de apertura no puede estar vacio",
+                }
             )
 
         if not ":" in str(apertura):
             raise AssertionError(
-                {"campo": "apertura", "mensaje": "El horario debe estar en el formato hh:mm"}
-            ) 
+                {
+                    "campo": "apertura",
+                    "mensaje": "El horario debe estar en el formato hh:mm",
+                }
+            )
 
-            
         for elemento in str(apertura):
             if elemento not in expresion:
                 raise AssertionError(
@@ -241,38 +276,45 @@ class Centro(db.Model):
 
     @validates("cierre")
     def validate_cierre(self, key, cierre):
-       expresion = (string.digits + (":"))
-       
-       if not str(cierre):
-           raise AssertionError(
-               {"campo": "cierre", "mensaje": "El horario de cierre no puede estar vacio"}
-           )
+        expresion = string.digits + (":")
 
-       if not ":" in str(cierre):
+        if not str(cierre):
             raise AssertionError(
-                {"campo": "cierre", "mensaje": "El horario debe estar en el formato hh:mm"}
-            ) 
+                {
+                    "campo": "cierre",
+                    "mensaje": "El horario de cierre no puede estar vacio",
+                }
+            )
 
-        
-       for elemento in str(cierre):
-           if elemento not in expresion:              # transformo a string sino no puedo iterar sobre la hora, porque datetime no es un tipo iterable
-               raise AssertionError(
-                   {
-                       "campo": "cierre",
-                       "mensaje": "El horario de cierre solo puede contener numeros y : ",
-                   }
-               )
-       return cierre   
+        if not ":" in str(cierre):
+            raise AssertionError(
+                {
+                    "campo": "cierre",
+                    "mensaje": "El horario debe estar en el formato hh:mm",
+                }
+            )
+
+        for elemento in str(cierre):
+            if (
+                elemento not in expresion
+            ):  # transformo a string sino no puedo iterar sobre la hora, porque datetime no es un tipo iterable
+                raise AssertionError(
+                    {
+                        "campo": "cierre",
+                        "mensaje": "El horario de cierre solo puede contener numeros y : ",
+                    }
+                )
+        return cierre
 
     @validates("municipio")
     def validate_direccion(self, key, municipio):
         expresion = string.digits
-        
+
         if not municipio:
             raise AssertionError(
                 {"campo": "municipio", "mensaje": "El municipio es obligatorio"}
             )
-        
+
         for elemento in municipio:
             if elemento not in expresion:
                 raise AssertionError(
@@ -284,37 +326,38 @@ class Centro(db.Model):
 
         if int(municipio) < 1 or int(municipio) > 135:
             raise AssertionError(
-                {"campo": "municipio", "mensaje": "El municipio debe estar entre 1 y 135"}
+                {
+                    "campo": "municipio",
+                    "mensaje": "El municipio debe estar entre 1 y 135",
+                }
             )
 
-        return municipio  
+        return municipio
 
     @validates("web")
     def validate_web(self, key, web):
-       expresion = (string.printable)
-       
-              
-       if not "." in web:
+        expresion = string.printable
+
+        if not "." in web:
             raise AssertionError(
                 {"campo": "web", "mensaje": "Ingrese una pagina web valida"}
-            )    
-        
-       for elemento in web:
-           if elemento not in expresion:              
-               raise AssertionError(
-                   {
-                       "campo": "web",
-                       "mensaje": "La pagina web puede contener solo numeros,letras y sinos de puntuacion ",
-                   }
-               )
+            )
 
-               
-       return web   
+        for elemento in web:
+            if elemento not in expresion:
+                raise AssertionError(
+                    {
+                        "campo": "web",
+                        "mensaje": "La pagina web puede contener solo numeros,letras y sinos de puntuacion ",
+                    }
+                )
+
+        return web
 
     @validates("telefono")
     def validate_telefono(self, key, telefono):
-        expresion = (string.digits + ("-") )
-        
+        expresion = string.digits + ("-")
+
         if not telefono:
             raise AssertionError(
                 {"campo": "telefono", "mensaje": "El telefono no puede estar vacio"}
@@ -322,13 +365,16 @@ class Centro(db.Model):
 
         if len(telefono) > 40:
             raise AssertionError(
-                {"campo": "telefono", "mensaje": "El telefono no puede tener mas de 40 caracteres"}
+                {
+                    "campo": "telefono",
+                    "mensaje": "El telefono no puede tener mas de 40 caracteres",
+                }
             )
 
         if len(telefono) < 7:
             raise AssertionError(
                 {"campo": "telefono", "mensaje": "Ingrese un numero de telefono valido"}
-            )    
+            )
 
         for elemento in telefono:
             if elemento not in expresion:
@@ -338,12 +384,12 @@ class Centro(db.Model):
                         "mensaje": "El telefono solo puede contener numeros y el caracter - , ingrese formato 221-4259320 ",
                     }
                 )
-        return telefono    
+        return telefono
 
     @validates("lat")
     def validate_lat(self, key, lat):
-        expresion = (string.digits + ("-") + (".") )
-        
+        expresion = string.digits + ("-") + (".")
+
         if not lat:
             raise AssertionError(
                 {"campo": "lat", "mensaje": "El campo latitud no puede estar vacio"}
@@ -351,10 +397,12 @@ class Centro(db.Model):
 
         if len(lat) > 25:
             raise AssertionError(
-                {"campo": "lat", "mensaje": "La latitud no puede tener mas de 25 caracteres"}
-            )    
+                {
+                    "campo": "lat",
+                    "mensaje": "La latitud no puede tener mas de 25 caracteres",
+                }
+            )
 
-                
         for elemento in lat:
             if elemento not in expresion:
                 raise AssertionError(
@@ -363,12 +411,12 @@ class Centro(db.Model):
                         "mensaje": "El campo latitud solo puede contener numeros ",
                     }
                 )
-        return lat  
+        return lat
 
     @validates("lng")
     def validate_lng(self, key, lng):
-        expresion = (string.digits + ("-") + (".") )
-        
+        expresion = string.digits + ("-") + (".")
+
         if not lng:
             raise AssertionError(
                 {"campo": "lng", "mensaje": "El campo longitud no puede estar vacio"}
@@ -376,8 +424,11 @@ class Centro(db.Model):
 
         if len(lng) > 25:
             raise AssertionError(
-                {"campo": "lng", "mensaje": "La longitud no puede tener mas de 25 caracteres"}
-            ) 
+                {
+                    "campo": "lng",
+                    "mensaje": "La longitud no puede tener mas de 25 caracteres",
+                }
+            )
 
         for elemento in lng:
             if elemento not in expresion:
@@ -387,4 +438,4 @@ class Centro(db.Model):
                         "mensaje": "El campo longitud solo puede contener numeros ",
                     }
                 )
-        return lng          
+        return lng
