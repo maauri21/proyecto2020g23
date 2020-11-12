@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Ignora el contenido dentro de la carpeta
+/app/static/uploads/*
+# Menos el .keep
+!/app/static/uploads/.keep
+
 # Distribution / packaging
 .Python
 build/
