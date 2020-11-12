@@ -87,24 +87,11 @@ def registrar_centro():
             nombreArchivo = form.nombre.data + "_" + filename
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
         try:
-            centro = Centro(
-                nombre=form.nombre.data,
-                direccion=form.direccion.data,
-                telefono=form.telefono.data,
-                apertura=form.apertura.data,
-                cierre=form.cierre.data,
-                municipio=form.municipio.data,
-                web=form.web.data,
-                email=form.email.data,
-                estado="Pendiente",
-                protocolo=nombreArchivo,
-                lat=form.lat.data,
-                lng=form.lng.data,
-            )
+            centro = Centro.crear(tipo, form.nombre.data, form.direccion.data, form.telefono.data, form.apertura.data, form.cierre.data, form.municipio.data, form.web.data, form.email.data, "Pendiente", nombreArchivo, form.lat.data, form.lng.data)
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
-            flash("Centro agregado, pendiente de aprobación")
+            flash("Centro agregatrex, pendiente de aprobación")
         # Levanto las excepciones del modelo por sino pasa alguna validacion
         except AssertionError as e:
             # recorro el diccionario y listo el error de validacion correspondiente
@@ -158,20 +145,7 @@ def agregar_centro():
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreArchivo))
 
         try:
-            centro = Centro(
-                nombre=form.nombre.data,
-                direccion=form.direccion.data,
-                telefono=form.telefono.data,
-                apertura=form.apertura.data,
-                cierre=form.cierre.data,
-                municipio=form.municipio.data,
-                web=form.web.data,
-                email=form.email.data,
-                estado="Aceptado",
-                protocolo=nombreArchivo,
-                lat=form.lat.data,
-                lng=form.lng.data,
-            )
+            centro = Centro.crear(tipo, form.nombre.data, form.direccion.data, form.telefono.data, form.apertura.data, form.cierre.data, form.municipio.data, form.web.data, form.email.data, "Aceptado", nombreArchivo, form.lat.data, form.lng.data)
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
@@ -369,23 +343,11 @@ def registrar_centro_api():
         abort(400)
 
     try:
-        centro = Centro(
-            nombre=json["nombre"],
-            direccion=json["direccion"],
-            telefono=json["telefono"],
-            apertura=json["hora_apertura"],
-            cierre=json["hora_cierre"],
-            municipio=json["municipio"],
-            web=json["web"],
-            email=json["email"],
-            lat=json["latitud"],
-            lng=json["longitud"],
-            estado="Pendiente",
-        )
-
         tipo = TipoCentro.buscar_nombre(json["tipo"])
         if (tipo is None):
             return jsonify({"Error": "Este tipo de centro no existe"})
+
+        centro = Centro.crear(tipo, json["nombre"], json["direccion"], json["telefono"], json["hora_apertura"], json["hora_cierre"], json["municipio"], json["web"], json["email"], "Pendiente", None, json["latitud"], json["longitud"])
 
         tipo.centros.append(centro)
         Centro.agregar(centro)

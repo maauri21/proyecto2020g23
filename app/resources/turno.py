@@ -178,7 +178,7 @@ def devolver_turnos_api(id):
     turnos_ocupados = Turno.turnos_ocupados(id, fecha)
 
     lista = []
-    horario = datetime.strptime('09:00', '%H:%M')
+    horario = datetime.strptime('08:30', '%H:%M')
     while horario < datetime.strptime('16:00', '%H:%M'):
         horario = (horario + timedelta(minutes=30))
         lista.append(horario.strftime("%H:%M"))

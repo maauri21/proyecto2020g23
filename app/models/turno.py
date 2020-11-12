@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from flask import json
 import string
 from flask import session
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 class Turno(db.Model):
     """
@@ -120,7 +120,7 @@ class Turno(db.Model):
             ) 
 
         lista = []
-        horario = datetime.strptime('09:00', '%H:%M')
+        horario = datetime.strptime('08:30', '%H:%M')
         while horario < datetime.strptime('16:00', '%H:%M'):
             horario = (horario + timedelta(minutes=30))
             lista.append(horario.strftime("%H:%M"))

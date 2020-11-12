@@ -36,6 +36,25 @@ class Centro(db.Model):
         """
         db.session.add(centro)
 
+    def crear(tipo, nombre, direccion, telefono, apertura, cierre, municipio, web, email, estado, protocolo, lat, lng):
+        """
+        Crea un centro
+        """
+        return Centro(
+            nombre=nombre,
+            direccion=direccion,
+            telefono=telefono,
+            apertura=apertura,
+            cierre=cierre,
+            municipio=municipio,
+            web=web,
+            email=email,
+            estado=estado,
+            protocolo=protocolo,
+            lat=lat,
+            lng=lng,
+        )
+
     def commit():
         """
         Comiteo a la  DB
