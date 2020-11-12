@@ -104,7 +104,7 @@ def registrar_centro():
             tipo.centros.append(centro)
             Centro.agregar(centro)
             Centro.commit()
-            flash("Centro agregatrex, pendiente de aprobación")
+            flash("Centro agregado, pendiente de aprobación")
         # Levanto las excepciones del modelo por sino pasa alguna validacion
         except AssertionError as e:
             # recorro el diccionario y listo el error de validacion correspondiente
@@ -131,10 +131,11 @@ def agregar_centro():
     if not check_permiso(current_user, "centro_new"):
         abort(401)
 
-    # Agarrar los municipios de la API
+    # Hago un request para agarrar los municipios de la API
     req = requests.get(
         "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
     )
+    # Guardo todo en data para dsp recorrer el índice
     Jresponse = req.text
     data = json.loads(Jresponse)
 
