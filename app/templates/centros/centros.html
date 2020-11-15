@@ -23,11 +23,12 @@
                 <thead>
                   <tr>
                     <td class="text-primary" style="width:20%">Nombre</td>
-                    <td class="text-primary" style="width:15%">Dirección</td>
+                    <td class="text-primary" style="width:10%">Dirección</td>
                     <td class="text-primary" style="width:12%">Teléfono</td>
                     <td class="text-primary">Apertura</td>
                     <td class="text-primary">Cierre</td>
-                    <td class="text-primary" style="width:16%">Tipo</td>
+                    <td class="text-primary" style="width:17%">Tipo</td>
+                    <td class="text-primary" style="width:9%">Protocolo</td>
                     <td class="text-primary" style="width:25%">Acciones</td>
                   </tr>
                 </thead>
@@ -40,7 +41,12 @@
                     <td> {{ centro.apertura.strftime("%H:%M") }} </td>
                     <td> {{ centro.cierre.strftime("%H:%M") }} </td>
                     <td> {{ centro.tipo.nombre }} </td>
-                    
+                    {% if centro.protocolo %}
+                      <td><a target="_blank" href="{{ url_for('static', filename='uploads/'+centro.protocolo) }}">Ver</a><div class="mb-3"></div></td>
+                    {% else %}
+                     <td></td>
+                    {% endif %}
+
                     <td>
                       {% if centro.estado == 'Aceptado' %}
                         {% if tiene_permiso(current_user, 'turno_index') %}

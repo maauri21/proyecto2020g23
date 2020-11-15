@@ -145,6 +145,6 @@ def create_app(environment="development"):
     app.add_url_rule("/centros/turnos/borrar/<int:id>", "borrar_turno", turno.borrar_turno)
     app.add_url_rule("/centros/turnos/editar/<int:id>", "editar_turno", turno.editar_turno, methods=['GET', 'POST'])
     app.add_url_rule("/api/v1/centros/<int:id>/turnos_disponibles/", "devolver_turnos_api", turno.devolver_turnos_api, methods=['GET'])
-    app.add_url_rule("/api/v1/centros/<int:id>/reserva/", "registrar_turno_api", turno.registrar_turno_api, methods=['POST'])
+    app.add_url_rule("/api/v1/centros/<int:id>/reserva", "registrar_turno_api", turno.registrar_turno_api, methods=['POST'])
 
     return app

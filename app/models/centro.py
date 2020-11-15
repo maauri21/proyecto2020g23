@@ -264,7 +264,8 @@ class Centro(db.Model):
                 }
             )
 
-        if apertura > '09:00':
+        if str(apertura) > '09:00:00':
+            print (str(apertura))
             raise AssertionError(
                 {
                     "campo": "apertura",
@@ -302,7 +303,7 @@ class Centro(db.Model):
                 }
             )
 
-        if cierre < '16:00':
+        if str(cierre) < '16:00':
             raise AssertionError(
                 {
                     "campo": "cierre",

@@ -216,6 +216,11 @@ def registrar_turno_api(id):
     """
     Registrar turno en api
     """
+
+    centro = Centro.buscar(id)
+    if centro is None or centro.estado != "Aceptado":
+        return jsonify({"Error": "El centro no existe o no fue aceptado"}), 404
+
     json = request.get_json(force=True)
     turnos = Turno.turnos_ocupados(id, json["fecha"])
     for item in turnos:
