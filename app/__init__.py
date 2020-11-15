@@ -131,8 +131,7 @@ def create_app(environment="development"):
 
     # Centros
     app.add_url_rule("/centros/", "buscar_centros", centro.buscar_centros, methods=['GET', 'POST'])
-    app.add_url_rule("/centros/registrar/", "registrar_centro", centro.registrar_centro, methods=['GET', 'POST'])       # Publico
-    app.add_url_rule("/centros/agregar/", "agregar_centro", centro.agregar_centro, methods=['GET', 'POST'])             # Privado
+    app.add_url_rule("/centros/agregar/", "agregar_centro", centro.agregar_centro, methods=['GET', 'POST'])
     app.add_url_rule("/centros/editar/<int:id>", "editar_centro", centro.editar_centro, methods=['GET', 'POST'])
     app.add_url_rule("/centros/borrar/<int:id>", "borrar_centro", centro.borrar_centro)
     app.add_url_rule("/centros/validar/<int:id>", "validar_centro", centro.validar_centro, methods=['GET', 'POST'])

@@ -264,6 +264,14 @@ class Centro(db.Model):
                 }
             )
 
+        if apertura > '09:00':
+            raise AssertionError(
+                {
+                    "campo": "apertura",
+                    "mensaje": "La hora de apertura debe ser menor o igual a las 09:00",
+                }
+            )
+
         for elemento in str(apertura):
             if elemento not in expresion:
                 raise AssertionError(
@@ -291,6 +299,14 @@ class Centro(db.Model):
                 {
                     "campo": "cierre",
                     "mensaje": "El horario debe estar en el formato hh:mm",
+                }
+            )
+
+        if cierre < '16:00':
+            raise AssertionError(
+                {
+                    "campo": "cierre",
+                    "mensaje": "La hora de cierre debe ser mayor o igual a las 16:00",
                 }
             )
 

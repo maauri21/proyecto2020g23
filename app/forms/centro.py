@@ -67,9 +67,14 @@ class CentroForm(FlaskForm):
 
     submit = SubmitField("Aceptar")
 
+    def validate_apertura(form, field):
+        if field.data.strftime("%H:%M") > '09:00':
+            raise ValidationError(
+                "La hora de apertura debe ser menor o igual a las 09:00"
+            )
+
     def validate_cierre(form, field):
-        if form.apertura.data is not None:
-            if field.data <= form.apertura.data:
-                raise ValidationError(
-                    "La hora de cierre debe ser mayor a la de apartura"
-                )
+        if field.data.strftime("%H:%M") < '16:00':
+            raise ValidationError(
+                "La hora de cierre debe ser mayor o igual a las 16:00"
+            )
