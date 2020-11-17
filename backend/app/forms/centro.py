@@ -1,14 +1,22 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, SelectField, HiddenField
+from wtforms import (
+    StringField,
+    SubmitField,
+    FileField,
+    ValidationError,
+    SelectField,
+    HiddenField,
+)
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp
 from app.models.tipocentro import TipoCentro
+from flask_wtf.file import FileAllowed
 from wtforms.fields.html5 import TimeField
 
 # DataRequired es un validador de flaskwtf
-class EditarCentroForm(FlaskForm):
+class CentroForm(FlaskForm):
     """
-    Formulario de editar centro
+    Formulario de agregar centro
     """
 
     nombre = StringField(
@@ -27,7 +35,7 @@ class EditarCentroForm(FlaskForm):
             Length(max=20, message="Máximo 20 caracteres"),
             Regexp("^[0-9\-]+$", message="Solo números y -"),
         ],
-        description="Estilo 221-4808080",
+        description="Insertar formato estilo 221-4808080",
     )
     apertura = TimeField(
         "Hora de apertura",
@@ -42,8 +50,7 @@ class EditarCentroForm(FlaskForm):
     )
     municipio = SelectField("Municipio", choices=[])
     web = StringField(
-        "Web",
-        validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
+        "Web", validators=[Length(max=40, message="Máximo 40 caracteres")]
     )
     email = StringField(
         "Email",
@@ -53,13 +60,21 @@ class EditarCentroForm(FlaskForm):
             Length(max=40, message="Máximo 40 caracteres"),
         ],
     )
+    protocolo = FileField("Protocolo", validators=[FileAllowed(["pdf"], "Solo .pdf")])
+
     lat = HiddenField("lat")
     lng = HiddenField("lng")
+
     submit = SubmitField("Aceptar")
 
+    def validate_apertura(form, field):
+        if field.data.strftime("%H:%M") > '09:00':
+            raise ValidationError(
+                "La hora de apertura debe ser menor o igual a las 09:00"
+            )
+
     def validate_cierre(form, field):
-        if form.apertura.data is not None:
-            if field.data <= form.apertura.data:
-                raise ValidationError(
-                    "La hora de cierre debe ser mayor a la de apartura"
-                )
+        if field.data.strftime("%H:%M") < '16:00':
+            raise ValidationError(
+                "La hora de cierre debe ser mayor o igual a las 16:00"
+            )
