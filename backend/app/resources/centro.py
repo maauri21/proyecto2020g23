@@ -209,8 +209,8 @@ def borrar_centro(id):
     centro = Centro.buscar(id)
 
     # Borrar el archivo si subió pdf
-    if centro.protocolo is not None:
-        os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
+    # if centro.protocolo is not None:
+    #    os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
 
     Centro.eliminar(centro)
     Centro.commit()

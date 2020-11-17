@@ -84,7 +84,7 @@ def agregar_turno(id):
         try:
             for item in turnos:
                 if item.hora.strftime("%H:%M") == (form.hora.data):
-                    flash("Turno ocupado")
+                    flash('Turno ocupado', 'danger')
                     return redirect(url_for("buscar_turno"))
 
             turno = Turno(
@@ -121,6 +121,8 @@ def editar_turno(id):
 
     agregar_turno = False
     turno = Turno.buscar(id)
+    turnos = Turno.turnos_ocupados(turno.centro_id, turno.dia)
+    print (turnos)
 
     form = TurnoForm()
     form.centro_id.data = turno.centro_id
@@ -129,6 +131,11 @@ def editar_turno(id):
 
     if form.validate_on_submit():
         try:
+            for item in turnos:
+                if item.hora.strftime("%H:%M") == (form.hora.data):
+                    flash('Turno ocupado', 'danger')
+                    return redirect(url_for("buscar_turno"))
+
             turno.email = form.email.data
             turno.dia = form.dia.data
             turno.hora = form.hora.data

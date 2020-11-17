@@ -11,6 +11,7 @@ class BuscarCentroForm(FlaskForm):
             ("Pendiente", "Pendiente"),
             ("Aceptado", "Aceptado"),
             ("Rechazado", "Rechazado"),
+            ("Borrado", "Borrado")
         ],
         default="Todos",
     )  # (value, label)
