@@ -1,6 +1,18 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-    <b-button>Boot</b-button>
-  </div>
+    <div>
+        <main class="py-4">
+            <b-container>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card border-primary">
+                            <div class="card-header text-white bg-primary">About</div>
+                            <div class="card-body">
+                                <h1>About</h1>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </b-container>
+        </main>
+    </div>
 </template>

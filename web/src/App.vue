@@ -1,13 +1,13 @@
 <template>
   <div id="app">
 
-    <b-navbar toggleable="md" type="dark" variant="primary">
+    <b-navbar toggleable="md" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
       <b-container>
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-        <b-navbar-brand>Portal COVID</b-navbar-brand>
         
+        <b-navbar-brand :to="{name: 'Home'}">Portal COVID</b-navbar-brand>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse is-nav id="nav-collapse">
-          <b-navbar-nav>
+          <b-navbar-nav class="navbar-nav ml-auto">
             <b-nav-item :to="{name: 'Home'}" active-class="active" exact>Home</b-nav-item>
             <b-nav-item :to="{name: 'About'}" active-class="active">About</b-nav-item>
             <b-nav-item :to="{name: 'CargarCentro'}" active-class="active">Cargar Centro</b-nav-item>
