@@ -28,7 +28,7 @@
 
             <div class="form-group">
                 <div>Hora de apertura *</div>
-                <input name="apertura" autocomplete="off" class="form-control" v-validate="'required'" v-model="apertura" type="time" />
+                <input name="apertura" autocomplete="off" class="form-control" v-validate="'required|apertura9'" v-model="apertura" type="time" />
                 <div class="invalid-feedback">
                     {{errors.first('apertura')}}
                 </div>
@@ -36,7 +36,7 @@
 
             <div class="form-group">
                 <div>Hora de cierre *</div>
-                <input name="cierre" autocomplete="off" class="form-control" v-validate="'required'" v-model="cierre" type="time" />
+                <input name="cierre" autocomplete="off" class="form-control" v-validate="'required|cierre16'" v-model="cierre" type="time" />
                 <div class="invalid-feedback">
                     {{errors.first('cierre')}}
                 </div>
@@ -128,6 +128,27 @@ export default {
             .then(response => {
             this.municipios = response.data.data.Town;
             })
+
+        // Validador personalizado para las horas
+        let self = this
+        this.$validator.extend('apertura9', {
+        getMessage() {
+            return 'El horario de apertura debe ser menor a las 09:00'
+        },
+        validate() {
+            return self.apertura <= '09:00'
+        }
+        })
+
+        this.$validator.extend('cierre16', {
+        getMessage() {
+            return 'El horario de cierre debe ser mayor a las 16:00'
+        },
+        validate() {
+            return self.cierre >= '16:00'
+        }
+        })
+
     }
 }
 </script>
