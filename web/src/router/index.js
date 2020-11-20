@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import CargarCentro from '../views/CargarCentro.vue'
 import MapaCentros from '../views/MapaCentros.vue'
+import CargarTurno from '../views/CargarTurno.vue'
 
 Vue.use(VueRouter)
 
@@ -27,7 +28,13 @@ const routes = [
     path: '/centros/',
     name: 'MapaCentros',
     component: MapaCentros
+  },
+  {
+    path: '/centros/:id/reserva',
+    name: 'CargarTurno',
+    component: CargarTurno
   }
+
 ]
 
 const router = new VueRouter({

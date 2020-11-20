@@ -15,7 +15,7 @@
                                  Mediante esta opcion los visitantes podran agregar centros de ayuda social donde se recibiran donaciones de cualquier tipo</h6>
                             </div><hr>
                             <div class="card-body">
-                                <h6> <button type="button" class="btn btn-primary btn-md"  @click="$router.push('#')" data-toggle="button" aria-pressed="false" autocomplete="off">Ver Centros </button>
+                                <h6> <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/centros/')" data-toggle="button" aria-pressed="false" autocomplete="off">Ver Centros </button>
                                  Mediante esta opcion los visitantes podran visualizar un mapa con todos los centros activos que se encuentran en funcionamiento</h6>
                             </div><hr>
                             
