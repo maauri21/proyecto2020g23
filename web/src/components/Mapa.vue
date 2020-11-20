@@ -4,30 +4,24 @@
     <l-map
       :zoom.sync="zoom"
       :center="center"
-      :options="option1"
-      :bounds="bounds"
-      :min-zoom="minZoom"
-      :max-zoom="maxZoom"
       style="height: 500px; width: 100%"
     >
       <l-tile-layer
         :url="url"
-        :attribution="attribution"
       />
 
-      <l-marker v-for="(centro, index) in centros" :key="index" :value="centro" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
+      <l-marker v-for="(centro, index) in centros" :key="index" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
         <l-popup>
           <div>
             <b>Nombre:</b> {{centro.nombre}}<br/>
             <b>Dirección:</b> {{centro.direccion}}<br/>
             <b>Teléfono:</b> {{centro.telefono}}<br/>
-            <b>Horario:</b> {{centro.hora_apertura}} - {{centro.hora_cierre}}<br/>
+            <b>Horario:</b> {{centro.hora_apertura.slice(0, -3)}} - {{centro.hora_cierre.slice(0, -3)}}<br/>
           </div>
         </l-popup>
       </l-marker>
 
     </l-map>
-      <ul v-for="(centro, index) in centros" :key="index" :value="centro">{{centro.nombre}}</ul>
   </div>
 </template>
 
@@ -82,7 +76,7 @@ export default {
     }
   },
   created() {
-      axios.get('http://localhost:5000/api/v1/centros')
+      axios.get('http://localhost:5000/api/v1/centros/?num_pag=1')
           .then(response => {
           this.centros = response.data.centros;
           })

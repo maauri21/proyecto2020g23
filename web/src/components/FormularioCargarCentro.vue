@@ -113,9 +113,10 @@ export default {
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
 					if (esValido) {
-                        const centro = { nombre: this.nombre };
-                        axios.post("http://localhost:5000/api/v1/centros", centro)
-                            .then(response => this.centroid = response.data.id);
+                        alert("bien")
+                    //    const centro = { nombre: this.nombre };
+                    //    axios.post("http://localhost:5000/api/v1/centros", centro)
+                    //        .then(response => this.centroid = response.data.id);
 					}
 				});
 		}
