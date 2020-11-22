@@ -22,6 +22,7 @@ import FormularioCargarCentro from '@/components/FormularioCargarCentro.vue'
 
 export default {
   name: 'CargarCentro',
+  title: 'Cargar centro',
   components: {
     FormularioCargarCentro
   }

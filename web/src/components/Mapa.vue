@@ -17,6 +17,7 @@
             <b>Dirección:</b> {{centro.direccion}}<br/>
             <b>Teléfono:</b> {{centro.telefono}}<br/>
             <b>Horario:</b> {{centro.hora_apertura.slice(0, -3)}} - {{centro.hora_cierre.slice(0, -3)}}<br/>
+            <b-button class="mt-2" size="sm" variant="primary">Solicitar turno</b-button>
           </div>
         </l-popup>
       </l-marker>

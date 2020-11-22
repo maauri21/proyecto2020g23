@@ -1,5 +1,25 @@
 <template>
     <div>
+
+        <l-map @click="addMarker"
+        :zoom.sync="zoom"
+        :center="center"
+        style="height: 300px; width: 100%"
+        >
+        <l-tile-layer
+            :url="url"
+        />
+
+        <l-marker :lat-lng="coordenadas(latitud, longitud)">
+            <l-popup>
+            <div>
+                <b-button class="mt-2" size="sm" variant="primary">Solicitar turno</b-button>
+            </div>
+            </l-popup>
+        </l-marker>
+
+        </l-map>
+        <br/>
         <form>
 
             <div class="form-group">
@@ -81,16 +101,26 @@
 
         <h2>{{select_municipio.name}}</h2>
         <h2>{{nombre}}</h2>
+        <h2>{{latitud}}</h2>
+        <h2>{{longitud}}</h2>
         <h2>{{select_tipo.text}}</h2>
 
     </div>
 </template>
 
 <script>
+import { latLng } from "leaflet";
+import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 import axios from 'axios';
 
 export default {
     name: 'FormularioCargarCentro',
+    components: {
+        LMap,
+        LTileLayer,
+        LMarker,
+        LPopup
+    },
     data() {
         return {
             nombre: '',
@@ -107,9 +137,25 @@ export default {
             municipios: [],
             web: '',
             email: '',
+            // Mapa
+            zoom: 13,
+            center: latLng(-34.9187, -57.956),
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            currentZoom: 11.5,
+            currentCenter: latLng(-34.9187, -57.956),
+            showParagraph: false,
+            mapOptions: {
+                zoomSnap: 0.5
+            },
+            latitud: '',
+            longitud: '',
+
         }
     }, methods: {
 		enviar_centro() {
+            if (this.latitud == '') {
+                alert("Debes seleccionar una ubicación en el mapa")
+            }
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
 					if (esValido) {
@@ -119,7 +165,14 @@ export default {
                     //        .then(response => this.centroid = response.data.id);
 					}
 				});
-		}
+        },
+        coordenadas(lat, lng) {
+            return latLng(lat, lng)
+        },
+        addMarker(event) {
+            this.latitud = event.latlng.lat,
+            this.longitud = event.latlng.lng
+        },
     },
     computed: {
 

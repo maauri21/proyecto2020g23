@@ -17,10 +17,13 @@ import VeeValidate, { Validator } from "vee-validate";
 // Leaflet
 import 'leaflet/dist/leaflet.css';
 
-// Axios
+// Titulos
+import titleMixin from './mixins/titleMixin'
+
+Vue.mixin(titleMixin)
+
 Vue.use(VueAxios, axios)
 
-// VeeValidate
 Vue.use(VeeValidate, {
   classes: true, // Usar clases de bootstrap is-valid y is-invalid en el formulario
 	classNames: {
@@ -30,7 +33,6 @@ Vue.use(VeeValidate, {
 });
 Validator.localize("es", es);
 
-// Bootstrap
 Vue.use(BootstrapVue)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

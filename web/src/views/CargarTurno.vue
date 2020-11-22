@@ -22,6 +22,7 @@ import FormularioCargarTurno from '@/components/FormularioCargarTurno.vue'
 
 export default {
   name: 'CargarTurno',
+  title: 'Cargar turno',
   components: {
     FormularioCargarTurno
   }

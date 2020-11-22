@@ -11,7 +11,7 @@
 
             <div class="form-group">
                 <div>Dia *</div>
-                <input name="dia" autocomplete="off" class="form-control" v-validate="'required|date_format:dd/MM/yyyy'" v-model="hora" type="text" />
+                <input name="dia" autocomplete="off" class="form-control" v-validate="'required'" v-model="hora" type="date" />
                 <div class="invalid-feedback">
                     {{errors.first('dia')}}
                 </div>

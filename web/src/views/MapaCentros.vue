@@ -22,6 +22,7 @@ import Mapa from '@/components/Mapa.vue'
 
 export default {
   name: 'MapaCentros',
+  title: 'Mapa Centros',
   components: {
     Mapa
   }
