@@ -1,4 +1,5 @@
 <template>
+
     <div>
 
         <l-map @click="addMarker"
@@ -20,7 +21,7 @@
 
         </l-map>
         <br/>
-        <form>
+        <form @submit.prevent="submit">
 
             <div class="form-group">
                 <div>Nombre *</div>
@@ -65,7 +66,7 @@
             <div class="form-group">
                 <div>Tipo *</div>
                 <select class="form-control" v-validate="'required'" v-model="select_tipo" name="tipo">
-                    <option v-for="(tipo, index) in tipos" :key="index" :value="tipo">
+                    <option v-for="(tipo, index) in tipos" :key="index" :value="tipo.text">
                         {{ tipo.text }}
                     </option>
                 </select>
@@ -74,7 +75,7 @@
             <div class="form-group">
                 <div>Municipio *</div>
                 <select class="form-control" v-validate="'required'" v-model="select_municipio" name="municipio">
-                    <option v-for="(municipio, index) in municipios" :key="index" :value="municipio">
+                    <option v-for="(municipio, index) in municipios" :key="index" :value="municipio.id">
                         {{municipio.name}}
                     </option>
                 </select>
@@ -96,19 +97,25 @@
                 </div>
             </div>
 
-            <b-button variant="primary" @click="enviar_centro">Aceptar</b-button>
+            <vue-recaptcha ref="recaptcha"
+                @verify="onVerify" sitekey="6LfmHOkZAAAAALDLZmgEpnmrv84y0ApHcRcsi3_7">
+            </vue-recaptcha>
+
+            <b-button class="mt-3" variant="primary" @click="enviar_centro">Aceptar</b-button>
         </form>
 
-        <h2>{{select_municipio.name}}</h2>
+        <h2>{{select_municipio}}</h2>
         <h2>{{nombre}}</h2>
         <h2>{{latitud}}</h2>
         <h2>{{longitud}}</h2>
-        <h2>{{select_tipo.text}}</h2>
+        <h2>{{apertura}}</h2>
+        <h2>{{select_tipo}}</h2>
 
     </div>
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha';
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 import axios from 'axios';
@@ -119,7 +126,8 @@ export default {
         LMap,
         LTileLayer,
         LMarker,
-        LPopup
+        LPopup,
+        VueRecaptcha,
     },
     data() {
         return {
@@ -130,6 +138,7 @@ export default {
             cierre: '',
             select_tipo: '',
             select_municipio: '',
+            robot: false,
             tipos: [
                 {value: 'Merendero', text: 'Merendero'},
                 {value: 'Institución religiosa', text: 'Institución religiosa'}
@@ -154,13 +163,14 @@ export default {
     }, methods: {
 		enviar_centro() {
             if (this.latitud == '') {
-                alert("Debes seleccionar una ubicación en el mapa")
+                alert("Seleccionar una ubicación en el mapa")
             }
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
-					if (esValido) {
+					if (esValido && this.latitud != '' && this.robot) {
                         alert("bien")
-                    //    const centro = { nombre: this.nombre };
+                    //    const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
+                    //  municipio: this.select_municipio, tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud, longitud: this.longitud };
                     //    axios.post("http://localhost:5000/api/v1/centros", centro)
                     //        .then(response => this.centroid = response.data.id);
 					}
@@ -172,6 +182,9 @@ export default {
         addMarker(event) {
             this.latitud = event.latlng.lat,
             this.longitud = event.latlng.lng
+        },
+        onVerify: function (response) {
+            if (response) this.robot = true;
         },
     },
     computed: {
