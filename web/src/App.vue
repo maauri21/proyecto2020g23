@@ -8,10 +8,10 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse is-nav id="nav-collapse">
           <b-navbar-nav class="navbar-nav ml-auto">
-            <b-nav-item :to="{name: 'Home'}" active-class="active" exact>Home</b-nav-item>
-            <b-nav-item :to="{name: 'MapaCentros'}" active-class="active" exact>Mapa Centros</b-nav-item>
-            <b-nav-item :to="{name: 'CargarTurno'}" active-class="active" exact>Solicitar Turno</b-nav-item>
-            <b-nav-item :to="{name: 'CargarCentro'}" active-class="active" exact>Cargar Centro</b-nav-item>
+            <b-nav-item :to="{name: 'Home'}">Home</b-nav-item>
+            <b-nav-item :to="{name: 'MapaCentros'}">Mapa Centros</b-nav-item>
+            <b-nav-item :to="{name: 'CargarTurno'}">Cargar Turno</b-nav-item>
+            <b-nav-item :to="{name: 'CargarCentro'}">Cargar Centro</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-container>

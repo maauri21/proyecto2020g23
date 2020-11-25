@@ -5,7 +5,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card border-primary">
-                            <div class="card-header text-white bg-primary">Cargar centro</div>
+                            <div class="card-header text-white bg-primary">Cargar Centro</div>
                             <div class="card-body">
                                 <FormularioCargarCentro/>
                             </div>
@@ -22,7 +22,7 @@ import FormularioCargarCentro from '@/components/FormularioCargarCentro.vue'
 
 export default {
   name: 'CargarCentro',
-  title: 'Cargar centro',
+  title: 'Cargar Centro',
   components: {
     FormularioCargarCentro
   }

@@ -104,13 +104,6 @@
             <b-button class="mt-3" variant="primary" @click="enviar_centro">Aceptar</b-button>
         </form>
 
-        <h2>{{select_municipio}}</h2>
-        <h2>{{nombre}}</h2>
-        <h2>{{latitud}}</h2>
-        <h2>{{longitud}}</h2>
-        <h2>{{apertura}}</h2>
-        <h2>{{select_tipo}}</h2>
-
     </div>
 </template>
 
