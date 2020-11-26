@@ -112,6 +112,7 @@ class Centro(db.Model):
         Jresponse = req.text
         data = json.loads(Jresponse)
         return {
+            "id": self.id,
             "nombre": self.nombre,
             "direccion": self.direccion,
             "telefono": self.telefono,

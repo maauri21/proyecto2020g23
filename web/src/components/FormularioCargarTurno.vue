@@ -11,18 +11,20 @@
 
             <div class="form-group">
                 <div>Dia *</div>
-                <input name="dia" autocomplete="off" class="form-control" v-validate="'required'" v-model="hora" type="date" />
+                <input name="dia" autocomplete="off" class="form-control" v-validate="'required'" v-model="dia" @change="traer_horarios()" type="date" />
                 <div class="invalid-feedback">
                     {{errors.first('dia')}}
                 </div>
            </div>
                         
-             <div class="form-group">
+            <div class="form-group">
                 <div>Hora *</div>
-                <select class="form-control" v-validate="'required'" v-model="select_municipio" name="hora">
-                    
+                <select class="form-control" v-validate="'required'" v-model="select_hora" name="hora">
+                    <option v-for="(hora, index) in horarios" :key="index" :value="hora.hora_inicio">
+                        {{hora.hora_inicio}}
+                    </option>
                 </select>
-            </div>  
+            </div>
 
            <b-button variant="primary" @click="enviar_turno">Aceptar</b-button>
 
@@ -38,23 +40,28 @@ export default {
         return {
             email: '',
             dia: '',
-            hora: '',
-            
+            horarios: [],
+            select_hora: '',
+            id_centro: this.$route.params.id,
         }
     }, methods: {
 		enviar_turno() {
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
 					if (esValido) {
-                        const turno = { email: this.email, dia: this.dia, hora: this.hora };
-                        axios.post("http://localhost:5000//api/v1/centros/${centro_id}/turnos_disponibles?fecha=${fecha}", turno)
-                            .then(response => this.centroid = response.data.id);
+                        alert ('bien')
+                        //const turno = { email_donante: this.email, hora_inicio: this.select_hora, fecha: this.dia };
+                        //axios.post(`http://localhost:5000/api/v1/centros/${this.id_centro}/reserva`, turno)
+                        //    .then(response => this.centroid = response.data.id);
 					}
 				});
-		}
-    },
-    computed: {
-
+        },
+        traer_horarios() {
+            axios.get(`http://localhost:5000/api/v1/centros/${this.id_centro}/turnos_disponibles/?fecha=${this.dia}`)
+                .then(response => {
+                this.horarios = response.data.turnos;
+                })
+        }
     }
 }    
-</script>    
+</script>
