@@ -209,8 +209,8 @@ def borrar_centro(id):
     centro = Centro.buscar(id)
 
     # Borrar el archivo si subió pdf
-    if centro.protocolo is not None:
-        os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
+    # if centro.protocolo is not None:
+    #    os.unlink(os.path.join(app.config["UPLOAD_FOLDER"], centro.protocolo))
 
     Centro.eliminar(centro)
     Centro.commit()
@@ -282,7 +282,7 @@ def devolver_centros_api():
     resultado = [centro.json() for centro in centros.items]
 
     return jsonify(
-        {"centros": resultado}, {"total": math.ceil(total)}, {"pagina": page}
+        {"centros": resultado, "total": math.ceil(total), "pagina": page}
     )
 
 

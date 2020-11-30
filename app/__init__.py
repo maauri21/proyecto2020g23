@@ -1,5 +1,6 @@
 from os import environ
 from flask import Flask, render_template, request, url_for, redirect
+from flask_cors import CORS, cross_origin
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
@@ -20,6 +21,7 @@ def create_app(environment="development"):
     """
     # Levanta la aplicación Flask. __name__ sirve para obtener el nombre de importación donde se define la app y Flask lo usa para saber donde buscar los resources, templates, static, etc.
     app = Flask(__name__)
+    CORS(app)
     env = environ.get("FLASK_ENV", environment)
     app.config.from_object(config[env])
 

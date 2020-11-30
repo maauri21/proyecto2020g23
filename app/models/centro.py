@@ -89,9 +89,9 @@ class Centro(db.Model):
 
     def eliminar(centro):
         """
-        Elimina un centro en la DB
+        Baja lógica de un centro en la DB
         """
-        return db.session.delete(centro)
+        centro.estado = 'Borrado'
 
     def cantidad():
         """
@@ -112,6 +112,7 @@ class Centro(db.Model):
         Jresponse = req.text
         data = json.loads(Jresponse)
         return {
+            "id": self.id,
             "nombre": self.nombre,
             "direccion": self.direccion,
             "telefono": self.telefono,
@@ -355,17 +356,12 @@ class Centro(db.Model):
     def validate_web(self, key, web):
         expresion = string.printable
 
-        if not "." in web:
-            raise AssertionError(
-                {"campo": "web", "mensaje": "Ingrese una pagina web valida"}
-            )
-
         for elemento in web:
             if elemento not in expresion:
                 raise AssertionError(
                     {
                         "campo": "web",
-                        "mensaje": "La pagina web puede contener solo numeros,letras y sinos de puntuacion ",
+                        "mensaje": "La pagina web puede contener solo numeros,letras y signos de puntuacion ",
                     }
                 )
 

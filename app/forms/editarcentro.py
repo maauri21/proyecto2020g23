@@ -12,15 +12,15 @@ class EditarCentroForm(FlaskForm):
     """
 
     nombre = StringField(
-        "Nombre",
+        "Nombre *",
         validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
     )
     direccion = StringField(
-        "Dirección",
+        "Dirección *",
         validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
     )
     telefono = StringField(
-        "Teléfono",
+        "Teléfono *",
         validators=[
             DataRequired(),
             Length(min=7, message="Mínimo 7 caracteres"),
@@ -30,23 +30,23 @@ class EditarCentroForm(FlaskForm):
         description="Estilo 221-4808080",
     )
     apertura = TimeField(
-        "Hora de apertura",
+        "Hora de apertura *",
         format="%H:%M",
         validators=[DataRequired(message="Hora incorrecta")],
     )
     cierre = TimeField(
-        "Hora de cierre", validators=[DataRequired(message="Hora incorrecta")]
+        "Hora de cierre *", validators=[DataRequired(message="Hora incorrecta")]
     )
     tipo = QuerySelectField(
-        "Tipo", validators=[DataRequired()], query_factory=TipoCentro.mostrar
+        "Tipo *", validators=[DataRequired()], query_factory=TipoCentro.mostrar
     )
-    municipio = SelectField("Municipio", choices=[])
+    municipio = SelectField("Municipio *", choices=[], validators=[DataRequired()])
     web = StringField(
         "Web",
-        validators=[DataRequired(), Length(max=40, message="Máximo 40 caracteres")],
+        validators=[Length(max=40, message="Máximo 40 caracteres")],
     )
     email = StringField(
-        "Email",
+        "Email *",
         validators=[
             DataRequired(),
             Email(message="Email incorrecto"),
