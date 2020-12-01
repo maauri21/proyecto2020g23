@@ -27,6 +27,7 @@ from flask import current_app as app
 import math
 
 
+
 @login_required
 def buscar_centros():
     """
@@ -269,13 +270,15 @@ def devolver_centros_api():
     """
     Listar centros via Api
     """
-
-    page = int(request.args.get("num_pag", 1))
-    config = Configuracion.buscar_config()
-    centros = Centro.buscar_estado("Aceptado").paginate(
-        per_page=config.cantPaginacion, page=page, error_out=False
-    )
-
+        
+    try:
+        page = int(request.args.get("num_pag", 1))
+        config = Configuracion.buscar_config()
+        centros = Centro.buscar_estado("Aceptado").paginate(
+            per_page=config.cantPaginacion, page=page, error_out=False
+        )
+    except ValueError:
+        return jsonify({"Error": "El Numero de pagina solo puede ser un numero"}), 400
     cant_centrosAceptados = Centro.cantidad()
     total = cant_centrosAceptados / config.cantPaginacion
 
