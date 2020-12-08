@@ -14,12 +14,12 @@
                                  Agregar centros de ayuda social donde se recibirán donaciones de cualquier tipo
                             </div>
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/centros/')" data-toggle="button">Ver Centros </button>
+                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/centros')" data-toggle="button">Ver Centros </button>
                                  Visualizar un mapa con todos los centros activos que se encuentran en funcionamiento
                             </div>
                             
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('#')" data-toggle="button">Ver Estadisticas </button>
+                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/estadisticas')" data-toggle="button">Ver Estadisticas </button>
                                  Visualizar una serie de estadísticas
                             </div>
                             

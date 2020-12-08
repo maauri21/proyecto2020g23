@@ -51,7 +51,7 @@ import axios from 'axios';
 import { mapState } from "vuex";
 
 export default {
-  name: "Mapa",
+  name: "MapaCentrosCargados",
   components: {
     LMap,
     LTileLayer,
@@ -66,21 +66,9 @@ export default {
       center: latLng(-34.9187, -57.956),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       ll: latLng(-34.9323859290129, -57.940950393676765),
-      currentZoom: 11.5,
-      currentCenter: latLng(-34.9187, -57.956),
-      showParagraph: false,
-      mapOptions: {
-        zoomSnap: 0.5
-      },
     };
   },
   methods: {
-    zoomUpdate(zoom) {
-      this.currentZoom = zoom;
-    },
-    centerUpdate(center) {
-      this.currentCenter = center;
-    },
     coordenadas(lat, lng) {
       return latLng(lat, lng)
     }

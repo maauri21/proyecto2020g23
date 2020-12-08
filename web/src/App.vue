@@ -11,6 +11,7 @@
             <b-nav-item :to="{name: 'Home'}">Home</b-nav-item>
             <b-nav-item :to="{name: 'MapaCentros'}">Mapa Centros</b-nav-item>
             <b-nav-item :to="{name: 'CargarCentro'}">Cargar Centro</b-nav-item>
+            <b-nav-item :to="{name: 'Estadisticas'}">Estadisticas</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-container>

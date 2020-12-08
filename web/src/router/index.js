@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import About from '../views/About.vue'
+import Estadisticas from '../views/Estadisticas.vue'
 import CargarCentro from '../views/CargarCentro.vue'
 import MapaCentros from '../views/MapaCentros.vue'
 import CargarTurno from '../views/CargarTurno.vue'
@@ -15,9 +15,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    component: About
+    path: '/estadisticas',
+    name: 'Estadisticas',
+    component: Estadisticas
   },
   {
     path: '/centros/agregar',

@@ -7,7 +7,7 @@
                         <div class="card border-primary">
                             <div class="card-header text-white bg-primary">Mapa Centros</div>
                             <div class="card-body">
-                                <Mapa/>
+                                <MapaCentrosCargados/>
                             </div>
                           </div>
                       </div>
@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import Mapa from '@/components/Mapa.vue'
+import MapaCentrosCargados from '@/components/MapaCentrosCargados.vue'
 
 export default {
   name: 'MapaCentros',
   title: 'Mapa Centros',
   components: {
-    Mapa
+    MapaCentrosCargados
   }
 }
 </script>
