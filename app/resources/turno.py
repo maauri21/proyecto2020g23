@@ -21,7 +21,6 @@ from app.helpers.permisos import check_permiso
 from sqlalchemy import distinct
 from datetime import date, timedelta, datetime
 
-
 @login_required
 def buscar_turno():
     """
@@ -217,7 +216,6 @@ def devolver_turnos_api(id):
         array.append(diccionario)
 
     return jsonify({"turnos": array})
-
 
 def registrar_turno_api(id):
     """

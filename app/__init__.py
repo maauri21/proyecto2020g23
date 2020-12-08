@@ -1,6 +1,6 @@
 from os import environ
 from flask import Flask, render_template, request, url_for, redirect
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
@@ -21,7 +21,7 @@ def create_app(environment="development"):
     """
     # Levanta la aplicación Flask. __name__ sirve para obtener el nombre de importación donde se define la app y Flask lo usa para saber donde buscar los resources, templates, static, etc.
     app = Flask(__name__)
-    CORS(app)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     env = environ.get("FLASK_ENV", environment)
     app.config.from_object(config[env])
 
@@ -139,7 +139,7 @@ def create_app(environment="development"):
     app.add_url_rule("/centros/validar/<int:id>", "validar_centro", centro.validar_centro, methods=['GET', 'POST'])
     app.add_url_rule("/api/v1/centros/", "devolver_centros_api", centro.devolver_centros_api, methods=['GET'])
     app.add_url_rule("/api/v1/centros/<int:id>", "devolver_centro_api", centro.devolver_centro_api, methods=['GET'])
-    app.add_url_rule("/api/v1/centros", "registrar_centros_api", centro.registrar_centro_api, methods=['POST'])
+    app.add_url_rule("/api/v1/trocen", "registrar_centros_api", centro.registrar_centro_api, methods=['POST'])
 
     # Turnos
     app.add_url_rule("/centros/turnos/", "buscar_turno", turno.buscar_turno, methods=['GET', 'POST'])

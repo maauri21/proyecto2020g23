@@ -1,5 +1,9 @@
 <template>
+
      <form>
+        <section v-if="error">
+            <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
+        </section>
 
             <div class="form-group">
                 <div>Email *</div>
@@ -43,16 +47,20 @@ export default {
             horarios: [],
             select_hora: '',
             id_centro: this.$route.params.id,
+            error: false
         }
     }, methods: {
 		enviar_turno() {
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
 					if (esValido) {
-                        alert ('bien')
-                        //const turno = { email_donante: this.email, hora_inicio: this.select_hora, fecha: this.dia };
-                        //axios.post(`http://localhost:5000/api/v1/centros/${this.id_centro}/reserva`, turno)
-                        //    .then(response => this.centroid = response.data.id);
+                        const turno = { email_donante: this.email, hora_inicio: this.select_hora, fecha: this.dia };
+                        axios.post(`http://localhost:5000/api/v1/centros/${this.id_centro}/reserva`, turno)
+                        .catch(error => {
+                            this.makeToast('danger', 'Error', error.response.data.Error);
+                        })
+                        //alert('Turno registrado')
+                        //this.$router.push('/centros/')
 					}
 				});
         },
@@ -60,7 +68,11 @@ export default {
             axios.get(`http://localhost:5000/api/v1/centros/${this.id_centro}/turnos_disponibles/?fecha=${this.dia}`)
                 .then(response => {
                 this.horarios = response.data.turnos;
-                })
+            })
+            .catch(error => {
+                console.log(error)
+                this.error = true
+            })
         }
     }
 }    

@@ -1,6 +1,11 @@
 <template>
 
   <div>
+
+    <section v-if="error">
+      <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
+    </section>
+
     <l-map
       :zoom.sync="zoom"
       :center="center"
@@ -10,17 +15,19 @@
         :url="url"
       />
 
-      <l-marker v-for="(centro, index) in centros" :key="index" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
-        <l-popup>
-          <div>
-            <b>Nombre:</b> {{centro.nombre}}<br/>
-            <b>Dirección:</b> {{centro.direccion}}<br/>
-            <b>Teléfono:</b> {{centro.telefono}}<br/>
-            <b>Horario:</b> {{centro.hora_apertura.slice(0, -3)}} - {{centro.hora_cierre.slice(0, -3)}}<br/>
-            <b-button class="mt-2"  size="sm" @click="$router.push({ name: 'CargarTurno', params: { id: centro.id } })" variant="primary " >Solicitar turno</b-button>
-          </div>
-        </l-popup>
-      </l-marker>
+      <div v-for="i in this.total" :key="i">
+        <l-marker v-for="(centro, index) in centros[i]" :key="index" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
+          <l-popup>
+            <div>
+              <b>Nombre:</b> {{centro.nombre}}<br/>
+              <b>Dirección:</b> {{centro.direccion}}<br/>
+              <b>Teléfono:</b> {{centro.telefono}}<br/>
+              <b>Horario:</b> {{centro.hora_apertura.slice(0, -3)}} - {{centro.hora_cierre.slice(0, -3)}}<br/>
+              <b-button class="mt-2"  size="sm" @click="$router.push({ name: 'CargarTurno', params: { id: centro.id } })" variant="primary " >Solicitar turno</b-button>
+            </div>
+          </l-popup>
+        </l-marker>
+      </div>
 
     </l-map>
   </div>
@@ -41,6 +48,7 @@ Icon.Default.mergeOptions({
 });
 
 import axios from 'axios';
+import { mapState } from "vuex";
 
 export default {
   name: "Mapa",
@@ -52,7 +60,8 @@ export default {
   },
   data() {
     return {
-      centros: [],
+      total: '',
+      error: false,
       zoom: 13,
       center: latLng(-34.9187, -57.956),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -76,11 +85,28 @@ export default {
       return latLng(lat, lng)
     }
   },
+  computed: {
+    ...mapState(['centros'])
+  },
   created() {
       axios.get('http://localhost:5000/api/v1/centros/?num_pag=1')
+      .then(response => {
+        this.total = response.data.total;
+        for (var i = 1; i <= this.total; i++) {
+          axios.get(`http://localhost:5000/api/v1/centros/?num_pag=${i}`)
           .then(response => {
-          this.centros = response.data.centros;
+            this.centros.push(response.data.centros);
           })
+          .catch(error => {
+            console.log(error)
+            this.error = true
+          })
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        this.error = true
+      })
   }
 };
 </script>

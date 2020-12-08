@@ -2,6 +2,10 @@
 
     <div>
 
+        <section v-if="error">
+            <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
+        </section>
+
         <l-map @click="addMarker"
         :zoom.sync="zoom"
         :center="center"
@@ -103,7 +107,6 @@
 
             <b-button class="mt-3" variant="primary" @click="enviar_centro">Aceptar</b-button>
         </form>
-
     </div>
 </template>
 
@@ -151,21 +154,28 @@ export default {
             },
             latitud: '',
             longitud: '',
+            error: false
 
         }
     }, methods: {
 		enviar_centro() {
             if (this.latitud == '') {
-                alert("Seleccionar una ubicación en el mapa")
+                this.makeToast('danger', 'Error', 'Seleccionar una ubicación en el mapa');
+            }
+            if (this.robot == false) {
+                this.makeToast('danger', 'Error', 'Completar el captcha');
             }
 			this.$validator.validate() // VeeValidete tiene el validate dentro de $validator. Devuelve una promesa y al resolverse trae un booleano
 				.then(esValido => {
 					if (esValido && this.latitud != '' && this.robot) {
-                        alert("bien")
-                    //    const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
-                    //  municipio: this.select_municipio, tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud, longitud: this.longitud };
-                    //    axios.post("http://localhost:5000/api/v1/centros", centro)
-                    //        .then(response => this.centroid = response.data.id);
+                        const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
+                            municipio: this.select_municipio.toString(), tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud.toString(), longitud: this.longitud.toString() };
+                        axios.post(`http://localhost:5000/api/v1/trocen`, centro)
+                        .catch(error => {
+                            this.makeToast('danger', 'Error', error.response.data.Error);
+                        })
+                        //alert('Centro registrado')
+                        //this.$router.push('/centros/')
 					}
 				});
         },
@@ -179,6 +189,13 @@ export default {
         onVerify: function (response) {
             if (response) this.robot = true;
         },
+        makeToast(variant, title, text) {
+            this.$bvToast.toast(text, {
+                title: title,
+                variant: variant,
+                solid: true
+            })
+        },
     },
     computed: {
 
@@ -187,7 +204,11 @@ export default {
         axios.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
             .then(response => {
             this.municipios = response.data.data.Town;
-            })
+        })
+        .catch(error => {
+            console.log(error)
+            this.error = true
+        })
 
         // Validador personalizado para las horas
         let self = this

@@ -26,7 +26,6 @@ import requests
 from flask import current_app as app
 import math
 
-
 @login_required
 def buscar_centros():
     """
@@ -295,7 +294,6 @@ def devolver_centro_api(id):
     if centro is None or centro.estado != "Aceptado":
         return jsonify({"Error": "El centro no existe o no fue aceptado"}), 404
     return jsonify({"atributos": centro.json()}), 200
-
 
 def registrar_centro_api():
     """
