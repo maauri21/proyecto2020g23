@@ -177,11 +177,8 @@ export default {
                         const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
                             municipio: this.select_municipio.toString(), tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud.toString(), longitud: this.longitud.toString() };
                         axios.post(`http://localhost:5000/api/v1/trocen`, centro)
-                        .catch(error => {
-                            this.makeToast('danger', 'Error', error.response.data.Error);
-                        })
-                        //alert('Centro registrado')
-                        //this.$router.push('/centros/')
+                        .then(() => { alert ('Centro registrado'); this.$router.push('/centros/')})
+                        .catch(error => this.makeToast('danger', 'Error', error.response.data.Error))
 					}
 				});
         },

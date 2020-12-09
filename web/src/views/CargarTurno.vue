@@ -70,11 +70,9 @@ export default {
 					if (esValido) {
                         const turno = { email_donante: this.email, hora_inicio: this.select_hora, fecha: this.dia };
                         axios.post(`http://localhost:5000/api/v1/centros/${this.id_centro}/reserva`, turno)
-                        .catch(error => {
-                            this.makeToast('danger', 'Error', error.response.data.Error);
-                        })
-                        //alert('Turno registrado')
-                        //this.$router.push('/centros/')
+                        .then(() => { alert ('Turno registrado'); this.$router.push('/centros/')})
+                        .catch(error => this.makeToast('danger', 'Error', error.response.data.Error))
+
 					}
 				});
         },
