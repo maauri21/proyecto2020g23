@@ -5,9 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    centros: []
+    centros: [],
+    loading: false,
   },
   mutations: {
+    mostrarLoading(state) {
+      state.loading = true
+    },
+    ocultarLoading(state) {
+      state.loading = false
+    }
   },
   actions: {
   },

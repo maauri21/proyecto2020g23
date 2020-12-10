@@ -6,6 +6,15 @@
       <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
     </section>
 
+
+
+    <div v-if="this.loading" class="loader">
+      <b-modal ref="my-modal" hide-footer hide-header>
+        <div class="d-block text-center">
+          <h3>Cargando centros</h3><b-spinner variant="primary" label="Spinning"></b-spinner>
+        </div>
+      </b-modal>
+    </div>
     <l-map
       :zoom.sync="zoom"
       :center="center"
@@ -23,7 +32,7 @@
               <b>Dirección:</b> {{centro.direccion}}<br/>
               <b>Teléfono:</b> {{centro.telefono}}<br/>
               <b>Horario:</b> {{centro.hora_apertura.slice(0, -3)}} - {{centro.hora_cierre.slice(0, -3)}}<br/>
-              <b-button class="mt-2"  size="sm" @click="$router.push({ name: 'CargarTurno', params: { id: centro.id } })" variant="primary " >Solicitar turno</b-button>
+              <b-button class="mt-2"  size="sm" @click="$router.push({ name: 'CargarTurno', params: { id: centro.id } })" variant="primary">Solicitar turno</b-button>
             </div>
           </l-popup>
         </l-marker>
@@ -49,6 +58,7 @@ Icon.Default.mergeOptions({
 
 import axios from 'axios';
 import { mapState } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "MapaCentrosCargados",
@@ -69,14 +79,26 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(['mostrarLoading', 'ocultarLoading']),
+
     coordenadas(lat, lng) {
       return latLng(lat, lng)
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
     }
   },
   computed: {
-    ...mapState(['centros'])
+    ...mapState(['centros', 'loading'])
+  },
+  mounted() {
+    this.showModal();
   },
   created() {
+      this.mostrarLoading()
       axios.get('http://localhost:5000/api/v1/centros?num_pag=1')
       .then(response => {
         this.total = response.data.total;
@@ -84,6 +106,7 @@ export default {
           axios.get(`http://localhost:5000/api/v1/centros?num_pag=${i}`)
           .then(response => {
             this.centros.push(response.data.centros);
+            this.ocultarLoading();
           })
           .catch(error => {
             console.log(error)
