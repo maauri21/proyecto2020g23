@@ -77,11 +77,11 @@ export default {
     ...mapState(['centros'])
   },
   created() {
-      axios.get('http://localhost:5000/api/v1/centros/?num_pag=1')
+      axios.get('http://localhost:5000/api/v1/centros?num_pag=1')
       .then(response => {
         this.total = response.data.total;
         for (var i = 1; i <= this.total; i++) {
-          axios.get(`http://localhost:5000/api/v1/centros/?num_pag=${i}`)
+          axios.get(`http://localhost:5000/api/v1/centros?num_pag=${i}`)
           .then(response => {
             this.centros.push(response.data.centros);
           })

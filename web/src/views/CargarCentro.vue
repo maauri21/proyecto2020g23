@@ -176,7 +176,7 @@ export default {
 					if (esValido && this.latitud != '' && this.robot) {
                         const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
                             municipio: this.select_municipio.toString(), tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud.toString(), longitud: this.longitud.toString() };
-                        axios.post(`http://localhost:5000/api/v1/trocen`, centro)
+                        axios.post(`http://localhost:5000/api/v1/centros`, centro)
                         .then(() => { alert ('Centro registrado'); this.$router.push('/centros/')})
                         .catch(error => this.makeToast('danger', 'Error', error.response.data.Error))
 					}
