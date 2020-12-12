@@ -24,8 +24,8 @@
         :url="url"
       />
 
-      <div v-for="i in this.total" :key="i">
-        <l-marker v-for="(centro, index) in centros[i]" :key="index" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
+      <div v-for="i in total" :key="i">
+        <l-marker v-for="(centro, index) in centros[i-1]" :key="index" :lat-lng="coordenadas(centro.latitud, centro.longitud)">
           <l-popup>
             <div>
               <b>Nombre:</b> {{centro.nombre}}<br/>
@@ -99,11 +99,11 @@ export default {
   },
   created() {
       this.mostrarLoading()
-      axios.get('http://localhost:5000/api/v1/centros?num_pag=1')
+      axios.get('https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/centros?num_pag=1')
       .then(response => {
         this.total = response.data.total;
         for (var i = 1; i <= this.total; i++) {
-          axios.get(`http://localhost:5000/api/v1/centros?num_pag=${i}`)
+          axios.get(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/centros?num_pag=${i}`)
           .then(response => {
             this.centros.push(response.data.centros);
             this.ocultarLoading();

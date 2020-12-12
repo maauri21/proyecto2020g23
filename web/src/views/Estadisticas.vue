@@ -16,3 +16,13 @@
         </main>
     </div>
 </template>
+
+<script>
+
+export default {
+  name: 'Estadisticas',
+  title: 'Estadísticas',
+  components: {
+  }
+}
+</script>

@@ -69,7 +69,7 @@ export default {
 				.then(esValido => {
 					if (esValido) {
                         const turno = { email_donante: this.email, hora_inicio: this.select_hora, fecha: this.dia };
-                        axios.post(`http://localhost:5000/api/v1/centros/${this.id_centro}/reserva`, turno)
+                        axios.post(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/centros/${this.id_centro}/reserva`, turno)
                         .then(() => { alert ('Turno registrado'); this.$router.push('/centros/')})
                         .catch(error => this.makeToast('danger', 'Error', error.response.data.Error))
 
@@ -77,7 +77,7 @@ export default {
 				});
         },
         traer_horarios() {
-            axios.get(`http://localhost:5000/api/v1/centros/${this.id_centro}/turnos_disponibles/?fecha=${this.dia}`)
+            axios.get(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/centros/${this.id_centro}/turnos_disponibles/?fecha=${this.dia}`)
                 .then(response => {
                 this.horarios = response.data.turnos;
             })

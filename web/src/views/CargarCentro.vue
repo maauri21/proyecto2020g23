@@ -122,10 +122,10 @@
 </template>
 
 <script>
-import VueRecaptcha from 'vue-recaptcha';
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 import axios from 'axios';
+import VueRecaptcha from 'vue-recaptcha';
 
 export default {
     name: 'CargarCentro',
@@ -176,7 +176,7 @@ export default {
 					if (esValido && this.latitud != '' && this.robot) {
                         const centro = { nombre: this.nombre, direccion: this.direccion, telefono: this.telefono, hora_apertura: this.apertura, hora_cierre: this.cierre,
                             municipio: this.select_municipio.toString(), tipo: this.select_tipo, web: this.web, email: this.email, latitud: this.latitud.toString(), longitud: this.longitud.toString() };
-                        axios.post(`http://localhost:5000/api/v1/centros`, centro)
+                        axios.post(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/centros`, centro)
                         .then(() => { alert ('Centro registrado'); this.$router.push('/centros/')})
                         .catch(error => this.makeToast('danger', 'Error', error.response.data.Error))
 					}

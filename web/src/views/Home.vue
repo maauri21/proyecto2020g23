@@ -1,33 +1,72 @@
 <template>
     <div>
+        <b-container>
         <main class="py-4">
-            <b-container>
                 <div class="row justify-content-center">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div class="card border-primary">
-                            <div class="card-header text-white bg-primary">Home</div>
+                            <div class="card-header text-white bg-primary">Bienvenidos al Portal del Covid de la Provincia de Buenos Aires</div>
                             <div class="card-body">
-                                <h2>Bienvenidos al Portal del Covid de la Provincia de Buenos Aires</h2>
+                                <h2></h2>
                                 <h5>Este portal fue creado con el propósito de brindar la informacion de los centros de ayuda disponibles en la provincia de Buenos Aires, poniendo a disposición una serie de operaciones para los visitantes que se describirán a continuacion.</h5>
-                                <br/>
-                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('centros/agregar')" data-toggle="button">Agregar Centro</button>
-                                 Agregar centros de ayuda social donde se recibirán donaciones de cualquier tipo
                             </div>
-                            <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/centros')" data-toggle="button">Ver Centros </button>
-                                 Visualizar un mapa con todos los centros activos que se encuentran en funcionamiento
-                            </div>
-                            
-                            <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-md"  @click="$router.push('/estadisticas')" data-toggle="button">Ver Estadisticas </button>
-                                 Visualizar una serie de estadísticas
-                            </div>
-                            
                           </div>
                       </div>
                   </div>
-              </b-container>
         </main>
+
+        <b-row class="mb-3">
+
+            <b-col cols="12" md="4">
+                <b-card
+                    img-src="cargar.jpg"
+                    img-top
+                    class="mb-2"
+                    border-variant="primary"
+                >
+                    <b-card-text>
+                    Cargar centros de ayuda social donde se recibirán donaciones
+                    </b-card-text>
+
+                    <b-button @click="$router.push('centros/agregar')" variant="primary">Cargar centro</b-button>
+                </b-card>
+            </b-col>
+
+            <b-col cols="12" md="4">
+                <b-card
+                    img-src="mapa.jpg"
+                    img-top
+                    class="mb-2"
+                    border-variant="primary"
+                >
+                    <b-card-text>
+                    Visualizar un mapa con todos los centros que se encuentran activos
+                    </b-card-text>
+
+                    <b-button  @click="$router.push('/centros')" variant="primary">Ver centros</b-button>
+                </b-card>
+            </b-col>
+
+            <b-col cols="12" md="4">
+                <b-card
+                    img-src="estadisticas.jpg"
+                    img-top
+                    class="mb-2"
+                    border-variant="primary"
+                >
+                    <b-card-text>
+                    Visualizar una serie de estadísticas relacionadas con los centros
+                    </b-card-text>
+
+                    <b-button @click="$router.push('/estadisticas')" variant="primary">Ver estadísticas</b-button>
+                </b-card>
+            </b-col>
+
+            
+        </b-row>
+        </b-container>
+
+
     </div>
 </template>
 
