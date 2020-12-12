@@ -60,6 +60,10 @@ def agregar_centro():
     """
     Agregar centro
     """
+    tot = str(json.loads(requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios"
+    ).text)['total'])
+
     agregar_centro = True
 
     if not check_permiso(current_user, "centro_new"):
@@ -67,7 +71,7 @@ def agregar_centro():
 
     # Hago un request para agarrar los municipios de la API
     req = requests.get(
-        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page="+tot
     )
     # Guardo todo en data para dsp recorrer el índice
     Jresponse = req.text
@@ -132,6 +136,9 @@ def editar_centro(id):
     """
     Editar centro
     """
+    tot = str(json.loads(requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios"
+    ).text)['total'])
 
     if not check_permiso(current_user, "centro_update"):
         abort(401)
@@ -141,7 +148,7 @@ def editar_centro(id):
 
     # Agarrar los municipios de la API
     req = requests.get(
-        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page="+tot
     )
     Jresponse = req.text
     data = json.loads(Jresponse)
@@ -226,6 +233,9 @@ def validar_centro(id):
     """
     Validar centro
     """
+    tot = str(json.loads(requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios"
+    ).text)['total'])
 
     if not check_permiso(current_user, "centro_validate"):
         abort(401)
@@ -252,7 +262,7 @@ def validar_centro(id):
 
     # Agarrar el nombre teniendo el id (centro.municipio)
     req = requests.get(
-        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page="+tot
     )
     Jresponse = req.text
     data = json.loads(Jresponse)
