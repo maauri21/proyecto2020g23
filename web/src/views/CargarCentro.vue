@@ -201,9 +201,16 @@ export default {
         },
     },
     created() {
-        axios.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135')
+        axios.get('https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios')
             .then(response => {
-            this.municipios = response.data.data.Town;
+                axios.get(`https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=${response.data.total}`)
+            .then(response => {
+                this.municipios = response.data.data.Town;
+            })
+            .catch(error => {
+                console.log(error)
+                this.error = true
+            })
         })
         .catch(error => {
             console.log(error)
