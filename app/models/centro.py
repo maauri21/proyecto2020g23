@@ -107,7 +107,7 @@ class Centro(db.Model):
 
     def json(self):
         req = requests.get(
-            "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page=135"
+            "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios/"+str(self.municipio)
         )
         Jresponse = req.text
         data = json.loads(Jresponse)
