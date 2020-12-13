@@ -233,10 +233,7 @@ def validar_centro(id):
     """
     Validar centro
     """
-    tot = str(json.loads(requests.get(
-        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios"
-    ).text)['total'])
-
+    
     if not check_permiso(current_user, "centro_validate"):
         abort(401)
 
@@ -262,7 +259,7 @@ def validar_centro(id):
 
     # Agarrar el nombre teniendo el id (centro.municipio)
     req = requests.get(
-        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page="+tot
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios/"+str(centro.municipio)
     )
     Jresponse = req.text
     data = json.loads(Jresponse)
