@@ -20,9 +20,14 @@ import 'leaflet/dist/leaflet.css';
 // Titulos
 import titleMixin from './mixins/titleMixin'
 
+// Gráficos
+import VCharts from 'v-charts'
+
 Vue.mixin(titleMixin)
 
 Vue.use(VueAxios, axios)
+
+Vue.use(VCharts)
 
 Vue.use(VeeValidate, {
   classes: true, // Usar clases de bootstrap is-valid y is-invalid en el formulario
