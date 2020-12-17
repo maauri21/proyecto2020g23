@@ -2,37 +2,17 @@
     <div>
         <main class="py-4">
             <b-container>
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card border-primary">
-                            <div class="card-header text-white bg-primary">Estadísticas</div>
-                            <div class="card-body">
-                            <b-row class="mb-3">
-                                <b-col cols="12" md="7">
-                                    <b-card
-                                        class="mb-2" 
-                                        border-variant="primary"
-                                        >    
-                                        <h3 class="text-center">Grafico de lineas</h3>
-                                        <ve-line :data="chartData" :settings="chartSettings"></ve-line>
-                                    </b-card>
-                                </b-col>
-                                <b-row class="mb-2">
-                                <b-col cols="14" md="14">
-                                    <b-card
-                                        class="mb-2" 
-                                        border-variant="primary"
-                                        >    
-                                        <h3 class="text-center">Grafico Torta</h3>
-                                        <ve-pie :data="chartData2" :settings="chartSettings"></ve-pie>
-                                    </b-card>
-                                </b-col>
-                                </b-row>
-                            </b-row>
-                            </div>
-                          </div>
-                      </div>
-                  </div>
+
+                <b-card
+                    border-variant="primary"
+                    header="Tipos de Centro más utilizados"
+                    header-bg-variant="primary"
+                    header-text-variant="white"
+                    align="center"
+                >
+                    <b-card-text><TiposMasUtilizados/></b-card-text>
+                </b-card>
+
               </b-container>
         </main>
     </div>
@@ -40,14 +20,14 @@
 
 <script>
 // import VeLine from 'v-charts/lib/line.common'
-
-
+import TiposMasUtilizados from '@/components/TiposMasUtilizados.vue'
 
 export default {
     name: 'Estadisticas',
     title: 'Estadísticas',
     components: {
 //      VeLine
+        TiposMasUtilizados
     },
     data () {
         this.chartSettings = {

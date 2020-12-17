@@ -23,3 +23,9 @@ class TipoCentro(db.Model):
         Busco si el nombre está en la DB
         """
         return TipoCentro.query.filter_by(nombre=nombre).first()
+
+    def buscar_id(id):
+        """
+        Busco si el id está en la DB
+        """
+        return TipoCentro.query.filter_by(id=id).first()

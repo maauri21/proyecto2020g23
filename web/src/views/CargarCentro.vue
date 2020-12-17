@@ -30,7 +30,7 @@
 
                                 </l-map>
                                 <br/>
-                                <form @submit.prevent="submit">
+                                <form>
 
                                     <div class="form-group">
                                         <div>Nombre *</div>

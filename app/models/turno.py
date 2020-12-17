@@ -4,7 +4,7 @@ from flask import json
 import string
 from flask import session
 from datetime import date, timedelta, datetime
-
+from sqlalchemy import func
 
 class Turno(db.Model):
     """
@@ -45,6 +45,12 @@ class Turno(db.Model):
         Elimina un turno en la DB
         """
         return db.session.delete(turno)
+
+    def cantidad(centro):
+        """
+        Devuelve la cantidad de turnos para un centro
+        """
+        return Turno.query.filter_by(centro_id=centro).count()
 
     def email_distintos():
         """

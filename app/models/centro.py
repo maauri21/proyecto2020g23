@@ -3,6 +3,7 @@ from sqlalchemy.orm import validates
 import string
 import requests
 from flask import json
+from sqlalchemy import func
 
 
 class Centro(db.Model):
@@ -36,6 +37,19 @@ class Centro(db.Model):
         Agrego el centro a la DB
         """
         db.session.add(centro)
+
+    def municipios_mas_concurridos():
+        """
+        Devuelvo la cantidad de centros de cada municipio
+        """
+        return Centro.query.with_entities(Centro.municipio, Centro.id, func.count(Centro.municipio)).group_by(Centro.municipio).all()
+
+    def tipos_mas_utilizados():
+        """
+        Devuelvo la cantidad de centros para cada tipo
+        """
+        return Centro.query.with_entities(Centro.tipo_id, func.count(Centro.tipo_id)).group_by(Centro.tipo_id).all()
+
 
     def crear(
         nombre,

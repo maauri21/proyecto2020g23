@@ -76,6 +76,7 @@ def create_app(environment="development"):
     from app.resources import usuario
     from app.resources import centro
     from app.resources import turno
+    from app.resources import estadistica
 
     # Para ocultar en los .html dependiendo los permisos
     from app.helpers import permisos
@@ -148,5 +149,10 @@ def create_app(environment="development"):
     app.add_url_rule("/centros/turnos/editar/<int:id>", "editar_turno", turno.editar_turno, methods=['GET', 'POST'])
     app.add_url_rule("/api/v1/centros/<int:id>/turnos_disponibles/", "devolver_turnos_api", turno.devolver_turnos_api, methods=['GET'])
     app.add_url_rule("/api/v1/centros/<int:id>/reserva", "registrar_turno_api", turno.registrar_turno_api, methods=['POST'])
+
+    # Estadísticas
+
+    app.add_url_rule("/api/v1/estadisticas/tipos_mas_utilizados", "tipos_mas_utilizados", estadistica.tipos_mas_utilizados, methods=['GET'])
+    app.add_url_rule("/api/v1/estadisticas/municipios_mas_concurridos", "municipios_mas_concurridos", estadistica.municipios_mas_concurridos, methods=['GET'])
 
     return app
