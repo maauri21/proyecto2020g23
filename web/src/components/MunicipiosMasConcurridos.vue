@@ -6,7 +6,7 @@
       <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
     </section>
 
-    <ve-pie :data="chartData"></ve-pie>
+    <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
   </div>
 </template>
 
@@ -15,15 +15,18 @@
 import axios from 'axios';
 
 export default {
-  name: "TiposMasUtilizados",
+  name: "MunicipiosMasConcurridos",
   data() {
+    this.chartSettings = {
+      metrics: ['cantidad']
+    }
     return {
         error: false,
-        chartData: ''
+        chartData: '',
     };
   },
   created() {
-    axios.get(`http://localhost:5000/api/v1/estadisticas/tipos_mas_utilizados`)
+    axios.get(`http://localhost:5000/api/v1/estadisticas/municipios_mas_concurridos`)
         .then(response => {
         this.chartData = response.data;
     })

@@ -15,11 +15,15 @@ def tipos_mas_utilizados():
         tipo = TipoCentro.buscar_id(item[0])
         diccionario = {
             "tipo": tipo.nombre,
-            "cantidad": item[1],
+            "cant": item[1],
         }
         array.append(diccionario)
 
-    return jsonify({"tiposmasutilizados": array})
+    return {
+          "columns": ['tipo', 'cant'],
+          "rows": 
+              array
+        }
 
 def municipios_mas_concurridos():
     """
@@ -39,6 +43,11 @@ def municipios_mas_concurridos():
             "municipio": data["data"]["Town"][item[0]]["name"],
             "cantidad": cant,
         }
-        array.append(diccionario)
+        if (cant != 0):
+            array.append(diccionario)
 
-    return jsonify({"municipiosmasconcurridos": array})
+    return {
+          "columns": ['municipio', 'cantidad'],
+          "rows": 
+                array
+        }
