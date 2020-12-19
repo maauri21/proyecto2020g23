@@ -154,5 +154,7 @@ def create_app(environment="development"):
 
     app.add_url_rule("/api/v1/estadisticas/tipos_mas_utilizados", "tipos_mas_utilizados", estadistica.tipos_mas_utilizados, methods=['GET'])
     app.add_url_rule("/api/v1/estadisticas/municipios_mas_concurridos", "municipios_mas_concurridos", estadistica.municipios_mas_concurridos, methods=['GET'])
+    app.add_url_rule("/api/v1/estadisticas/fases_de_municipios", "fases_de_municipios", estadistica.fases_de_municipios, methods=['GET'])
+
 
     return app

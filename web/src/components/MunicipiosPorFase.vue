@@ -1,0 +1,36 @@
+<template>
+
+  <div>
+
+    <section v-if="error">
+      <p>No es posible obtener la información en este momento, intente nuevamente más tarde</p>
+    </section>
+
+    <ve-pie :data="chartData"></ve-pie>
+  </div>
+</template>
+
+<script>
+
+import axios from 'axios';
+
+export default {
+  name: "MunicipiosPorFase",
+  data() {
+    return {
+        error: false,
+        chartData: ''
+    };
+  },
+  created() {
+    axios.get(`http://localhost:5000/api/v1/estadisticas/fases_de_municipios`)
+        .then(response => {
+        this.chartData = response.data;
+    })
+    .catch(error => {
+        console.log(error)
+        this.error = true
+    })
+  }
+};
+</script>

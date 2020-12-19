@@ -24,6 +24,17 @@
                     <b-card-text><MunicipiosMasConcurridos/></b-card-text>
                 </b-card>
 
+                <b-card
+                    border-variant="primary"
+                    header="Porcentaje de municipios en cada fase"
+                    header-bg-variant="primary"
+                    header-text-variant="white"
+                    align="center"
+                    class="mt-6"
+                >
+                    <b-card-text><MunicipiosPorFase/></b-card-text>
+                </b-card>
+
               </b-container>
         </main>
     </div>
@@ -32,13 +43,15 @@
 <script>
 import TiposMasUtilizados from '@/components/TiposMasUtilizados.vue'
 import MunicipiosMasConcurridos from '@/components/MunicipiosMasConcurridos.vue'
+import MunicipiosPorFase from '@/components/MunicipiosPorFase.vue'
 
 export default {
     name: 'Estadisticas',
     title: 'Estadísticas',
     components: {
         TiposMasUtilizados,
-        MunicipiosMasConcurridos
+        MunicipiosMasConcurridos,
+        MunicipiosPorFase
     },
     data () {
 

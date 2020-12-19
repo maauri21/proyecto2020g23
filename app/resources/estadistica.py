@@ -34,7 +34,7 @@ def municipios_mas_concurridos():
     array = []
     for item in centros:
         req = requests.get(
-            "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios/"+item[0]
+            "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios/"+(item[0])
         )
         Jresponse = req.text
         data = json.loads(Jresponse)
@@ -51,3 +51,43 @@ def municipios_mas_concurridos():
           "rows": 
                 array
         }
+
+def fases_de_municipios():
+    """
+    La cantidad de municipios de cada fase
+    """
+    tot = str(json.loads(requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios"
+    ).text)['total'])
+
+    req = requests.get(
+        "https://api-referencias.proyecto2020.linti.unlp.edu.ar/municipios?page=1&per_page="+tot
+    )
+    Jresponse = req.text
+    data = json.loads(Jresponse)
+
+    array = []
+    fases = {
+
+
+    }
+      
+    for fase,contenido in data["data"]["Town"].items():
+           
+        if (contenido["phase"])in fases.keys():
+            fases[contenido["phase"]]+=1
+        else:
+            fases[contenido["phase"]]=1      
+ 
+    
+    for fase,cantidad in fases.items():
+        array.append({"fase": 'Fase '+str(fase),
+        "cantidad": cantidad})
+    
+    return {
+          "columns": ['fase', 'cantidad'],
+          "rows": 
+                array
+        }
+    
+        

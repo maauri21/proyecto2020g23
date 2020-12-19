@@ -51,6 +51,8 @@ class Centro(db.Model):
         return Centro.query.with_entities(Centro.tipo_id, func.count(Centro.tipo_id)).group_by(Centro.tipo_id).all()
 
 
+
+
     def crear(
         nombre,
         direccion,
