@@ -49,7 +49,7 @@
 
             <b-col cols="12" md="4">
                 <b-card
-                    img-src="estadisticas.jpg"
+                    img-src="est.jpg"
                     img-top
                     class="mb-2"
                     border-variant="primary"
