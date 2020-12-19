@@ -26,7 +26,7 @@ export default {
     };
   },
   created() {
-    axios.get(`http://localhost:5000/api/v1/estadisticas/municipios_mas_concurridos`)
+    axios.get(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/estadisticas/municipios_mas_concurridos`)
         .then(response => {
         this.chartData = response.data;
     })

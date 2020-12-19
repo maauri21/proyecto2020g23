@@ -23,7 +23,7 @@ export default {
     };
   },
   created() {
-    axios.get(`http://localhost:5000/api/v1/estadisticas/fases_de_municipios`)
+    axios.get(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/estadisticas/fases_de_municipios`)
         .then(response => {
         this.chartData = response.data;
     })

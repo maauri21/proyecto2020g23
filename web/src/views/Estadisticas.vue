@@ -30,7 +30,7 @@
                     header-bg-variant="primary"
                     header-text-variant="white"
                     align="center"
-                    class="mt-6"
+                    class="mt-4"
                 >
                     <b-card-text><MunicipiosPorFase/></b-card-text>
                 </b-card>

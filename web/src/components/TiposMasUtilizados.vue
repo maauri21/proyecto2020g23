@@ -23,7 +23,7 @@ export default {
     };
   },
   created() {
-    axios.get(`http://localhost:5000/api/v1/estadisticas/tipos_mas_utilizados`)
+    axios.get(`https://admin-grupo23.proyecto2020.linti.unlp.edu.ar/api/v1/estadisticas/tipos_mas_utilizados`)
         .then(response => {
         this.chartData = response.data;
     })
