@@ -28,7 +28,7 @@ export default {
     }
     return {
         error: false,
-        chartData: '',
+        chartData: [],
     };
   },
   methods: {

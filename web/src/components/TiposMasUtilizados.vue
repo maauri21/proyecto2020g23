@@ -19,7 +19,7 @@ export default {
   data() {
     return {
         error: false,
-        chartData: ''
+        chartData: []
     };
   },
   created() {
